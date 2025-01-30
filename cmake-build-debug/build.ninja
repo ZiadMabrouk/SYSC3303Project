@@ -49,29 +49,29 @@ cmake_ninja_workdir = C$:/Users/ziadm/OneDrive/Desktop/Computer$ Eng/SYSC3303Pro
 
 build cmake_object_order_depends_target_SYSC3303Project: phony || .
 
-build CMakeFiles/SYSC3303Project.dir/main.cpp.obj: CXX_COMPILER__SYSC3303Project_unscanned_Debug C$:/Users/ziadm/OneDrive/Desktop/Computer$ Eng/SYSC3303Project/main.cpp || cmake_object_order_depends_target_SYSC3303Project
-  DEP_FILE = CMakeFiles\SYSC3303Project.dir\main.cpp.obj.d
+build CMakeFiles/SYSC3303Project.dir/src/main.cpp.obj: CXX_COMPILER__SYSC3303Project_unscanned_Debug C$:/Users/ziadm/OneDrive/Desktop/Computer$ Eng/SYSC3303Project/src/main.cpp || cmake_object_order_depends_target_SYSC3303Project
+  DEP_FILE = CMakeFiles\SYSC3303Project.dir\src\main.cpp.obj.d
   FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\SYSC3303Project.dir
-  OBJECT_FILE_DIR = CMakeFiles\SYSC3303Project.dir
+  OBJECT_FILE_DIR = CMakeFiles\SYSC3303Project.dir\src
 
-build CMakeFiles/SYSC3303Project.dir/Elevator.cpp.obj: CXX_COMPILER__SYSC3303Project_unscanned_Debug C$:/Users/ziadm/OneDrive/Desktop/Computer$ Eng/SYSC3303Project/Elevator.cpp || cmake_object_order_depends_target_SYSC3303Project
-  DEP_FILE = CMakeFiles\SYSC3303Project.dir\Elevator.cpp.obj.d
+build CMakeFiles/SYSC3303Project.dir/src/Elevator.cpp.obj: CXX_COMPILER__SYSC3303Project_unscanned_Debug C$:/Users/ziadm/OneDrive/Desktop/Computer$ Eng/SYSC3303Project/src/Elevator.cpp || cmake_object_order_depends_target_SYSC3303Project
+  DEP_FILE = CMakeFiles\SYSC3303Project.dir\src\Elevator.cpp.obj.d
   FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\SYSC3303Project.dir
-  OBJECT_FILE_DIR = CMakeFiles\SYSC3303Project.dir
+  OBJECT_FILE_DIR = CMakeFiles\SYSC3303Project.dir\src
 
-build CMakeFiles/SYSC3303Project.dir/Scheduler.cpp.obj: CXX_COMPILER__SYSC3303Project_unscanned_Debug C$:/Users/ziadm/OneDrive/Desktop/Computer$ Eng/SYSC3303Project/Scheduler.cpp || cmake_object_order_depends_target_SYSC3303Project
-  DEP_FILE = CMakeFiles\SYSC3303Project.dir\Scheduler.cpp.obj.d
+build CMakeFiles/SYSC3303Project.dir/src/Scheduler.cpp.obj: CXX_COMPILER__SYSC3303Project_unscanned_Debug C$:/Users/ziadm/OneDrive/Desktop/Computer$ Eng/SYSC3303Project/src/Scheduler.cpp || cmake_object_order_depends_target_SYSC3303Project
+  DEP_FILE = CMakeFiles\SYSC3303Project.dir\src\Scheduler.cpp.obj.d
   FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\SYSC3303Project.dir
-  OBJECT_FILE_DIR = CMakeFiles\SYSC3303Project.dir
+  OBJECT_FILE_DIR = CMakeFiles\SYSC3303Project.dir\src
 
-build CMakeFiles/SYSC3303Project.dir/Floor.cpp.obj: CXX_COMPILER__SYSC3303Project_unscanned_Debug C$:/Users/ziadm/OneDrive/Desktop/Computer$ Eng/SYSC3303Project/Floor.cpp || cmake_object_order_depends_target_SYSC3303Project
-  DEP_FILE = CMakeFiles\SYSC3303Project.dir\Floor.cpp.obj.d
+build CMakeFiles/SYSC3303Project.dir/src/Floor.cpp.obj: CXX_COMPILER__SYSC3303Project_unscanned_Debug C$:/Users/ziadm/OneDrive/Desktop/Computer$ Eng/SYSC3303Project/src/Floor.cpp || cmake_object_order_depends_target_SYSC3303Project
+  DEP_FILE = CMakeFiles\SYSC3303Project.dir\src\Floor.cpp.obj.d
   FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\SYSC3303Project.dir
-  OBJECT_FILE_DIR = CMakeFiles\SYSC3303Project.dir
+  OBJECT_FILE_DIR = CMakeFiles\SYSC3303Project.dir\src
 
 
 # =============================================================================
@@ -81,7 +81,7 @@ build CMakeFiles/SYSC3303Project.dir/Floor.cpp.obj: CXX_COMPILER__SYSC3303Projec
 #############################################
 # Link the executable SYSC3303Project.exe
 
-build SYSC3303Project.exe: CXX_EXECUTABLE_LINKER__SYSC3303Project_Debug CMakeFiles/SYSC3303Project.dir/main.cpp.obj CMakeFiles/SYSC3303Project.dir/Elevator.cpp.obj CMakeFiles/SYSC3303Project.dir/Scheduler.cpp.obj CMakeFiles/SYSC3303Project.dir/Floor.cpp.obj
+build SYSC3303Project.exe: CXX_EXECUTABLE_LINKER__SYSC3303Project_Debug CMakeFiles/SYSC3303Project.dir/src/main.cpp.obj CMakeFiles/SYSC3303Project.dir/src/Elevator.cpp.obj CMakeFiles/SYSC3303Project.dir/src/Scheduler.cpp.obj CMakeFiles/SYSC3303Project.dir/src/Floor.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\SYSC3303Project.dir
