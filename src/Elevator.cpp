@@ -8,16 +8,16 @@
 #include <iostream>
 #include <random>
 #include <mutex>
-
+#include <ctime> // For datetime data type 
 #include <condition_variable>
 
 #include "Scheduler.h"
 
 void Elevator<>::operator()(const std::string &name) {
     for(int i = 0; i < 10; i++) {
-        std::cout << name << "(" << std::this_thread::get_id() << ") ready to consume " << i << std::endl;
-        Type item = scheduler.get();
-        std::cout << name << "(" << std::this_thread::get_id() << ") consumed " << item << std::endl;
-        std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
+        //std::cout << name << "(" << std::this_thread::get_id() << ") ready to consume " << i << std::endl;
+        //Type item = scheduler.get();
+        //std::cout << name << "(" << std::this_thread::get_id() << ") consumed " << item << std::endl;
+       // std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
     }
 }
