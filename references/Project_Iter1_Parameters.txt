@@ -1,10 +1,23 @@
+//Shared Includes, Parameters, and Datatypes for Project Iteration 0
+//Created by Ziad Mabrouk , id#101255696
 
-Scheduler.put(e_struct struct); 
+Shared Includes:
 
-Scheduler.get(); 
+	#include <ctime> // For datetime Data Type
 
-typedef struct ElevatorDataStruct {
+Shared Methods: 
+
+	Scheduler.put(e_struct struct); // Only USED BY FLOOR
+
+	Scheduler.get(); // Only USED BY ELEVATOR
 
 
+Shared Struct: 
+	typedef struct ElevatorDataStruct {
+			
+			datetime timestamp; // datetime data type: https://www.w3schools.com/cpp/cpp_date.asp
+			short int floor_number; // 2 bytes long (more than enough) 
+			bool floor_up_button; // The button to request an elevator to go up *Note: The top and bottom floors will only use one button
+			bool floor_down_button // The button to request an elevator to go down 
 
-}e_struct;
+	}e_struct;
