@@ -1,0 +1,3 @@
+C:\Users\ziadm\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe -E rm -f CMakeFiles\SYSC3303Project.dir/objects.a
+C:\Users\ziadm\AppData\Local\Programs\CLion\bin\mingw\bin\ar.exe qc CMakeFiles\SYSC3303Project.dir/objects.a @CMakeFiles\SYSC3303Project.dir\objects1.rsp
+C:\Users\ziadm\AppData\Local\Programs\CLion\bin\mingw\bin\g++.exe -g -Wl,--whole-archive CMakeFiles\SYSC3303Project.dir/objects.a -Wl,--no-whole-archive -o SYSC3303Project.exe -Wl,--out-implib,libSYSC3303Project.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\SYSC3303Project.dir\linkLibs.rsp
