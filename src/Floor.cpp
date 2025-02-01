@@ -2,13 +2,26 @@
 // Created by ziadm on 2025-01-30.
 //
 
-#include <chrono>
-#include <thread>
-#include <iostream>
-#include <random>
-#include <mutex>
-#include <condition_variable>
 #include "Floor.h"
-#include "Scheduler.h"
-#include "ElevatorDataTypes.h"
+
+
+
+Floor::Floor(Scheduler& scheduler) : scheduler(scheduler) {}
+
+void Floor::readFile() {
+    std::ifstream file("../src/input_file.txt");
+
+    std::string line;
+    while (std::getline(file, line)) {
+        std::cout << line << std::endl;
+    }
+}
+
+void Floor::operator()() {
+    readFile();
+}
+
+
+
+
 
