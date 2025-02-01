@@ -22,7 +22,7 @@ private:
 public:
     Scheduler();	// Constructor
 
-    void put();
+    void put(e_struct elevatorData);
 
     void get();
 };

@@ -6,7 +6,7 @@
 
 Scheduler::Scheduler() : empty(true), mtx(), cv() {}
 
-void Scheduler::put(  ) {
+void Scheduler::put(e_struct elevatorData) {
     std::unique_lock<std::mutex> lock(mtx);	// releases when lock goes out of scope.
     while ( !empty ) cv.wait(lock);
 

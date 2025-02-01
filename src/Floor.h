@@ -22,9 +22,11 @@ class Floor {
 private:
     Scheduler& scheduler;
 public:
-    Floor(Scheduler& scheduler);
+    explicit Floor(Scheduler& scheduler) : scheduler(scheduler) {}
 
-    static void readFile();
+    void readFile();
+
+    tm formatTime(const std::string& str);
 
     void operator()();
 };
