@@ -24,7 +24,9 @@ public:
 
     void put(e_struct elevatorData);
 
-    void get();
+    e_struct get();
+    void operator()();
+    
 };
 
 
