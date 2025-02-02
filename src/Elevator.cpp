@@ -14,17 +14,12 @@
 #include <condition_variable>
 #include "Scheduler.h"
 
+//Scheduler::Scheduler() : empty(true), mtx(), cv() {}
 
-class Elevator {
 
-private:
-    e_struct elevator_data;
-    Scheduler& scheduler_object;
+    Elevator::Elevator(Scheduler& object) : scheduler_object(object) {}
 
-public:
-    Elevator(Scheduler& object) : scheduler_object(object) {}
-
-    void operator()() {
+    void Elevator::operator()() {
         while (true) {
             elevator_data = scheduler_object.get();
             std::cout <<"Grab request";
@@ -32,4 +27,3 @@ public:
     }
 
 
-};
