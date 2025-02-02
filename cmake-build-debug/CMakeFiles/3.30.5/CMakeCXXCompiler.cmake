@@ -1,4 +1,4 @@
-set(CMAKE_CXX_COMPILER "C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/bin/g++.exe")
+set(CMAKE_CXX_COMPILER "C:/Program Files/JetBrains/CLion 2024.3.2/bin/mingw/bin/g++.exe")
 set(CMAKE_CXX_COMPILER_ARG1 "")
 set(CMAKE_CXX_COMPILER_ID "GNU")
 set(CMAKE_CXX_COMPILER_VERSION "13.1.0")
@@ -24,14 +24,14 @@ set(CMAKE_CXX_SIMULATE_VERSION "")
 
 
 
-set(CMAKE_AR "C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/bin/ar.exe")
-set(CMAKE_CXX_COMPILER_AR "C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/bin/gcc-ar.exe")
-set(CMAKE_RANLIB "C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/bin/ranlib.exe")
-set(CMAKE_CXX_COMPILER_RANLIB "C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/bin/gcc-ranlib.exe")
-set(CMAKE_LINKER "C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/bin/ld.exe")
+set(CMAKE_AR "C:/Program Files/JetBrains/CLion 2024.3.2/bin/mingw/bin/ar.exe")
+set(CMAKE_CXX_COMPILER_AR "C:/Program Files/JetBrains/CLion 2024.3.2/bin/mingw/bin/gcc-ar.exe")
+set(CMAKE_RANLIB "C:/Program Files/JetBrains/CLion 2024.3.2/bin/mingw/bin/ranlib.exe")
+set(CMAKE_CXX_COMPILER_RANLIB "C:/Program Files/JetBrains/CLion 2024.3.2/bin/mingw/bin/gcc-ranlib.exe")
+set(CMAKE_LINKER "C:/Program Files/JetBrains/CLion 2024.3.2/bin/mingw/bin/ld.exe")
 set(CMAKE_LINKER_LINK "")
 set(CMAKE_LINKER_LLD "")
-set(CMAKE_CXX_COMPILER_LINKER "C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/bin/ld.exe")
+set(CMAKE_CXX_COMPILER_LINKER "C:/Program Files/JetBrains/CLion 2024.3.2/bin/mingw/bin/ld.exe")
 set(CMAKE_CXX_COMPILER_LINKER_ID "GNU")
 set(CMAKE_CXX_COMPILER_LINKER_VERSION 2.40)
 set(CMAKE_CXX_COMPILER_LINKER_FRONTEND_VARIANT GNU)
@@ -87,9 +87,9 @@ endif()
 
 
 
-set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES "C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++;C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32;C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/backward;C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include;C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/include;C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include-fixed;C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/x86_64-w64-mingw32/include;/MinGW/include")
-set(CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "stdc++;mingw32;gcc_s;gcc;moldname;mingwex;kernel32;pthread;advapi32;shell32;user32;kernel32;iconv;mingw32;gcc_s;gcc;moldname;mingwex;kernel32")
-set(CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES "C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0;C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/lib/gcc;C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/x86_64-w64-mingw32/lib;C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/lib;/MinGW/lib")
+set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES "C:/Program Files/JetBrains/CLion 2024.3.2/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++;C:/Program Files/JetBrains/CLion 2024.3.2/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32;C:/Program Files/JetBrains/CLion 2024.3.2/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/backward;C:/Program Files/JetBrains/CLion 2024.3.2/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include;C:/Program Files/JetBrains/CLion 2024.3.2/bin/mingw/include;C:/Program Files/JetBrains/CLion 2024.3.2/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include-fixed;C:/Program Files/JetBrains/CLion 2024.3.2/bin/mingw/x86_64-w64-mingw32/include")
+set(CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "")
+set(CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES "")
 set(CMAKE_CXX_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES "")
 set(CMAKE_CXX_COMPILER_CLANG_RESOURCE_DIR "")
 

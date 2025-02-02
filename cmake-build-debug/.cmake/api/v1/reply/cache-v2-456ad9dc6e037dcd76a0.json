@@ -15,7 +15,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/bin/addr2line.exe"
+			"value" : "C:/Program Files/JetBrains/CLion 2024.3.2/bin/mingw/bin/addr2line.exe"
 		},
 		{
 			"name" : "CMAKE_AR",
@@ -31,7 +31,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/bin/ar.exe"
+			"value" : "C:/Program Files/JetBrains/CLion 2024.3.2/bin/mingw/bin/ar.exe"
 		},
 		{
 			"name" : "CMAKE_BUILD_TYPE",
@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "c:/Users/ziadm/OneDrive/Desktop/Computer Eng/SYSC3303Project/cmake-build-debug"
+			"value" : "c:/Users/Daniel/CLionProjects/SYSC3303Project/cmake-build-debug"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -115,7 +115,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "C:/Users/ziadm/AppData/Local/Programs/CLion/bin/cmake/win/x64/bin/cmake.exe"
+			"value" : "C:/Program Files/JetBrains/CLion 2024.3.2/bin/cmake/win/x64/bin/cmake.exe"
 		},
 		{
 			"name" : "CMAKE_CPACK_COMMAND",
@@ -127,7 +127,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "C:/Users/ziadm/AppData/Local/Programs/CLion/bin/cmake/win/x64/bin/cpack.exe"
+			"value" : "C:/Program Files/JetBrains/CLion 2024.3.2/bin/cmake/win/x64/bin/cpack.exe"
 		},
 		{
 			"name" : "CMAKE_CTEST_COMMAND",
@@ -139,7 +139,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "C:/Users/ziadm/AppData/Local/Programs/CLion/bin/cmake/win/x64/bin/ctest.exe"
+			"value" : "C:/Program Files/JetBrains/CLion 2024.3.2/bin/cmake/win/x64/bin/ctest.exe"
 		},
 		{
 			"name" : "CMAKE_CXX_COMPILER",
@@ -155,7 +155,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/bin/g++.exe"
+			"value" : "C:/Program Files/JetBrains/CLion 2024.3.2/bin/mingw/bin/g++.exe"
 		},
 		{
 			"name" : "CMAKE_CXX_COMPILER_AR",
@@ -171,7 +171,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/bin/gcc-ar.exe"
+			"value" : "C:/Program Files/JetBrains/CLion 2024.3.2/bin/mingw/bin/gcc-ar.exe"
 		},
 		{
 			"name" : "CMAKE_CXX_COMPILER_RANLIB",
@@ -187,7 +187,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/bin/gcc-ranlib.exe"
+			"value" : "C:/Program Files/JetBrains/CLion 2024.3.2/bin/mingw/bin/gcc-ranlib.exe"
 		},
 		{
 			"name" : "CMAKE_CXX_FLAGS",
@@ -299,7 +299,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/bin/gcc.exe"
+			"value" : "C:/Program Files/JetBrains/CLion 2024.3.2/bin/mingw/bin/gcc.exe"
 		},
 		{
 			"name" : "CMAKE_C_COMPILER_AR",
@@ -315,7 +315,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/bin/gcc-ar.exe"
+			"value" : "C:/Program Files/JetBrains/CLion 2024.3.2/bin/mingw/bin/gcc-ar.exe"
 		},
 		{
 			"name" : "CMAKE_C_COMPILER_RANLIB",
@@ -331,7 +331,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/bin/gcc-ranlib.exe"
+			"value" : "C:/Program Files/JetBrains/CLion 2024.3.2/bin/mingw/bin/gcc-ranlib.exe"
 		},
 		{
 			"name" : "CMAKE_C_FLAGS",
@@ -443,7 +443,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/bin/dlltool.exe"
+			"value" : "C:/Program Files/JetBrains/CLion 2024.3.2/bin/mingw/bin/dlltool.exe"
 		},
 		{
 			"name" : "CMAKE_EXECUTABLE_FORMAT",
@@ -559,7 +559,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/ziadm/OneDrive/Desktop/Computer Eng/SYSC3303Project/cmake-build-debug/CMakeFiles/pkgRedirects"
+			"value" : "C:/Users/Daniel/CLionProjects/SYSC3303Project/cmake-build-debug/CMakeFiles/pkgRedirects"
 		},
 		{
 			"name" : "CMAKE_GENERATOR",
@@ -631,7 +631,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "C:/Users/ziadm/OneDrive/Desktop/Computer Eng/SYSC3303Project"
+			"value" : "C:/Users/Daniel/CLionProjects/SYSC3303Project"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -659,7 +659,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/bin/ld.exe"
+			"value" : "C:/Program Files/JetBrains/CLion 2024.3.2/bin/mingw/bin/ld.exe"
 		},
 		{
 			"name" : "CMAKE_MAKE_PROGRAM",
@@ -671,11 +671,11 @@
 				},
 				{
 					"name" : "HELPSTRING",
-					"value" : "Path to a program."
+					"value" : "make program"
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/bin/mingw32-make.exe"
+			"value" : "C:/PROGRA~1/JETBRA~1/CLION2~1.2/bin/mingw/bin/mingw32-make.exe"
 		},
 		{
 			"name" : "CMAKE_MODULE_LINKER_FLAGS",
@@ -771,7 +771,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/bin/nm.exe"
+			"value" : "C:/Program Files/JetBrains/CLion 2024.3.2/bin/mingw/bin/nm.exe"
 		},
 		{
 			"name" : "CMAKE_NUMBER_OF_MAKEFILES",
@@ -799,7 +799,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/bin/objcopy.exe"
+			"value" : "C:/Program Files/JetBrains/CLion 2024.3.2/bin/mingw/bin/objcopy.exe"
 		},
 		{
 			"name" : "CMAKE_OBJDUMP",
@@ -815,7 +815,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/bin/objdump.exe"
+			"value" : "C:/Program Files/JetBrains/CLion 2024.3.2/bin/mingw/bin/objdump.exe"
 		},
 		{
 			"name" : "CMAKE_PLATFORM_INFO_INITIALIZED",
@@ -879,7 +879,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/bin/ranlib.exe"
+			"value" : "C:/Program Files/JetBrains/CLion 2024.3.2/bin/mingw/bin/ranlib.exe"
 		},
 		{
 			"name" : "CMAKE_RC_COMPILER",
@@ -895,7 +895,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/bin/windres.exe"
+			"value" : "C:/Program Files/JetBrains/CLion 2024.3.2/bin/mingw/bin/windres.exe"
 		},
 		{
 			"name" : "CMAKE_RC_COMPILER_WORKS",
@@ -1003,7 +1003,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/bin/readelf.exe"
+			"value" : "C:/Program Files/JetBrains/CLion 2024.3.2/bin/mingw/bin/readelf.exe"
 		},
 		{
 			"name" : "CMAKE_ROOT",
@@ -1015,7 +1015,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "C:/Users/ziadm/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.30"
+			"value" : "C:/Program Files/JetBrains/CLion 2024.3.2/bin/cmake/win/x64/share/cmake-3.30"
 		},
 		{
 			"name" : "CMAKE_SHARED_LINKER_FLAGS",
@@ -1223,7 +1223,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "C:/Users/ziadm/AppData/Local/Programs/CLion/bin/mingw/bin/strip.exe"
+			"value" : "C:/Program Files/JetBrains/CLion 2024.3.2/bin/mingw/bin/strip.exe"
 		},
 		{
 			"name" : "CMAKE_TAPI",
@@ -1267,7 +1267,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/ziadm/OneDrive/Desktop/Computer Eng/SYSC3303Project/cmake-build-debug"
+			"value" : "C:/Users/Daniel/CLionProjects/SYSC3303Project/cmake-build-debug"
 		},
 		{
 			"name" : "SYSC3303Project_IS_TOP_LEVEL",
@@ -1291,7 +1291,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/ziadm/OneDrive/Desktop/Computer Eng/SYSC3303Project"
+			"value" : "C:/Users/Daniel/CLionProjects/SYSC3303Project"
 		},
 		{
 			"name" : "_CMAKE_LINKER_PUSHPOP_STATE_SUPPORTED",

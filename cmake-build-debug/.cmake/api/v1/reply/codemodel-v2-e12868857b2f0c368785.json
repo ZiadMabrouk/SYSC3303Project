@@ -49,8 +49,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "C:/Users/ziadm/OneDrive/Desktop/Computer Eng/SYSC3303Project/cmake-build-debug",
-		"source" : "C:/Users/ziadm/OneDrive/Desktop/Computer Eng/SYSC3303Project"
+		"build" : "C:/Users/Daniel/CLionProjects/SYSC3303Project/cmake-build-debug",
+		"source" : "C:/Users/Daniel/CLionProjects/SYSC3303Project"
 	},
 	"version" : 
 	{
