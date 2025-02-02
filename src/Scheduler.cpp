@@ -130,7 +130,7 @@ void Scheduler::operator()() {
     while (1) {}
 }
 
-
+/***
 int main(void) {
 
     Scheduler scheduler; 
@@ -165,3 +165,4 @@ int main(void) {
     std::cout << "Success"; 
     return 1;
 }
+***/
