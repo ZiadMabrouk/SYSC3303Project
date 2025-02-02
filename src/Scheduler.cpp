@@ -19,15 +19,15 @@
 Scheduler::Scheduler() : empty(true), mtx(), cv() {}
 
 void Scheduler::put(e_struct elevatorData) {
-    
+
 
     std::unique_lock<std::mutex> lock(mtx);	// releases when lock goes out of scope.
     //while ( !empty ) cv.wait(lock);
 
     std::ostringstream oss;
-	
+
     // Format time as hh:mm:ss.mmm
-    oss << std::setfill('0') 
+    oss << std::setfill('0')
         << std::setw(2) << elevatorData.datetime.tm_hour << ":"
         << std::setw(2) << elevatorData.datetime.tm_min << ":"
         << std::setw(2) << elevatorData.datetime.tm_sec;
@@ -37,11 +37,11 @@ void Scheduler::put(e_struct elevatorData) {
         << (elevatorData.floor_up_button ? "Up" : elevatorData.floor_down_button ? "Down" : "No Button");
 
     std::string newLine = oss.str();
-	
-	
+
+
 	//std::string newLine = "12:23:12 4 Up";
     // Open the file in append mode
-    std::ofstream outputFile("../lib/shareddata.txt", std::ios_base::app);
+    std::ofstream outputFile("../data/shared/shareddata.txt", std::ios_base::app);
     if (!outputFile) {
         std::cerr << "File could not be opened for appending." << std::endl;
         return;
@@ -60,7 +60,7 @@ void Scheduler::put(e_struct elevatorData) {
 e_struct Scheduler::get() {
     std::unique_lock<std::mutex> lock(mtx);	// releases when lock goes out of scope.
     while ( empty ) cv.wait(lock);
-    std::ifstream f("../lib/shareddata.txt");
+    std::ifstream f("../data/shared/shareddata.txt");
 
         // Check if the file is successfully opened
     if (!f.is_open()) {
@@ -85,7 +85,7 @@ e_struct Scheduler::get() {
     f.close();
 
     // Write remaining lines back to the file
-    std::ofstream outputFile("../lib/shareddata.txt");
+    std::ofstream outputFile("../data/shared/shareddata.txt");
     if (!outputFile) {
         std::cerr << "File could not be opened for writing." << std::endl;
 		e_struct struct1;
@@ -96,13 +96,13 @@ e_struct Scheduler::get() {
         outputFile << l << std::endl;
     }
     outputFile.close();
-    
+
 
     if (lines.empty()) {
-        empty = true; 
+        empty = true;
     }
 
-    
+
     e_struct data;
     std::istringstream iss(firstLine);
     std::string timeString;
@@ -113,16 +113,16 @@ e_struct Scheduler::get() {
 
 
     // Parse time (hh:mm:ss.mmm)
-    sscanf(timeString.c_str(), "%2d:%2d:%2d", 
-           &data.datetime.tm_hour, 
-           &data.datetime.tm_min, 
+    sscanf(timeString.c_str(), "%2d:%2d:%2d",
+           &data.datetime.tm_hour,
+           &data.datetime.tm_min,
            &data.datetime.tm_sec);
 
     // Set button status
     data.floor_up_button = (floorButton == "Up");
     data.floor_down_button = (floorButton == "Down");
 
-    
+
     cv.notify_all();
     return data;
 }
@@ -133,7 +133,7 @@ void Scheduler::operator()() {
 /***
 int main(void) {
 
-    Scheduler scheduler; 
+    Scheduler scheduler;
 // Test struct 1
     ElevatorData test1;
     test1.datetime = {30, 14, 1, 0, 125}; // 2025-01-01 14:30:00
