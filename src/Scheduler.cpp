@@ -14,6 +14,7 @@
 #include <sstream>
 #include <iomanip>
 #include <string>
+#include <fstream>
 
 Scheduler::Scheduler() : empty(true), mtx(), cv() {}
 
@@ -21,23 +22,24 @@ void Scheduler::put(e_struct elevatorData) {
 
 
     std::unique_lock<std::mutex> lock(mtx);	// releases when lock goes out of scope.
-    while ( !empty ) cv.wait(lock);
+    //while ( !empty ) cv.wait(lock);
 
     std::ostringstream oss;
-
+	
     // Format time as hh:mm:ss.mmm
     oss << std::setfill('0') 
         << std::setw(2) << elevatorData.datetime.tm_hour << ":"
         << std::setw(2) << elevatorData.datetime.tm_min << ":"
-        << std::setw(2) << data.datetime.tm_sec << "."
-        << std::setw(3) << data.milliseconds;
+        << std::setw(2) << elevatorData.datetime.tm_sec;
 
     // Format the rest of the string
     oss << " " << elevatorData.floor_number << " "
         << (elevatorData.floor_up_button ? "Up" : elevatorData.floor_down_button ? "Down" : "No Button");
 
     std::string newLine = oss.str();
-
+	
+	
+	//std::string newLine = "12:23:12 4 Up";
     // Open the file in append mode
     std::ofstream outputFile("../lib/shareddata.txt", std::ios_base::app);
     if (!outputFile) {
@@ -48,7 +50,7 @@ void Scheduler::put(e_struct elevatorData) {
     // Write the new line to the end of the file
     outputFile << newLine << std::endl;
 
-    outputFile.close
+    outputFile.close();
 
 
     empty = false;
@@ -63,7 +65,8 @@ e_struct Scheduler::get() {
         // Check if the file is successfully opened
     if (!f.is_open()) {
         std::cerr << "Error opening the file!";
-        return 1;
+		e_struct struct1;
+        return  struct1;
     }
 
 
@@ -73,19 +76,20 @@ e_struct Scheduler::get() {
     std::string firstLine;
 
     // Read the first line separately
-    if (std::getline(inputFile, firstLine)) {
+    if (std::getline(f, firstLine)) {
         // Read all remaining lines
-        while (std::getline(inputFile, line)) {
+        while (std::getline(f, line)) {
             lines.push_back(line);
         }
     }
-    inputFile.close();
+    f.close();
 
     // Write remaining lines back to the file
     std::ofstream outputFile("../lib/shareddata.txt");
     if (!outputFile) {
         std::cerr << "File could not be opened for writing." << std::endl;
-        return;
+		e_struct struct1;
+        return  struct1;
     }
 
     for (const auto& l : lines) {
@@ -107,12 +111,12 @@ e_struct Scheduler::get() {
     // Extract time, floor number, and button status from the string
     iss >> timeString >> data.floor_number >> floorButton;
 
+
     // Parse time (hh:mm:ss.mmm)
-    sscanf(timeString.c_str(), "%2d:%2d:%2d.%3d", 
+    sscanf(timeString.c_str(), "%2d:%2d:%2d", 
            &data.datetime.tm_hour, 
            &data.datetime.tm_min, 
-           &data.datetime.tm_sec, 
-           &data.milliseconds);
+           &data.datetime.tm_sec);
 
     // Set button status
     data.floor_up_button = (floorButton == "Up");
@@ -132,28 +136,28 @@ int main(void) {
     Scheduler scheduler; 
 // Test struct 1
     ElevatorData test1;
-    test1.datetime = {0, 30, 14, 1, 0, 125}; // 2025-01-01 14:30:00
+    test1.datetime = {30, 14, 1, 0, 125}; // 2025-01-01 14:30:00
     test1.floor_number = 1;
     test1.floor_up_button = true;
     test1.floor_down_button = false;
 
     // Test struct 2
     ElevatorData test2;
-    test2.datetime = {500, 45, 16, 1, 1, 125}; // 2025-02-01 16:45:00.500
+    test2.datetime = {45, 16, 1, 1, 125}; // 2025-02-01 16:45:00.500
     test2.floor_number = 5;
     test2.floor_up_button = false;
     test2.floor_down_button = true;
 
     // Test struct 3
     ElevatorData test3;
-    test3.datetime = {750, 15, 9, 1, 2, 125}; // 2025-03-01 09:15:00.750
+    test3.datetime = {15, 9, 1, 2, 125}; // 2025-03-01 09:15:00.750
     test3.floor_number = 10;
     test3.floor_up_button = true;
     test3.floor_down_button = false;
 
-    scheduler.put(test1)
-    scheduler.put(test2)
-    scheduler.put(test3)
+    scheduler.put(test1);
+    scheduler.put(test2);
+    scheduler.put(test3);
 
     e_struct outtest1 = scheduler.get();
     e_struct outtest2 =scheduler.get();
