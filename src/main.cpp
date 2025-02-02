@@ -2,7 +2,11 @@
 #include "Elevator.h"
 #include "Floor.h"
 #include "Scheduler.h"
-
+#include <chrono>
+#include <thread>
+#include <random>
+#include <mutex>
+#include <condition_variable>
 
 
 
@@ -13,14 +17,11 @@ int main() {
     Floor floor(scheduler);
 
     std::thread floor_thread( floor);
-
     std::thread elevatorthread(elevator);
-    std::thread schedulerthread(scheduler);//
 
 
     floor_thread.join();
     elevatorthread.join();
-    schedulerthread.join();
 
     
     return 0;

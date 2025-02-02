@@ -20,9 +20,11 @@
     Elevator::Elevator(Scheduler& object) : scheduler_object(object) {}
 
     void Elevator::operator()() {
+        int i = 0;
         while (true) {
             elevator_data = scheduler_object.get();
-            std::cout <<"Grab request";
+            std::cout <<"Grab request " << i << std::endl;
+            i++;
         }
     }
 

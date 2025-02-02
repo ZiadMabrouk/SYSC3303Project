@@ -5,12 +5,11 @@
 #include "Floor.h"
 
 void Floor::readFile() {
-    std::ifstream file("../src/input_file.txt");
+    std::ifstream file("../src/SamTestCase.txt");
     e_struct elevatorData;
 
     std::string line, token;
     while (std::getline(file, line)) {
-        std::cout << line << std::endl;
         std::stringstream ss(line);
 
         std::getline(ss, token, ' ');

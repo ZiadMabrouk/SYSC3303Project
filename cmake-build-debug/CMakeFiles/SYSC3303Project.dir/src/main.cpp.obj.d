@@ -150,7 +150,7 @@ CMakeFiles/SYSC3303Project.dir/src/main.cpp.obj: \
  C:/Program\ Files/JetBrains/CLion\ 2024.3.2/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/ostream.tcc \
  C:/Program\ Files/JetBrains/CLion\ 2024.3.2/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/istream \
  C:/Program\ Files/JetBrains/CLion\ 2024.3.2/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/istream.tcc \
- C:\Users\Daniel\CLionProjects\SYSC3303Project\src\Floor.h \
+ C:\Users\Daniel\CLionProjects\SYSC3303Project\src\Elevator.h \
  C:\Users\Daniel\CLionProjects\SYSC3303Project\src\Scheduler.h \
  C:/Program\ Files/JetBrains/CLion\ 2024.3.2/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/chrono \
  C:/Program\ Files/JetBrains/CLion\ 2024.3.2/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/chrono.h \
@@ -243,6 +243,7 @@ CMakeFiles/SYSC3303Project.dir/src/main.cpp.obj: \
  C:/Program\ Files/JetBrains/CLion\ 2024.3.2/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/unique_lock.h \
  C:/Program\ Files/JetBrains/CLion\ 2024.3.2/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/condition_variable \
  C:\Users\Daniel\CLionProjects\SYSC3303Project\src\ElevatorDataTypes.h \
+ C:\Users\Daniel\CLionProjects\SYSC3303Project\src\Floor.h \
  C:/Program\ Files/JetBrains/CLion\ 2024.3.2/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/fstream \
  C:/Program\ Files/JetBrains/CLion\ 2024.3.2/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32/bits/basic_file.h \
  C:/Program\ Files/JetBrains/CLion\ 2024.3.2/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32/bits/c++io.h \
