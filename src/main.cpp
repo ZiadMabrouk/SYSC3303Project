@@ -10,7 +10,7 @@
 
 
 
-int main() {
+int Gmain() {
     Scheduler scheduler;
     Elevator  elevator(scheduler);
 

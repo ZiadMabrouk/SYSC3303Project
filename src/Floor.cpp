@@ -5,7 +5,7 @@
 #include "Floor.h"
 
 void Floor::readFile() {
-    std::ifstream file("../src/SamTestCase.txt");
+    std::ifstream file("../data/tests/SamTestCase.txt");
     e_struct elevatorData;
 
     std::string line, token;

@@ -6,12 +6,6 @@
 #define ELEVATOR_H
 
 #include "Scheduler.h"
-#include <chrono>
-#include <thread>
-#include <iostream>
-#include <random>
-#include <mutex>
-#include <condition_variable>
 #include "ElevatorDataTypes.h"
 
 class Elevator
