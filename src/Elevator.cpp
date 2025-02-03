@@ -28,7 +28,7 @@
         int i = 0;
         while (true) {
             elevator_data = scheduler_object.get();
-            std::cout <<"Grab request " << i << std::endl;
+            std::cout <<"Grab request " << "Floor Number:" << elevator_data.floor_number << std::endl;
             i++;
         }
     }
