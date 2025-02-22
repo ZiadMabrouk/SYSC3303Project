@@ -16,121 +16,123 @@
 #include <string>
 #include <fstream>
 
-Scheduler::Scheduler() : empty(true), mtx(), cv() {}
 
-void Scheduler::put(e_struct elevatorData) {
+
+
+
+void Calculation::handle(Scheduler *context) {
+    std::cout<<"Calculating..."<<std::endl;
+    std::cout<<"Calculated"<<std::endl;
+    context->setState(new WaitingForInput());
+    delete this;
+}
+
+void WaitingForInput::handle(Scheduler *context) {
+
+    while (1) {
+        std::cout<<"Waiting for input... "<<std::endl;
+        //logic
+
+
+        
+        if (context->requestInList && context->elevatorProduced == false) {
+            std::cout<<"Servicing request in Queue"<<std::endl;
+            context->setState(new Dispatching());
+            break;
+        }
+
+    }
+    delete this;
+}
+
+void Dispatching::handle(Scheduler *context) {
+    std::cout<<"Dispatching"<<std::endl;
+    //logic
+    std::cout<<"Dispatched"<<std::endl;
+    context->setState(new WaitingForInput());
+    delete this;
+}
+
+void AddingRequestToQueue::handle(Scheduler *context) {
+    std::cout<<"Adding request to queue..."<<std::endl;
+    std::cout<<"Added to queue"<<std::endl;
+    context->setState(new WaitingForInput());
+    delete this;
+}
+
+
+
+
+Scheduler::Scheduler() : empty(true), mtx(), cv(), currentState(new WaitingForInput()) {}
+
+void Scheduler::put(e_struct elevatorData, int id) {
 
 
     std::unique_lock<std::mutex> lock(mtx);	// releases when lock goes out of scope.
-    //while ( !empty ) cv.wait(lock);
 
-    std::ostringstream oss;
-
-    // Format time as hh:mm:ss.mmm
-    oss << std::setfill('0')
-        << std::setw(2) << elevatorData.datetime.tm_hour << ":"
-        << std::setw(2) << elevatorData.datetime.tm_min << ":"
-        << std::setw(2) << elevatorData.datetime.tm_sec;
-
-    // Format the rest of the string
-    oss << " " << elevatorData.floor_number << " "
-        << (elevatorData.floor_up_button ? "Up" : elevatorData.floor_down_button ? "Down" : "No Button");
-
-    std::string newLine = oss.str();
+    box.push_back(elevatorData);
 
 
-	//std::string newLine = "12:23:12 4 Up";
-    // Open the file in append mode
-    std::ofstream outputFile("../data/shared/shareddata.txt", std::ios_base::app);
-    if (!outputFile) {
-        std::cerr << "File could not be opened for appending." << std::endl;
-        return;
+    if (elevatorData.floor_up_button) {
+        upRequests.push_back(elevatorData.floor_number);
     }
 
-    // Write the new line to the end of the file
-    outputFile << newLine << std::endl;
+    if (elevatorData.floor_down_button) {
+        downRequests.push_back(elevatorData.floor_number);
+    }
 
-    outputFile.close();
+    if (id == 0) {
+        std::cout<<"input received from floor"<<std::endl;
 
+        if (elevatorOccupied) {
+
+            setState(new AddingRequestToQueue());
+
+        }
+
+
+        else {
+            setState(new Dispatching());
+        }
+
+
+    }
+
+    else {
+        std::cout<<"input received from floor"<<std::endl;
+        setState(new Calculation());
+    }
 
     empty = false;
+
     cv.notify_all();
 }
 
 e_struct Scheduler::get() {
     std::unique_lock<std::mutex> lock(mtx);	// releases when lock goes out of scope.
     while ( empty ) cv.wait(lock);
-    std::ifstream f("../data/shared/shareddata.txt");
-
-        // Check if the file is successfully opened
-    if (!f.is_open()) {
-        std::cerr << "Error opening the file!";
-		e_struct struct1;
-        return  struct1;
-    }
 
 
 
-    std::vector<std::string> lines;
-    std::string line;
-    std::string firstLine;
 
-    // Read the first line separately
-    if (std::getline(f, firstLine)) {
-        // Read all remaining lines
-        while (std::getline(f, line)) {
-            lines.push_back(line);
-        }
-    }
-    f.close();
-
-    // Write remaining lines back to the file
-    std::ofstream outputFile("../data/shared/shareddata.txt");
-    if (!outputFile) {
-        std::cerr << "File could not be opened for writing." << std::endl;
-		e_struct struct1;
-        return  struct1;
-    }
-
-    for (const auto& l : lines) {
-        outputFile << l << std::endl;
-    }
-    outputFile.close();
-
-
-    if (lines.empty()) {
+    e_struct data = box.front();
+    box.erase(box.begin());
+    if (box.empty()) {
         empty = true;
     }
-
-
-    e_struct data;
-    std::istringstream iss(firstLine);
-    std::string timeString;
-    std::string floorButton;
-
-    // Extract time, floor number, and button status from the string
-    iss >> timeString >> data.floor_number >> floorButton;
-
-
-    // Parse time (hh:mm:ss.mmm)
-    sscanf(timeString.c_str(), "%2d:%2d:%2d",
-           &data.datetime.tm_hour,
-           &data.datetime.tm_min,
-           &data.datetime.tm_sec);
-
-    // Set button status
-    data.floor_up_button = (floorButton == "Up");
-    data.floor_down_button = (floorButton == "Down");
-
-
     cv.notify_all();
     return data;
 }
 void Scheduler::operator()() {
-    while (1) {}
+    Scheduler* scheduler = new Scheduler();
+    while (1) {
+        scheduler->request();
+
+    }
+    delete scheduler;
 }
 
-/***
+
 int main(void) {
 
     Scheduler scheduler;
@@ -155,9 +157,9 @@ int main(void) {
     test3.floor_up_button = true;
     test3.floor_down_button = false;
 
-    scheduler.put(test1);
-    scheduler.put(test2);
-    scheduler.put(test3);
+    scheduler.put(test1, 0);
+    scheduler.put(test2, 0);
+    scheduler.put(test3, 0);
 
     e_struct outtest1 = scheduler.get();
     e_struct outtest2 =scheduler.get();
@@ -165,4 +167,4 @@ int main(void) {
     std::cout << "Success"; 
     return 1;
 }
-***/
+
