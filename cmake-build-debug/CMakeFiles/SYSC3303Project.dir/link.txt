@@ -1,3 +1,1 @@
-"C:\Users\jinan\Downloads\CLion 2023.2.2\bin\cmake\win\x64\bin\cmake.exe" -E rm -f CMakeFiles\SYSC3303Project.dir/objects.a
-C:\Users\jinan\DOWNLO~1\CLION2~1.2\bin\mingw\bin\ar.exe qc CMakeFiles\SYSC3303Project.dir/objects.a @CMakeFiles\SYSC3303Project.dir\objects1.rsp
-C:\Users\jinan\DOWNLO~1\CLION2~1.2\bin\mingw\bin\G__~1.EXE -g -Wl,--whole-archive CMakeFiles\SYSC3303Project.dir/objects.a -Wl,--no-whole-archive -o SYSC3303Project.exe -Wl,--out-implib,libSYSC3303Project.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\SYSC3303Project.dir\linkLibs.rsp
+/usr/bin/c++ -g CMakeFiles/SYSC3303Project.dir/src/main.cpp.o CMakeFiles/SYSC3303Project.dir/src/Elevator.cpp.o CMakeFiles/SYSC3303Project.dir/src/Scheduler.cpp.o CMakeFiles/SYSC3303Project.dir/src/Floor.cpp.o -o SYSC3303Project

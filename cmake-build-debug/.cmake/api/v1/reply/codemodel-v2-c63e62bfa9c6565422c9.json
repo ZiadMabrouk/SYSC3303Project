@@ -6,10 +6,10 @@
 			[
 				{
 					"build" : ".",
-					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
 					"minimumCMakeVersion" : 
 					{
-						"string" : "3.26.4"
+						"string" : "3.30"
 					},
 					"projectIndex" : 0,
 					"source" : ".",
@@ -39,7 +39,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "SYSC3303Project::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-SYSC3303Project-Debug-ffc18997f739331dda26.json",
+					"jsonFile" : "target-SYSC3303Project-Debug-0191feec404e21f8a2e5.json",
 					"name" : "SYSC3303Project",
 					"projectIndex" : 0
 				}
@@ -49,12 +49,12 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "C:/Users/jinan/CLionProjects/SYSC3303Project/cmake-build-debug",
-		"source" : "C:/Users/jinan/CLionProjects/SYSC3303Project"
+		"build" : "/home/user/Desktop/SYSC3303Project/cmake-build-debug",
+		"source" : "/home/user/Desktop/SYSC3303Project"
 	},
 	"version" : 
 	{
 		"major" : 2,
-		"minor" : 5
+		"minor" : 7
 	}
 }

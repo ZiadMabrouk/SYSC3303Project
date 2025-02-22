@@ -17,16 +17,16 @@
 #include <iomanip>
 #include <string>
 #include <fstream>
-
+// this method reads a line from the input file and converts it into e_struct then invokes put into the sheduler object.
 void Floor::readFile() {
-    std::ifstream file("../data/tests/SamTestCase.txt");
+    std::ifstream file("../data/tests/SamTestCase.txt");//open the file for reading
     e_struct elevatorData;
 
     std::string line, token;
-    while (std::getline(file, line)) {
+    while (std::getline(file, line)) { //read each from file and store into line
         std::stringstream ss(line);
 
-        std::getline(ss, token, ' ');
+        std::getline(ss, token, ' ');// read from ss(line but converted into stream) and store into token up until the first space.
         elevatorData.datetime = formatTime(token);
 
         std::getline(ss, token, ' ');
@@ -40,6 +40,13 @@ void Floor::readFile() {
             elevatorData.floor_up_button = false;
             elevatorData.floor_down_button = true;
         }
+
+        // Sam Alaboudi added this to for the new data type.
+        std::getline(ss, token, ' ');
+        elevatorData.car_to_floor_num = atoi(token.c_str());
+
+        //std::cout << elevatorData.car_to_floor_num <<"\n"; works well so the problem is with put or get
+
 
         scheduler.put(elevatorData);
     }
@@ -55,6 +62,7 @@ tm Floor::formatTime(const std::string& str) {
     return datetime;
 }
 
+// invokes the readFile() method.
 void Floor::operator()() {
     readFile();
 }
