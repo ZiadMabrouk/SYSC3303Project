@@ -27,7 +27,7 @@
         //
 
 
-Elevator::Elevator(Scheduler& object) : scheduler_object(object) {} // initializes the elevator class to object.
+Elevator::Elevator(Scheduler& object) : scheduler_object(object),  current_floor(0) {} // initializes the elevator class to object.
 
     void Elevator::operator()() { // defines how the Elevator object acts when called
         int i = 0;
@@ -40,24 +40,44 @@ Elevator::Elevator(Scheduler& object) : scheduler_object(object) {} // initializ
 
             // May or not need to circumvent this with a list ? or not just get this garbage working.
             // what kind of garbage do I want to put in a list?
-
+            //___________ROUGH CODE SEGMENT FOR I GET ZIADS CODE__________________
+            //            std::cout <<"Grab request " << "Floor Number:" << elevator_data.floor_number << std::endl;
+            std::cout <<"Grab request " << "Floor Number:" << elevator_data.floor_number << std::endl;
+            // current_floor = elevator_data->floor_number;
+            // add some time in between
+            // for now just use sleep funciton.
+            //elevator_data->arrival = 1;
+            std::cout << "Elevator has arrived at Floor Number:" << current_floor << " and the doors are open, waiting for button request"<< std::endl;
+            //scheduler_object.put(elevator_data,<elevator_id>); // put elevator_data back into the scheduler object. to update the scheduler on elevators arrival.
+            //
+            std::cout << "Elevator is now travelling to: " << elevator_data.car_to_floor_num << std::endl;
+            // current_floor = elevator_data->car_to_floor_num;
+            //elevator_data->data_arrival = 2;
+            std::cout << "Elevator has arrived at Floor Number:" << current_floor << " for drop off and the doors are now closed "<< std::endl;
+            //scheduler_object.put(elevator_data, <elevator_id>); //
+            //_______________________________________________________________________
             // This segment just prints whats taken may
             // before the second scheduler_object.get() call say someone arrived at floor 2 and wants to go to someohter floor
-            std::cout <<"Grab request " << "Floor Number:" << elevator_data.floor_number << std::endl;
             // Now Elevator subsystem needs to trigger one of its elevators' motor to go to this floor
 
             // once elevator arrives at this floor print a message saying the elevator arrived at this floor and the doors have now opened
-            std::cout << "Elevator has arrived at Floor Number:" << elevator_data.floor_number << " and the doors are open, waiting for button request"<< std::endl;
 
             // button request is also in the file, the only issue is two people can enter a floor and want to go to different places but ignore this
             // button should be read from the input file type? (double check for now assume this is the case) need to introduce new data type.
-            std::cout << "Elevator is now travelling to: " << elevator_data.car_to_floor_num << std::endl;
             //
 
             // maybe prior to the increment and some sort of condtional
             i++;//commenting this out changed nothing.
         }
     }
+//gets current floor
+short int Elevator::getCurrentFloor() {
+    return current_floor;
+}
+//sets current floor
+void Elevator::setCurrentFloor(short int floor) {
+    current_floor = floor;
+}
 
 //Let's start at by making sure how the elevator knows it reaches a floor.could be at the end of the line
 // so is their even floor tracking going on ? it really does not seem that way.
