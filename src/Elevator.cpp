@@ -26,7 +26,10 @@
     // 3. the single event list implementation. could create a vector or somesort of list.
         //
 
-
+#define ELEVATOR_ID 0
+#define NOT_ARRIVED 0
+#define ARRIVED_FOR_PICKUP 1
+#define ARRIVED_FOR_DROPOFF 2
 Elevator::Elevator(Scheduler& object) : scheduler_object(object),  current_floor(0) {} // initializes the elevator class to object.
 
     void Elevator::operator()() { // defines how the Elevator object acts when called
@@ -46,15 +49,15 @@ Elevator::Elevator(Scheduler& object) : scheduler_object(object),  current_floor
             // current_floor = elevator_data->floor_number;
             // add some time in between
             // for now just use sleep funciton.
-            //elevator_data->arrival = 1;
+            //elevator_data->arrival = ARRIVED_FOR_PICKUP;
             std::cout << "Elevator has arrived at Floor Number:" << current_floor << " and the doors are open, waiting for button request"<< std::endl;
-            //scheduler_object.put(elevator_data,<elevator_id>); // put elevator_data back into the scheduler object. to update the scheduler on elevators arrival.
+            //scheduler_object.put(elevator_data, ELEVATOR_ID); // put elevator_data back into the scheduler object. to update the scheduler on elevators arrival.
             //
             std::cout << "Elevator is now travelling to: " << elevator_data.car_to_floor_num << std::endl;
             // current_floor = elevator_data->car_to_floor_num;
-            //elevator_data->data_arrival = 2;
+            //elevator_data->data_arrival = ARRIVED_FOR_DROPOFF;
             std::cout << "Elevator has arrived at Floor Number:" << current_floor << " for drop off and the doors are now closed "<< std::endl;
-            //scheduler_object.put(elevator_data, <elevator_id>); //
+            //scheduler_object.put(elevator_data, ELEVATOR_ID); //
             //_______________________________________________________________________
             // This segment just prints whats taken may
             // before the second scheduler_object.get() call say someone arrived at floor 2 and wants to go to someohter floor
