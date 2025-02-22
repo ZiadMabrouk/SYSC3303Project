@@ -8,6 +8,10 @@
 #include <iostream>
 #include "Scheduler.h"
 #include "ElevatorDataTypes.h"
+#include <mutex>
+#include <condition_variable>
+#include <ctime>
+#include <fstream>
 //changed the shit out of this file.
 class Elevator
 {

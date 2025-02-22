@@ -13,6 +13,7 @@
 #include <condition_variable>
 #include "ElevatorDataTypes.h"
 #include "ElevatorSubsystem.h"
+#include <mutex>
 
 class Scheduler
 {
@@ -37,7 +38,7 @@ public:
 
     //method
     // choose out of the available cars which to assign to what floor request.
-    int selectElevatorCarCmd(int requestFloor)
+    int selectElevatorCarCmd(int requestFloor);
 
 
 
