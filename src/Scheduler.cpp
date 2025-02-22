@@ -15,16 +15,21 @@
 #include <iomanip>
 #include <string>
 #include <fstream>
+#include "ElevatorSubsystem.h"
 
-Scheduler::Scheduler() : empty(true), mtx(), cv() {}
+Scheduler::Scheduler() : empty(true), mtx(), cv() {} // proper definition of the Scheduler constructor
 
+
+// returns void takes in our elevator Data type, formats the data type into a string then, appends to output file
+// shareddata.txt and changes the status of scheduler instance from empty to not empty.
 void Scheduler::put(e_struct elevatorData) {
 
 
     std::unique_lock<std::mutex> lock(mtx);	// releases when lock goes out of scope.
     //while ( !empty ) cv.wait(lock);
 
-    std::ostringstream oss;
+    // This segment of the code  is the beginning of the string formating
+    std::ostringstream oss; //creates an oss stream which can be turned into a string
 
     // Format time as hh:mm:ss.mmm
     oss << std::setfill('0')
@@ -36,33 +41,46 @@ void Scheduler::put(e_struct elevatorData) {
     oss << " " << elevatorData.floor_number << " "
         << (elevatorData.floor_up_button ? "Up" : elevatorData.floor_down_button ? "Down" : "No Button");
 
-    std::string newLine = oss.str();
+    // What I added in should account for the floor number people are going into
+    oss << " " << elevatorData.car_to_floor_num;
 
+
+    std::string newLine = oss.str(); // formats the oss stream into a string
+
+    //end of the string formating
 
 	//std::string newLine = "12:23:12 4 Up";
     // Open the file in append mode
-    std::ofstream outputFile("../data/shared/shareddata.txt", std::ios_base::app);
+    std::ofstream outputFile("../data/shared/shareddata.txt", std::ios_base::app); // returns 1 on success
     if (!outputFile) {
         std::cerr << "File could not be opened for appending." << std::endl;
         return;
     }
 
-    // Write the new line to the end of the file
+    //std::cout << newLine <<"\n"; // check if this works, It does work so proble is with get.
+
+
+    // Write the new line(formatted string along with \n) to the end of the file
     outputFile << newLine << std::endl;
 
-    outputFile.close();
+    outputFile.close(); // closes the file
 
 
-    empty = false;
-    cv.notify_all();
+    empty = false; // changes the status of the scheduler to not be empty
+    cv.notify_all(); // notifies other threads that are in the blocked set to be able to be scheduled.
 }
+
+int Scheduler::selectElevatorCarCmd(int requestFloor) {
+    vector
+}
+
 
 e_struct Scheduler::get() {
     std::unique_lock<std::mutex> lock(mtx);	// releases when lock goes out of scope.
-    while ( empty ) cv.wait(lock);
+    while ( empty ) cv.wait(lock); // only go to next line if sched object is not empty.
     std::ifstream f("../data/shared/shareddata.txt");
 
-        // Check if the file is successfully opened
+        // Check if the file is successfully opened note if block only triggers if not opened.
     if (!f.is_open()) {
         std::cerr << "Error opening the file!";
 		e_struct struct1;
@@ -71,15 +89,15 @@ e_struct Scheduler::get() {
 
 
 
-    std::vector<std::string> lines;
+    std::vector<std::string> lines; // create a vector of strings.
     std::string line;
     std::string firstLine;
 
     // Read the first line separately
-    if (std::getline(f, firstLine)) {
+    if (std::getline(f, firstLine)) { //read from f and write into firsLine, getline returns f probably only on success
         // Read all remaining lines
         while (std::getline(f, line)) {
-            lines.push_back(line);
+            lines.push_back(line); // pushback line to the end of the vector
         }
     }
     f.close();
@@ -92,14 +110,15 @@ e_struct Scheduler::get() {
         return  struct1;
     }
 
+    // for every string in the vector
     for (const auto& l : lines) {
-        outputFile << l << std::endl;
+        outputFile << l << std::endl; // place them into the output file.
     }
     outputFile.close();
 
 
     if (lines.empty()) {
-        empty = true;
+        empty = true; // if the vector of strings is empty , the sched object will be modified to be empty.
     }
 
 
@@ -108,8 +127,10 @@ e_struct Scheduler::get() {
     std::string timeString;
     std::string floorButton;
 
-    // Extract time, floor number, and button status from the string
-    iss >> timeString >> data.floor_number >> floorButton;
+    // line I added
+
+    // Extract time, floor number, and button status from the firstLine string
+    iss >> timeString >> data.floor_number >> floorButton >> data.car_to_floor_num;
 
 
     // Parse time (hh:mm:ss.mmm)
