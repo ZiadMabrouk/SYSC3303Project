@@ -18,33 +18,6 @@
 #include <string>
 #include <fstream>
 
-void Floor::readFile() {
-    std::ifstream file("../data/tests/SamTestCase.txt");
-    e_struct elevatorData;
-
-    std::string line, token;
-    while (std::getline(file, line)) {
-        std::stringstream ss(line);
-
-        std::getline(ss, token, ' ');
-        elevatorData.datetime = formatTime(token);
-
-        std::getline(ss, token, ' ');
-        elevatorData.floor_number = atoi(token.c_str());
-
-        std::getline(ss, token, ' ');
-        if (token == "Up") {
-            elevatorData.floor_up_button = true;
-            elevatorData.floor_down_button = false;
-        } else if (token == "Down") {
-            elevatorData.floor_up_button = false;
-            elevatorData.floor_down_button = true;
-        }
-
-        scheduler.put(elevatorData);
-    }
-}
-
 tm Floor::formatTime(const std::string& str) {
 
     tm datetime{};
@@ -55,8 +28,31 @@ tm Floor::formatTime(const std::string& str) {
     return datetime;
 }
 
-void Floor::operator()() {
-    readFile();
+void Floor::operator()(const std::string& fileLocation) {
+    std::ifstream file(fileLocation);
+    elevatorData data;
+
+    std::string line, token;
+    while (std::getline(file, line)) {
+        std::stringstream ss(line);
+
+        std::getline(ss, token, ' ');
+        data.datetime = formatTime(token);
+
+        std::getline(ss, token, ' ');
+        data.floor_number = atoi(token.c_str());
+
+        std::getline(ss, token, ' ');
+        if (token == "Up") {
+            data.floor_up_button = true;
+            data.floor_down_button = false;
+        } else if (token == "Down") {
+            data.floor_up_button = false;
+            data.floor_down_button = true;
+        }
+
+        scheduler.put(data);
+    }
 }
 
 

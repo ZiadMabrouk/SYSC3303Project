@@ -8,21 +8,19 @@
 #include <mutex>
 #include <condition_variable>
 
+#include "ElevatorSubsystem.h"
 
 
 int main() {
     Scheduler scheduler;
-    Elevator  elevator(scheduler);
-
+    Elevator elevator(scheduler);
     Floor floor(scheduler);
 
-    std::thread floor_thread( floor);
-    std::thread elevatorthread(elevator);
+    std::thread floorThread( floor, "../data/tests/SamTestCase.txt");
+    std::thread elevatorThread(elevator);
 
+    floorThread.join();
+    elevatorThread.join();
 
-    floor_thread.join();
-    elevatorthread.join();
-
-    
     return 0;
 }

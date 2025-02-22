@@ -1,12 +1,9 @@
-//
-// Created by ziadm on 2025-01-30.
-//
-
 #ifndef FLOOR_H
 #define FLOOR_H
 
 #include "Scheduler.h"
 #include "ElevatorDataTypes.h"
+
 #include <chrono>
 #include <thread>
 #include <iostream>
@@ -24,11 +21,9 @@ private:
 public:
     explicit Floor(Scheduler& scheduler) : scheduler(scheduler) {}
 
-    void readFile();
-
     tm formatTime(const std::string& str);
 
-    void operator()();
+    void operator()(const std::string &fileLocation);
 };
 
 

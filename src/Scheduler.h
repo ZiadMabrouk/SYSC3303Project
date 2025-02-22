@@ -1,30 +1,26 @@
-//
-// Created by ziadm on 2025-01-30.
-//
-
 #ifndef SCHEDULER_H
 #define SCHEDULER_H
 
-#include <chrono>
-#include <thread>
-#include <iostream>
-#include <random>
 #include <mutex>
 #include <condition_variable>
+#include <queue>
+
 #include "ElevatorDataTypes.h"
+
 
 class Scheduler
 {
 private:
-    bool empty = true;	// The state of the box.
+    bool empty;	// The state of the box.
     std::mutex mtx;
     std::condition_variable cv;
+    std::queue<elevatorData> dataQueue;
 public:
-    Scheduler();	// Constructor
+    Scheduler() : empty(true) {}
 
-    void put(e_struct elevatorData);
+    void put(elevatorData data);
 
-    e_struct get();
+    elevatorData get();
 
     void operator()();
     
