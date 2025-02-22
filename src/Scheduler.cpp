@@ -15,7 +15,6 @@
 #include <iomanip>
 #include <string>
 #include <fstream>
-#include "ElevatorSubsystem.h"
 
 Scheduler::Scheduler() : empty(true), mtx(), cv() {} // proper definition of the Scheduler constructor
 
@@ -68,10 +67,6 @@ void Scheduler::put(e_struct elevatorData) {
 
     empty = false; // changes the status of the scheduler to not be empty
     cv.notify_all(); // notifies other threads that are in the blocked set to be able to be scheduled.
-}
-
-int Scheduler::selectElevatorCarCmd(int requestFloor) {
-    vector
 }
 
 

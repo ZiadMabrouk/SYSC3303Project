@@ -153,30 +153,6 @@ src/Elevator.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/SYSC3303Project.dir/build.make CMakeFiles/SYSC3303Project.dir/src/Elevator.cpp.s
 .PHONY : src/Elevator.cpp.s
 
-src/ElevatorSubsystem.o: src/ElevatorSubsystem.cpp.o
-.PHONY : src/ElevatorSubsystem.o
-
-# target to build an object file
-src/ElevatorSubsystem.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SYSC3303Project.dir/build.make CMakeFiles/SYSC3303Project.dir/src/ElevatorSubsystem.cpp.o
-.PHONY : src/ElevatorSubsystem.cpp.o
-
-src/ElevatorSubsystem.i: src/ElevatorSubsystem.cpp.i
-.PHONY : src/ElevatorSubsystem.i
-
-# target to preprocess a source file
-src/ElevatorSubsystem.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SYSC3303Project.dir/build.make CMakeFiles/SYSC3303Project.dir/src/ElevatorSubsystem.cpp.i
-.PHONY : src/ElevatorSubsystem.cpp.i
-
-src/ElevatorSubsystem.s: src/ElevatorSubsystem.cpp.s
-.PHONY : src/ElevatorSubsystem.s
-
-# target to generate assembly for a file
-src/ElevatorSubsystem.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SYSC3303Project.dir/build.make CMakeFiles/SYSC3303Project.dir/src/ElevatorSubsystem.cpp.s
-.PHONY : src/ElevatorSubsystem.cpp.s
-
 src/Floor.o: src/Floor.cpp.o
 .PHONY : src/Floor.o
 
@@ -261,9 +237,6 @@ help:
 	@echo "... src/Elevator.o"
 	@echo "... src/Elevator.i"
 	@echo "... src/Elevator.s"
-	@echo "... src/ElevatorSubsystem.o"
-	@echo "... src/ElevatorSubsystem.i"
-	@echo "... src/ElevatorSubsystem.s"
 	@echo "... src/Floor.o"
 	@echo "... src/Floor.i"
 	@echo "... src/Floor.s"

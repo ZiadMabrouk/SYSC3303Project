@@ -1,1 +1,1 @@
-/usr/bin/c++ -g CMakeFiles/SYSC3303Project.dir/src/main.cpp.o CMakeFiles/SYSC3303Project.dir/src/Elevator.cpp.o CMakeFiles/SYSC3303Project.dir/src/Scheduler.cpp.o CMakeFiles/SYSC3303Project.dir/src/Floor.cpp.o CMakeFiles/SYSC3303Project.dir/src/ElevatorSubsystem.cpp.o -o SYSC3303Project
+/usr/bin/c++ -g CMakeFiles/SYSC3303Project.dir/src/main.cpp.o CMakeFiles/SYSC3303Project.dir/src/Elevator.cpp.o CMakeFiles/SYSC3303Project.dir/src/Scheduler.cpp.o CMakeFiles/SYSC3303Project.dir/src/Floor.cpp.o -o SYSC3303Project

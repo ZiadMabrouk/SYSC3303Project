@@ -1,8 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/SYSC3303Project.dir/src/Elevator.cpp.o"
   "CMakeFiles/SYSC3303Project.dir/src/Elevator.cpp.o.d"
-  "CMakeFiles/SYSC3303Project.dir/src/ElevatorSubsystem.cpp.o"
-  "CMakeFiles/SYSC3303Project.dir/src/ElevatorSubsystem.cpp.o.d"
   "CMakeFiles/SYSC3303Project.dir/src/Floor.cpp.o"
   "CMakeFiles/SYSC3303Project.dir/src/Floor.cpp.o.d"
   "CMakeFiles/SYSC3303Project.dir/src/Scheduler.cpp.o"

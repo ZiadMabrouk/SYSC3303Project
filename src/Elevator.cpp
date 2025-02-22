@@ -1,10 +1,10 @@
 
-//#include "Elevator.h" included in ElevatorSubsytemm
+#include "Elevator.h"
 #include "ElevatorDataTypes.h"
 #include "Scheduler.h"
 #include <iostream>
 #include <fstream>
-#include "ElevatorSubsystem.h"
+
 
 // alright so where the fuck do I even start.
 // what I am supposed to add according to document?
@@ -26,55 +26,13 @@
     // 3. the single event list implementation. could create a vector or somesort of list.
         //
 
-//Going to change the shit out of this file.
-Elevator::Elevator(int id) : id(id),current_floor(1),direction_state("IDLE"), closed_door(true) {} // initializes the elevator class to object.
 
+Elevator::Elevator(Scheduler& object) : scheduler_object(object) {} // initializes the elevator class to object.
 
-void Elevator::moveToFloor(int stopfloor) {
-    std::lock_guard<std::mutex> lock(mtx);
-    std::cout << "Elevator " << id << " moving from " << current_floor << " to " << stopfloor << " \n";
-    current_floor = stopfloor;
-    direction_state = "IDLE";
-}
-
-// elevator operation which opens car door
-void Elevator::openDoors() {
-    std::lock_guard<std::mutex> lock(mtx);
-    closed_door = false;
-    std::cout << "Elevator " << id << "'s doors opened at floor " << current_floor << "\n";
-}
-
-// elevator operation which closes car door
-void Elevator::closeDoors() {
-    std::lock_guard<std::mutex> lock(mtx);
-    closed_door = true;
-    std::cout << "Elevator " << id << "'s doors at floor " << current_floor << "are now closed" << "\n";
-}
-
-// basic getter function
-int Elevator::getCurrentFloor() {
-    return current_floor;
-}
-
-
-std::string Elevator::getDirection() {
-    return direction_state;
-}
-
-int Elevator::getID() {
-    return id;
-}
-
-
-
-
-
-
-
-//void Elevator::operator()() { // defines how the Elevator object acts when called
-        //int i = 0; // still don't understand this at all
-        ///while (true) { // infinite loop
-           // elevator_data = scheduler_object.get(); // we are assigning elevator data to e_struct returned from the schdeduler object's method, which gets it from shared text
+    void Elevator::operator()() { // defines how the Elevator object acts when called
+        int i = 0;
+        while (true) { // infinite loop
+            elevator_data = scheduler_object.get(); // we are assigning elevator data to e_struct returned from the schdeduler object's method, which gets it from shared text
             // assuming this is scheduler input/request
 
             // take in elevator_data object. add pickups to one queue, and dropoff to another local queue. now is the gonna be one queue or multiple?
@@ -85,21 +43,21 @@ int Elevator::getID() {
 
             // This segment just prints whats taken may
             // before the second scheduler_object.get() call say someone arrived at floor 2 and wants to go to someohter floor
-            //std::cout <<"Grab request " << "Floor Number:" << elevator_data.floor_number << std::endl;
+            std::cout <<"Grab request " << "Floor Number:" << elevator_data.floor_number << std::endl;
             // Now Elevator subsystem needs to trigger one of its elevators' motor to go to this floor
 
             // once elevator arrives at this floor print a message saying the elevator arrived at this floor and the doors have now opened
-            //std::cout << "Elevator has arrived at Floor Number:" << elevator_data.floor_number << " and the doors are open, waiting for button request"<< std::endl;
+            std::cout << "Elevator has arrived at Floor Number:" << elevator_data.floor_number << " and the doors are open, waiting for button request"<< std::endl;
 
             // button request is also in the file, the only issue is two people can enter a floor and want to go to different places but ignore this
             // button should be read from the input file type? (double check for now assume this is the case) need to introduce new data type.
-            //std::cout << "Elevator is now travelling to: " << elevator_data.car_to_floor_num << std::endl;
+            std::cout << "Elevator is now travelling to: " << elevator_data.car_to_floor_num << std::endl;
             //
 
             // maybe prior to the increment and some sort of condtional
-            //i++;//commenting this out changed nothing.
-        //}
-    //}
+            i++;//commenting this out changed nothing.
+        }
+    }
 
 //Let's start at by making sure how the elevator knows it reaches a floor.could be at the end of the line
 // so is their even floor tracking going on ? it really does not seem that way.
