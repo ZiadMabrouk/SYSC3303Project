@@ -17,6 +17,7 @@ private:
     //some type of motor data type
     // elevator button could also be a short class or could have it read off the e_struct?
     short int current_floor;
+    //string state
 public:
     Elevator(Scheduler& object);	// Constructor undefined here.
 
@@ -26,7 +27,6 @@ public:
     short int getCurrentFloor(); // simply gets current floor of the elevator instance
 
     void setCurrentFloor(short int floor); // sets current floor of the elevator instance
-
 };
 
 

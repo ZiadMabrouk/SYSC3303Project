@@ -43,22 +43,29 @@ Elevator::Elevator(Scheduler& object) : scheduler_object(object),  current_floor
 
             // May or not need to circumvent this with a list ? or not just get this garbage working.
             // what kind of garbage do I want to put in a list?
+
+
             //___________ROUGH CODE SEGMENT FOR I GET ZIADS CODE__________________
             //            std::cout <<"Grab request " << "Floor Number:" << elevator_data.floor_number << std::endl;
             std::cout <<"Grab request " << "Floor Number:" << elevator_data.floor_number << std::endl;
-            // current_floor = elevator_data->floor_number;
+            current_floor = elevator_data.floor_number;
             // add some time in between
             // for now just use sleep funciton.
-            //elevator_data->arrival = ARRIVED_FOR_PICKUP;
+            elevator_data.arrived = ARRIVED_FOR_PICKUP;
             std::cout << "Elevator has arrived at Floor Number:" << current_floor << " and the doors are open, waiting for button request"<< std::endl;
-            //scheduler_object.put(elevator_data, ELEVATOR_ID); // put elevator_data back into the scheduler object. to update the scheduler on elevators arrival.
+            scheduler_object.put(elevator_data, ELEVATOR_ID); // put elevator_data back into the scheduler object. to update the scheduler on elevators arrival.
             //
-            std::cout << "Elevator is now travelling to: " << elevator_data.car_to_floor_num << std::endl;
-            // current_floor = elevator_data->car_to_floor_num;
-            //elevator_data->data_arrival = ARRIVED_FOR_DROPOFF;
+            std::cout << "Elevator is now travelling to: " << elevator_data.car_to_floor_number << std::endl;
+            current_floor = elevator_data.car_to_floor_number;
+            elevator_data.arrived = ARRIVED_FOR_DROPOFF;
             std::cout << "Elevator has arrived at Floor Number:" << current_floor << " for drop off and the doors are now closed "<< std::endl;
-            //scheduler_object.put(elevator_data, ELEVATOR_ID); //
+            scheduler_object.put(elevator_data, ELEVATOR_ID); //
             //_______________________________________________________________________
+
+
+
+
+
             // This segment just prints whats taken may
             // before the second scheduler_object.get() call say someone arrived at floor 2 and wants to go to someohter floor
             // Now Elevator subsystem needs to trigger one of its elevators' motor to go to this floor

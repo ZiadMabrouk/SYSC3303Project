@@ -8,10 +8,10 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/user/Desktop/SYSC3303Project/src/Elevator.cpp" "CMakeFiles/SYSC3303Project.dir/src/Elevator.cpp.o" "gcc" "CMakeFiles/SYSC3303Project.dir/src/Elevator.cpp.o.d"
-  "/home/user/Desktop/SYSC3303Project/src/Floor.cpp" "CMakeFiles/SYSC3303Project.dir/src/Floor.cpp.o" "gcc" "CMakeFiles/SYSC3303Project.dir/src/Floor.cpp.o.d"
-  "/home/user/Desktop/SYSC3303Project/src/Scheduler.cpp" "CMakeFiles/SYSC3303Project.dir/src/Scheduler.cpp.o" "gcc" "CMakeFiles/SYSC3303Project.dir/src/Scheduler.cpp.o.d"
-  "/home/user/Desktop/SYSC3303Project/src/main.cpp" "CMakeFiles/SYSC3303Project.dir/src/main.cpp.o" "gcc" "CMakeFiles/SYSC3303Project.dir/src/main.cpp.o.d"
+  "C:/Users/Daniel/CLionProjects/SYSC3303Project/src/Elevator.cpp" "CMakeFiles/SYSC3303Project.dir/src/Elevator.cpp.obj" "gcc" "CMakeFiles/SYSC3303Project.dir/src/Elevator.cpp.obj.d"
+  "C:/Users/Daniel/CLionProjects/SYSC3303Project/src/Floor.cpp" "CMakeFiles/SYSC3303Project.dir/src/Floor.cpp.obj" "gcc" "CMakeFiles/SYSC3303Project.dir/src/Floor.cpp.obj.d"
+  "C:/Users/Daniel/CLionProjects/SYSC3303Project/src/Scheduler.cpp" "CMakeFiles/SYSC3303Project.dir/src/Scheduler.cpp.obj" "gcc" "CMakeFiles/SYSC3303Project.dir/src/Scheduler.cpp.obj.d"
+  "C:/Users/Daniel/CLionProjects/SYSC3303Project/src/main.cpp" "CMakeFiles/SYSC3303Project.dir/src/main.cpp.obj" "gcc" "CMakeFiles/SYSC3303Project.dir/src/main.cpp.obj.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

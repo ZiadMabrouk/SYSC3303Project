@@ -43,12 +43,12 @@ void Floor::readFile() {
 
         // Sam Alaboudi added this to for the new data type.
         std::getline(ss, token, ' ');
-        elevatorData.car_to_floor_num = atoi(token.c_str());
+        elevatorData.car_to_floor_number = atoi(token.c_str());
 
         //std::cout << elevatorData.car_to_floor_num <<"\n"; works well so the problem is with put or get
 
 
-        scheduler.put(elevatorData);
+        scheduler.put(elevatorData,1);
     }
 }
 

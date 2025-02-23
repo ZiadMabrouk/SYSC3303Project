@@ -12,7 +12,7 @@ typedef struct ElevatorData {
     short int floor_number; // 2 bytes long (more than enough)
     bool floor_up_button; // The button to request an elevator to go up *Note: The top and bottom floors will only use one button
     bool floor_down_button; // The button to request an elevator to go down
-    bool arrived;
+    int arrived;
     short int car_to_floor_number;
 }e_struct;
 
