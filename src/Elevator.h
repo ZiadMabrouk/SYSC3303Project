@@ -13,16 +13,12 @@ class Elevator
 private:
     e_struct elevator_data;
     Scheduler& scheduler_object;
-    // iteration two additions
-    //some type of motor data type
-    // elevator button could also be a short class or could have it read off the e_struct?
     short int current_floor;
-    //string state
 public:
-    Elevator(Scheduler& object);	// Constructor undefined here.
+    Elevator(Scheduler& object);
 
 
-    void operator()(); // undefined
+    void operator()();
 
     short int getCurrentFloor(); // simply gets current floor of the elevator instance
 

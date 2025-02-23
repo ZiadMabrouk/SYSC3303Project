@@ -17,7 +17,7 @@
 #include <iomanip>
 #include <string>
 #include <fstream>
-// this method reads a line from the input file and converts it into e_struct then invokes put into the sheduler object.
+// this method reads a line from the input file and converts it into e_struct then invokes put into the scheduler object.
 void Floor::readFile() {
     std::ifstream file("../data/tests/SamTestCase.txt");//open the file for reading
     e_struct elevatorData;
@@ -41,12 +41,8 @@ void Floor::readFile() {
             elevatorData.floor_down_button = true;
         }
 
-        // Sam Alaboudi added this to for the new data type.
         std::getline(ss, token, ' ');
         elevatorData.car_to_floor_number = atoi(token.c_str());
-
-        //std::cout << elevatorData.car_to_floor_num <<"\n"; works well so the problem is with put or get
-
 
         scheduler.put(elevatorData,1);
     }

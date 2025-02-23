@@ -12,12 +12,12 @@
 
 int main() {
     Scheduler scheduler; // create a scheduler object
-    Elevator  elevator(scheduler); // create a elevator object with reference to the scheduler object on the first line
+    Elevator  elevator(scheduler); // create an elevator object with reference to the scheduler object on the first line
 
-    Floor floor(scheduler); //create a floor object with refernce to the scdueler object on the first line.
+    Floor floor(scheduler); //create a floor object with reference to the scheduler object on the first line.
 
     std::thread floor_thread( floor); // creates a floor thread
-    std::thread elevatorthread(elevator); // creates a elevator thread
+    std::thread elevatorthread(elevator); // creates an elevator thread
 
 
     floor_thread.join();

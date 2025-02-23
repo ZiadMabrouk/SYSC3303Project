@@ -22,7 +22,7 @@ class Floor {
 private:
     Scheduler& scheduler;
 public:
-    explicit Floor(Scheduler& scheduler) : scheduler(scheduler) {}
+    Floor(Scheduler& scheduler) : scheduler(scheduler) {}
 
     void readFile();
 
