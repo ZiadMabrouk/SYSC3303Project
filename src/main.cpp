@@ -11,7 +11,7 @@
 
 
 int main() {
-    Scheduler scheduler; // create a scheduler object
+    Scheduler scheduler(2); // create a scheduler object
     Elevator  elevator(scheduler); // create an elevator object with reference to the scheduler object on the first line
 
     Floor floor(scheduler); //create a floor object with reference to the scheduler object on the first line.
