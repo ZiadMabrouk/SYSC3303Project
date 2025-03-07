@@ -12,6 +12,20 @@
 #include <mutex>
 #include <condition_variable>
 #include "ElevatorDataTypes.h"
+#include "Datagram.h"
+#include <ctime>
+#include <iostream>
+#include <sstream>
+#include <iomanip>
+#include <string>
+#include <fstream>
+#include <iostream>        // For standard input-output
+#include <vector>          // For std::vector (used to store packet data)
+#include <stdexcept>       // For handling exceptions
+#include <sys/time.h>      // For setting socket timeout
+#include <sys/select.h>    // For using select() to monitor multiple clients
+#include <unistd.h>        // For close()
+#define SERVER_PORT 5000
 
 class Scheduler;
 class State {
@@ -49,24 +63,17 @@ public:
 class Scheduler
 {
 private:
-    bool empty = true;	// The state of the box.
-    std::mutex mtx;
-    std::condition_variable cv;
-    State* currentState = new WaitingForInput();
-    std::vector<short int> upRequests;
-    std::vector<short int> downRequests;
-    std::vector<e_struct> box;
+    State* currentState;
+    DatagramSocket sendSocket;
+    DatagramSocket receiveSocket;
+    fd_set readfds;
+    struct timeval timeout;
+
 
 public:
-    bool elevatorOccupied = false;
-    bool floorProduced = false;
-    bool elevatorProduced = false;
-    bool requestInList = false;
     Scheduler();	// Constructor
 
-    void put(e_struct elevatorData, int id);
-
-    e_struct get();
+    void handle();
 
     void operator()();
 
