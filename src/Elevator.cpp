@@ -212,7 +212,10 @@ void Elevator::handle() {
 
 void eWaitingForInput::handle(Elevator* context) {
     std::cout << "Elevator " << context->ID << "Waiting for input / IDLE" << std::endl;
-
+    while (context->myQueue.empty()) {}
+    std::cout << "Elevator " << context->ID << "Received Request" << std::endl;
+    context->setState(new ProcessRequest());
+    context->handle();
 }
 void ProcessRequest::handle(Elevator* context) {}
 void eCalculation::handle(Elevator* context) {}

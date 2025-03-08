@@ -79,13 +79,12 @@ private:
 
     eState* currentState;
     std::string threadName; // string name to be used in Ziads interface.
-    std::mutex mtx; // Mutex for myQueue and threads
-    std::condition_variable cv; // Condition variable for signaling
+
     e_struct received_e_struct_;
     e_struct send_e_struct_;
     Scheduler& scheduler_object;
     short int current_floor;
-    std::vector<short int> myQueue; // added a vector of short int
+
     Direction direction; // direction
 
     void calcdirection(short int floor); // for now only used by addtoQueue.
@@ -93,6 +92,12 @@ private:
     void travel(); // controls
 
 public:
+    void setState(eState* state) {
+        currentState = state;
+    }
+    std::mutex mtx; // Mutex for myQueue and threads
+    std::condition_variable cv; // Condition variable for signaling
+    std::vector<short int> myQueue; // added a vector of short int
     int ID; // elevator ID
     DatagramSocket sendSocket; // double check, this is a guess
     DatagramSocket receiveSocket; // double check, this is a guess
