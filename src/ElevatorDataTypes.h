@@ -13,16 +13,16 @@
 enum Direction { UP, DOWN, IDLE };
 
 typedef struct ElevatorData {
-    tm datetime; // datetime data type: https://www.w3schools.com/cpp/cpp_date.asp
-    short int floor_number; // 2 bytes long (more than enough)
-    bool floor_up_button; // The button to request an elevator to go up *Note: The top and bottom floors will only use one button
-    bool floor_down_button; // The button to request an elevator to go down
-    int arrived;
-    bool acknowledged;
-    short int car_to_floor_number;
-    int elevatorID; // ID for floor and elevator. Elevators being positive and Floors being negative.
-    int transmittedFloor;
-    Direction direction;
+    tm datetime{};  // Initialize to zero
+    short int floor_number = 0;
+    bool floor_up_button = false;
+    bool floor_down_button = false;
+    int arrived = 0;
+    bool acknowledged = false;
+    short int car_to_floor_number = 0;
+    int elevatorID = 0;
+    int transmittedFloor = 0;
+    Direction direction = Direction::IDLE;
     // Serialize struct into byte array
     void serialize(uint8_t* buffer) const {
         std::memcpy(buffer, this, sizeof(ElevatorData));

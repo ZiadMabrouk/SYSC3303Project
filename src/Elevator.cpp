@@ -34,6 +34,8 @@ void Elevator::doors() {
 }
 
 
+
+
 // AS OF NOW this only to be called by .addtoQueue Method so make sure to set to this private later
 // calculates direction issue with this, is that it needs the floo
 void Elevator::calcdirection(short int pfloor) {
@@ -49,6 +51,7 @@ void Elevator::calcdirection(short int pfloor) {
 
 //Im gonna assume that a floor lower than the elevators current floor, when
 void Elevator::addtoQueue(short int floor) {
+    std::lock_guard<std::mutex> lock(mtx);
     if (myQueue.empty())
     {// adds floor number, to queue.
         calcdirection(floor); // sets the direction
@@ -65,11 +68,14 @@ void Elevator::addtoQueue(short int floor) {
         std::sort(myQueue.begin(), myQueue.end(), std::greater<short int>());  // Descending order
 
     }
+    cv.notify_one();  // Notify waiting thread
+
 }
 
 // need to check if myQueue is empty at some point after a pop, so I can change its direction to IDLE
 //when traveling to next element.
 void Elevator::travel() {
+    std::lock_guard<std::mutex> lock(mtx);
     // this has to be called over and over again, until myQueue is empty. When I implement this functionality, somewhere it will always have to be running.
     while (myQueue.front() != current_floor) {
         std::this_thread::sleep_for(std::chrono::seconds(3));//change this to match excel
@@ -86,10 +92,12 @@ void Elevator::travel() {
         direction = IDLE;
         return;
     }
+    cv.notify_one();  // Notify waiting thread
+
 }
 
 
-// prints queue,
+// prints queue
 void Elevator::printQueue() {
     for (int num: myQueue) {
         std::cout << num << " ";
@@ -97,14 +105,56 @@ void Elevator::printQueue() {
     std::cout << std::endl;
 }
 
-// for now have a method
+// method so that I can print the direction now that it's enum.
+std::string Elevator::stringDirection(Direction direction) {
+    switch (direction) {
+        case UP: return "UP";
+        case DOWN: return "DOWN";
+        case IDLE: return "IDLE";
+        default: return "UNKNOWN";
+    }
+}
+
+// this thread will communicate will be receiving from scheduler.
+void Elevator::receiverThread() {
+    // does the name for receiving matter, when elevator is receiving can't it just be sheduler?
+    // have ziad check, my sockets, becuase what I did was scuffed.
+    while (true) { // may have to consider removing some of this logic into mainThread instead.
+        received_e_struct_ = scheduler_object.wait_and_receive_with_ack("Scheduler", receiveSocket, sendSocket);
+        // now pass it into add_queue, to update myQueue vector
+        addtoQueue(received_e_struct_.transmittedFloor); // only thread to call addtoQueue is this one, but myQueue itself will change
+        // as other threads exeucute
+
+        if (myID != received_e_struct_.elevatorID) {
+            myID = received_e_struct_.elevatorID; // sets the ID for the sender string name, should only do this once
+            threadName = "Elevator " + std::to_string(myID); // sets the threadName for the senderThread, to be able to properly communicate
+        }
+        std::cout << threadName << "'s current direction is " << stringDirection(direction) << std::endl;
+
+    }
+}
+
+void Elevator::mainThread() {
+    while (true){
+    // this will just have elevator move through floors until reaches it's destination.
+        travel(); // may need to modify to change e_struct elevators data?
+        send_e_struct_.elevatorID = myID;
+        send_e_struct_.transmittedFloor = current_floor;
+        send_e_struct_.direction = direction;
+    }
+}
+
+void Elevator::senderThread() {
+    scheduler_object.send_and_wait_for_ack(threadName, send_e_struct_,PORT + myID, sendSocket, receiveSocket);
+}
 
 
-Elevator::Elevator(Scheduler& object) : scheduler_object(object),  current_floor(0), direction("IDLE") {} // initializes the elevator class to object.
+Elevator::Elevator(Scheduler& object) : scheduler_object(object),  current_floor(0), direction(IDLE) , myID(23), sendSocket(object.getSendSocket()),receiveSocket(object.getReceiveSocket()),send_e_struct_{} {
+} // initializes the elevator class to object.
 
     void Elevator::operator()() { // defines how the Elevator object acts when called
-        int i = 1;
-        while (i) { // infinite loop
+        //int i = 1;
+        //while (true) { // infinite loop
             // elevator_data = scheduler_object.get();
             //
             // std::cout <<"Grab request " << "Floor Number:" << elevator_data.floor_number << std::endl;
@@ -120,15 +170,34 @@ Elevator::Elevator(Scheduler& object) : scheduler_object(object),  current_floor
             // std::cout << "Elevator has arrived at Floor Number:" << current_floor << " for drop off and the doors are now closed "<< std::endl;
             // scheduler_object.put(elevator_data, ELEVATOR_ID);
 
-            this->addtoQueue(3);
-            std::cout << "elevators current direction is " << direction << std::endl; //TODO: Change Direction to a string before passing it into a print
-            travel();
-            this->printQueue();
-            this->addtoQueue(1);
-            this->addtoQueue(16);
-            this->addtoQueue(2);
-            this->printQueue();
-            travel();
-            i--;
+            // e_struct that will tell me what to add into my queue.
+            //elevator_data = scheduler_object.wait_and_receive_with_ack("elevatorX", receiveSocket, sendSocket);
+
+            //void return type what I am sending the scheduler so my e_struct with my shit, which will just call somet
+
+            //elevator will have positive id and floor will be negative.
+
+            //scheduler_object.send_and_wait_for_ack("elevatorX", elevator_data,5000, sendSocket, receiveSocket);
+
+
+
+            //this->addtoQueue(3);
+            //std::cout << "elevators current direction is " << direction << std::endl; //Change Direction to a string before passing it into a print
+            //travel();
+            //this->printQueue();
+            //this->addtoQueue(1);
+            //this->addtoQueue(16);
+            //this->addtoQueue(2);
+            //this->printQueue();
+            //travel();
+            //i--;
+
+            std::thread t1(&Elevator::receiverThread, this);
+            std::thread t2(&Elevator::mainThread, this);
+            std::thread t3(&Elevator::senderThread, this);
+
+            t1.detach();
+            t2.detach();
+            t3.detach();
         }
-    }
+

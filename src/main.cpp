@@ -17,7 +17,7 @@ int main() {
     Floor floor(scheduler); //create a floor object with reference to the scheduler object on the first line.
 
     std::thread floor_thread( floor); // creates a floor thread
-    std::thread elevatorthread(elevator); // creates an elevator thread
+    std::thread elevatorthread(&Elevator::operator(),&elevator); // creates an elevator thread
     std::thread schedulerthread(&Scheduler::operator(), &scheduler);
 
 
