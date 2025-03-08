@@ -26,6 +26,7 @@
 #include <sys/select.h>    // For using select() to monitor multiple clients
 #include <unistd.h>        // For close()
 #define SERVER_PORT 5000
+#define TIMEOUT_SEC 5
 
 class Scheduler;
 class State {
@@ -70,12 +71,24 @@ private:
     struct timeval timeout;
 
 
+
 public:
+    e_struct receivedData;
+
     Scheduler();	// Constructor
+
+    fd_set &getReadfds();
+    struct timeval &getTimeout();
+    DatagramSocket& getReceiveSocket();
+    DatagramSocket& getSendSocket();
 
     void handle();
 
     void operator()();
+
+    e_struct wait_and_receive_with_ack(std::string name, DatagramSocket& iReceiveSocket, DatagramSocket& iSendSocket);
+    void send_and_wait_for_ack(std::string name, DatagramSocket& iReceiveSocket, DatagramSocket& iSendSocket);
+
 
 
     void setState(State* state) {

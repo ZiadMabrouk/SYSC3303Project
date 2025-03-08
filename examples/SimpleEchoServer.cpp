@@ -11,7 +11,7 @@
 #include <iostream>
 #include <string>
 #include <unistd.h>
-#include "Datagram.h"
+#include "../src/Datagram.h"
 
 #define PORT    5000
    

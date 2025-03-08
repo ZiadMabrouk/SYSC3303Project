@@ -49,6 +49,7 @@ private:
 // Creating socket file descriptor
 class DatagramSocket {
 public:
+	int socket_fd;
     DatagramSocket() : socket_fd(socket(AF_INET, SOCK_DGRAM, 0)) {
 	if ( socket_fd < 0 ) {
 	    throw std::runtime_error( std::string("socket creation failed: ") + strerror(errno) );
@@ -99,6 +100,6 @@ public:
     }
     
 private:
-    int socket_fd;
+
     static const size_t MAXLINE=1024;
 };
