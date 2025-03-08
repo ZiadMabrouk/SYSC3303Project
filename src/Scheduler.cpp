@@ -3,6 +3,7 @@
 //
 
 #include "Scheduler.h"
+#define PORT 8000
 
 
 Scheduler::Scheduler() :  sendSocket(), receiveSocket(SERVER_PORT), currentState(new WaitingForInput()) {
@@ -92,7 +93,7 @@ void Scheduler::handle() {
 
 void Calculation::handle(Scheduler *context) {
     std::cout<<"Calculating..."<<std::endl;
-    int elevatorID = context->calculateBestScore(context->receiveData.transmittedFloor, context->receiveData.direction);
+
     std::cout<<"Calculated"<<std::endl;
     context->setState(new WaitingForInput());
     context->handle();
@@ -120,6 +121,13 @@ void WaitingForInput::handle(Scheduler *context) {
 void Dispatching::handle(Scheduler *context) {
     std::cout<<"Dispatching"<<std::endl;
     //logic
+    int elevatorID = context->calculateBestScore(context->receiveData.transmittedFloor, context->receiveData.direction);
+    e_struct sendtoElevator;
+    sendtoElevator.elevatorID = elevatorID;
+    sendtoElevator.transmittedFloor = context->receiveData.transmittedFloor;
+    sendtoElevator.direction = context->receiveData.direction;
+    context->send_and_wait_for_ack("Scheduler", sendtoElevator, PORT+elevatorID, context->getReceiveSocket(), context->getSendSocket());
+
     std::cout<<"Dispatched"<<std::endl;
     context->setState(new WaitingForInput());
     context->handle();
