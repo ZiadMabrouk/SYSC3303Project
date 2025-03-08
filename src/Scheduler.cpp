@@ -35,7 +35,7 @@ void Scheduler::send_and_wait_for_ack(std::string name, e_struct sendingData, in
     sendingData.serialize(buffer.data());
 
 
-    DatagramPacket sendPacket(buffer, buffer.size(), InetAddress::getLocalHost(), htons(port));
+    DatagramPacket sendPacket(buffer, buffer.size(), InetAddress::getLocalHost(), port);
 
     fd_set readfds;
     struct timeval timeout; // Structure to store timeout duration
