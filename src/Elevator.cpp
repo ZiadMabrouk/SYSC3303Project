@@ -65,14 +65,15 @@ void Elevator::addtoQueue(short int floor) {
         std::sort(myQueue.begin(), myQueue.end(), std::greater<short int>());  // Descending order
 
     }
-    cv.notify_one();  // Notify waiting thread
+    cv.notify_all();  // Notify waiting thread
 
 }
 
 // need to check if myQueue is empty at some point after a pop, so I can change its direction to IDLE
 //when traveling to next element.
 void Elevator::travel() {
-    std::lock_guard<std::mutex> lock(mtx);
+    std::unique_lock<std::mutex> lock(mtx);
+    while (myQueue.empty()) cv.wait(lock);
     // this has to be called over and over again, until myQueue is empty. When I implement this functionality, somewhere it will always have to be running.
     while (myQueue.front() != current_floor) {
         std::this_thread::sleep_for(std::chrono::seconds(3));//change this to match excel
@@ -89,7 +90,7 @@ void Elevator::travel() {
         direction = IDLE;
         return;
     }
-    cv.notify_one();  // Notify waiting thread
+    cv.notify_all();  // Notify waiting thread
 
 }
 
