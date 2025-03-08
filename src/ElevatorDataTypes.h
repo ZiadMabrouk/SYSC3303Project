@@ -18,7 +18,7 @@ typedef struct ElevatorData {
     int arrived;
     bool acknowledged;
     short int car_to_floor_number;
-    int elevatorID;
+    int elevatorID; // ID for floor and elevator. Elevators being positive and Floors being negative.
     int transmittedFloor;
     Direction direction;
     // Serialize struct into byte array
