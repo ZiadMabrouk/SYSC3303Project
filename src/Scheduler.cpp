@@ -4,7 +4,6 @@
 
 #include "Scheduler.h"
 #define MAX_RETRIES 5
-#define PORT 8000
 
 
 Scheduler::Scheduler() :  sendSocket(), receiveSocket(SERVER_PORT), currentState(new WaitingForInput()) {

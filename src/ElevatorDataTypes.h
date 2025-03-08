@@ -8,6 +8,8 @@
 #include <cstdint>
 #include <cstring>
 
+#define PORT 5000
+
 enum Direction { UP, DOWN, IDLE };
 
 typedef struct ElevatorData {
