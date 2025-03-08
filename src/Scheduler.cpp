@@ -3,7 +3,6 @@
 //
 
 #include "Scheduler.h"
-#define MAX_RETRIES 5
 
 
 
