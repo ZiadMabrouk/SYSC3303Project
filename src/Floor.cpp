@@ -3,16 +3,30 @@
 //
 
 #include "Floor.h"
+#include <chrono>
+#include <thread>
 
+#include <random>
+#include <mutex>
+#include <condition_variable>
+#include "ElevatorDataTypes.h"
+#include "Scheduler.h"
+#include <ctime>
+#include <iostream>
+#include <sstream>
+#include <iomanip>
+#include <string>
+#include <fstream>
+// this method reads a line from the input file and converts it into e_struct then invokes put into the scheduler object.
 void Floor::readFile() {
-    std::ifstream file("../src/SamTestCase.txt");
+    std::ifstream file("../data/tests/SamTestCase.txt");//open the file for reading
     e_struct elevatorData;
 
     std::string line, token;
-    while (std::getline(file, line)) {
+    while (std::getline(file, line)) { //read each from file and store into line
         std::stringstream ss(line);
 
-        std::getline(ss, token, ' ');
+        std::getline(ss, token, ' ');// read from ss(line but converted into stream) and store into token up until the first space.
         elevatorData.datetime = formatTime(token);
 
         std::getline(ss, token, ' ');
@@ -27,7 +41,10 @@ void Floor::readFile() {
             elevatorData.floor_down_button = true;
         }
 
-        scheduler.put(elevatorData);
+        std::getline(ss, token, ' ');
+        elevatorData.car_to_floor_number = atoi(token.c_str());
+
+        scheduler.put(elevatorData,1);
     }
 }
 
@@ -41,6 +58,7 @@ tm Floor::formatTime(const std::string& str) {
     return datetime;
 }
 
+// invokes the readFile() method.
 void Floor::operator()() {
     readFile();
 }
