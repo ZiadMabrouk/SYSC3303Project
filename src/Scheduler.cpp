@@ -5,23 +5,27 @@
 #include "Scheduler.h"
 
 
-Scheduler::Scheduler() : readfds(), timeout(), sendSocket(), receiveSocket(SERVER_PORT), currentState(new WaitingForInput()) {
-    timeout.tv_sec = TIMEOUT_SEC;
-    timeout.tv_usec = 0;
-}
-
-fd_set &Scheduler::getReadfds() {
-    return readfds;
+Scheduler::Scheduler() :  sendSocket(), receiveSocket(SERVER_PORT), currentState(new WaitingForInput()) {
 
 }
+
+Scheduler::Scheduler(int num_elevators) :  currentState(new WaitingForInput()), numElevators(num_elevators) {
+
+    elevators.resize(numElevators);
+    for (int i = 0; i < numElevators; i++) {
+        elevators[i].elevatorID = i;
+        elevators[i].transmittedFloor = 1;
+        elevators[i].direction = IDLE;
+    }
+}
+
+
 
 DatagramSocket &Scheduler::getSendSocket() {
     return sendSocket;
 }
 
-struct timeval &Scheduler::getTimeout() {
-    return timeout;
-}
+
 
 DatagramSocket& Scheduler::getReceiveSocket() {
     return receiveSocket;
@@ -88,6 +92,7 @@ void Scheduler::handle() {
 
 void Calculation::handle(Scheduler *context) {
     std::cout<<"Calculating..."<<std::endl;
+    int elevatorID = context->calculateBestScore(context->receiveData.transmittedFloor, context->receiveData.direction);
     std::cout<<"Calculated"<<std::endl;
     context->setState(new WaitingForInput());
     context->handle();
@@ -99,7 +104,7 @@ void WaitingForInput::handle(Scheduler *context) {
     std::cout<<"Server: Waiting for input... "<<std::endl;
     //logic
 
-    context->receivedData = context->wait_and_receive_with_ack("Server", context->getReceiveSocket(), context->getSendSocket());
+    context->receiveData = context->wait_and_receive_with_ack("Server", context->getReceiveSocket(), context->getSendSocket());
 
     while (true) {
         FD_ZERO(&context->getReadfds());
@@ -123,6 +128,7 @@ void WaitingForInput::handle(Scheduler *context) {
     context->setState(new Dispatching());
     context->handle();
 
+    }
     delete this;
 }
 
@@ -147,9 +153,16 @@ void AddingRequestToQueue::handle(Scheduler *context) {
 
 
 
+
+
+
+
+
+
+
+
+
 void Scheduler::operator()() {
     handle();
 }
-
-
 

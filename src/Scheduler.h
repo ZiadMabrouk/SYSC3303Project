@@ -67,21 +67,23 @@ private:
     State* currentState;
     DatagramSocket sendSocket;
     DatagramSocket receiveSocket;
-    fd_set readfds;
-    struct timeval timeout;
-
-
-
+    std::vector<e_struct> elevators;
+    int numElevators;
 public:
-    e_struct receivedData;
-
+    bool elevatorOccupied = false;
+    bool floorProduced = false;
+    bool elevatorProduced = false;
+    bool requestInList = false;
+    e_struct sendData;
+    e_struct receiveData;
     Scheduler();	// Constructor
+    Scheduler(int num_elevators);
+
 
     fd_set &getReadfds();
     struct timeval &getTimeout();
     DatagramSocket& getReceiveSocket();
     DatagramSocket& getSendSocket();
-
     void handle();
 
     void operator()();
@@ -90,6 +92,9 @@ public:
     void send_and_wait_for_ack(std::string name, DatagramSocket& iReceiveSocket, DatagramSocket& iSendSocket);
 
 
+    int calculateScore(e_struct& elevator, int requestedFloor, Direction direction);
+
+    int calculateBestScore(int requestedFloor, Direction requestedDirection);
 
     void setState(State* state) {
         currentState = state;
