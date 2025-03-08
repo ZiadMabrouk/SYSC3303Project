@@ -56,7 +56,7 @@ private:
     std::vector<short int> upRequests;
     std::vector<short int> downRequests;
     std::vector<e_struct> box;
-    std::vector<elevatorMessage> elevators;
+    std::vector<e_struct> elevators;
     int numElevators;
 
 public:
@@ -64,6 +64,8 @@ public:
     bool floorProduced = false;
     bool elevatorProduced = false;
     bool requestInList = false;
+    e_struct sendData;
+    e_struct receiveData;
     Scheduler();	// Constructor
     Scheduler(int num_elevators);
 
@@ -73,7 +75,7 @@ public:
 
     void operator()();
 
-    int calculateScore(elevatorMessage& elevator, int requestedFloor, Direction direction);
+    int calculateScore(e_struct& elevator, int requestedFloor, Direction direction);
 
     int calculateBestScore(int requestedFloor, Direction requestedDirection);
 

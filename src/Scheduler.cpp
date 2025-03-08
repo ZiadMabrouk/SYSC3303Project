@@ -18,6 +18,7 @@
 
 void Calculation::handle(Scheduler *context) {
     std::cout<<"Calculating..."<<std::endl;
+    int elevatorID = context->calculateBestScore(context->receiveData.transmittedFloor, context->receiveData.direction);
     std::cout<<"Calculated"<<std::endl;
     context->setState(new WaitingForInput());
     delete this;
@@ -60,8 +61,8 @@ Scheduler::Scheduler(int num_elevators) : empty(true), mtx(), cv(), currentState
 
     elevators.resize(numElevators);
     for (int i = 0; i < numElevators; i++) {
-        elevators[i].elevatorNumber = i;
-        elevators[i].currentFloor = 1;
+        elevators[i].elevatorID = i;
+        elevators[i].transmittedFloor = 1;
         elevators[i].direction = IDLE;
     }
 }
@@ -70,8 +71,8 @@ Scheduler::Scheduler() : empty(true), mtx(), cv(), currentState(new WaitingForIn
     numElevators = 3;
     elevators.resize(numElevators);
     for (int i = 0; i < numElevators; i++) {
-        elevators[i].elevatorNumber = i;
-        elevators[i].currentFloor = 1;
+        elevators[i].elevatorID = i;
+        elevators[i].transmittedFloor = 1;
         elevators[i].direction = IDLE;
     }
 }
@@ -118,6 +119,7 @@ e_struct Scheduler::get() {
     cv.notify_all();
     return data;
 }
+
 void Scheduler::operator()() {
     Scheduler* scheduler = new Scheduler();
     while (1) {
@@ -127,9 +129,9 @@ void Scheduler::operator()() {
     delete scheduler;
 }
 
-int Scheduler::calculateScore(elevatorMessage& elevator, int requestedFloor, Direction requestedDirection) {
+int Scheduler::calculateScore(e_struct& elevator, int requestedFloor, Direction requestedDirection) {
     // Base score is absolute distance.
-    int score = std::abs(elevator.currentFloor - requestedFloor);
+    int score = std::abs(elevator.transmittedFloor - requestedFloor);
 
     // If elevator is idle, that's the whole score.
     if (elevator.direction == IDLE) {
@@ -137,7 +139,7 @@ int Scheduler::calculateScore(elevatorMessage& elevator, int requestedFloor, Dir
     }
 
     // If elevator is already heading in the right direction and will pass the requested floor, increase the score.
-    if ((elevator.direction == UP && requestedFloor > elevator.currentFloor && requestedDirection == UP) || (elevator.direction == DOWN && requestedFloor < elevator.currentFloor && requestedDirection == DOWN)) {
+    if ((elevator.direction == UP && requestedFloor > elevator.transmittedFloor && requestedDirection == UP) || (elevator.direction == DOWN && requestedFloor < elevator.transmittedFloor && requestedDirection == DOWN)) {
         return score * 2;
     }
 

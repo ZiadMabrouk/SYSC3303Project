@@ -17,13 +17,10 @@ typedef struct ElevatorData {
     bool floor_down_button; // The button to request an elevator to go down
     int arrived;
     short int car_to_floor_number;
-}e_struct;
-
-typedef struct ElevatorMessage {
-    int elevatorNumber;
-    int currentFloor;
+    int elevatorID;
+    int transmittedFloor;
     Direction direction;
-} elevatorMessage;
+}e_struct;
 
 
 #endif //ELEVATORDATATYPES_H
