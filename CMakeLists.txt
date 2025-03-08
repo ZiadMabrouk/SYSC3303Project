@@ -7,6 +7,7 @@ add_executable(SYSC3303Project src/main.cpp
         src/Elevator.cpp
         src/Elevator.h
         src/Scheduler.cpp
+        src/Datagram2.h
         src/Scheduler.h
         src/Floor.cpp
         src/Floor.h

@@ -52,7 +52,7 @@ e_struct Scheduler::wait_and_receive_with_ack(std::string name, DatagramSocket& 
 
     // Deserialize received struct
     e_struct receivedData = e_struct::deserialize(data.data());
-    std::cout << "Received Struct - ID: " << receivedData.id << std::endl;
+    std::cout << "Received Struct - ID: " << receivedData.elevatorID << std::endl;
     /**
      *Here you can use receivedData.(value) to access a member of the e_struct passed)
      *
@@ -106,29 +106,14 @@ void WaitingForInput::handle(Scheduler *context) {
 
     context->receiveData = context->wait_and_receive_with_ack("Server", context->getReceiveSocket(), context->getSendSocket());
 
-    while (true) {
-        FD_ZERO(&context->getReadfds());
-        FD_SET(context->getReceiveSocket().socket_fd, &context->getReadfds());
 
-        int activity = select(context->getReceiveSocket().socket_fd +1, &context->getReadfds(), NULL, NULL, &context->getTimeout());
-
-        if (activity <0) {
-            std::cerr << "Erro in selct()" <<std::endl;
-            exit(1);
-        }
-
-        else if (activity == 0) {
-            std::cerr << "Server timeout()" <<std::endl;
-        }
-
-    }
 
 
     std::cout<<"Input received... "<<std::endl;
     context->setState(new Dispatching());
     context->handle();
 
-    }
+
     delete this;
 }
 
@@ -150,6 +135,40 @@ void AddingRequestToQueue::handle(Scheduler *context) {
 }
 
 
+int Scheduler::calculateScore(e_struct& elevator, int requestedFloor, Direction requestedDirection) {
+    // Base score is absolute distance.
+    int score = std::abs(elevator.transmittedFloor - requestedFloor);
+
+    // If elevator is idle, that's the whole score.
+    if (elevator.direction == IDLE) {
+        return score;
+    }
+
+    // If elevator is already heading in the right direction and will pass the requested floor, increase the score.
+    if ((elevator.direction == UP && requestedFloor > elevator.transmittedFloor && requestedDirection == UP) || (elevator.direction == DOWN && requestedFloor < elevator.transmittedFloor && requestedDirection == DOWN)) {
+        return score * 2;
+    }
+
+    // Otherwise the elevator is moving away from the requested floor, or it's moving in the wrong direction
+    return score / 2;
+}
+
+// Determines the elevator with the best(biggest) score and returns its index.
+int Scheduler::calculateBestScore(int requestedFloor, Direction requestedDirection) {
+
+    int bestElevatorIndex = 0;
+    int bestScore = calculateScore(elevators[0], requestedFloor, requestedDirection);
+
+    for (int i = 1; i < numElevators; i++) {
+        int score = calculateScore(elevators[i], requestedFloor, requestedDirection);
+        if (score > bestScore) {
+            bestScore = score;
+            bestElevatorIndex = i;
+        }
+    }
+
+    return bestElevatorIndex;
+}
 
 
 

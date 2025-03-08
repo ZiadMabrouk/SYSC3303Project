@@ -3,6 +3,8 @@
  *
  * A work in progress.
  */
+#ifndef datagram_H
+#define datagram_H
 
 #include <cassert>
 #include <vector>
@@ -120,8 +122,12 @@ public:
 	/* Convert to milliseconds */
 	return timeout.tv_sec * 1000 + timeout.tv_usec / 1000;
     }
-    
+
+	int socket_fd;
 private:
-    int socket_fd;
+
     static const size_t MAXLINE=1024;
 };
+
+
+#endif //datagram_H

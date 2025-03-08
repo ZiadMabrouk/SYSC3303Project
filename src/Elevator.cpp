@@ -12,6 +12,15 @@
 // Scheduler can only do the above if car direction is set to "IDLE" aka stopped.
 // assume all caps will be used for direction data from scheduler.
 
+// 1 thread or 3 lol.
+// receiving data socket
+// travel there
+// send data to scheduler
+
+// What I have left.
+// communications
+//
+
 //gets current floor
 short int Elevator::getCurrentFloor() {
     return current_floor;
