@@ -81,9 +81,9 @@ private:
     std::string threadName; // string name to be used in Ziads interface.
 
     e_struct received_e_struct_;
-    e_struct send_e_struct_;
+
     Scheduler& scheduler_object;
-    short int current_floor;
+
 
     Direction direction; // direction
 
@@ -92,10 +92,15 @@ private:
     void travel(); // controls
 
 public:
+    e_struct send_e_struct_;
+    int arrived;
+    short int current_floor;
+    int floor_to_go_to;
     void setState(eState* state) {
         currentState = state;
     }
     std::mutex mtx; // Mutex for myQueue and threads
+    std::mutex mtx2; // Mutex for send_elevator_data and threads
     std::condition_variable cv; // Condition variable for signaling
     std::vector<short int> myQueue; // added a vector of short int
     int ID; // elevator ID

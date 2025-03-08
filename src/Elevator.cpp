@@ -77,6 +77,7 @@ void Elevator::addtoQueue(short int floor) {
 void Elevator::travel() {
     std::unique_lock<std::mutex> lock(mtx);
     while (myQueue.empty()) cv.wait(lock);
+
     // this has to be called over and over again, until myQueue is empty. When I implement this functionality, somewhere it will always have to be running.
     while (myQueue.front() != current_floor) {
         std::this_thread::sleep_for(std::chrono::seconds(3));//change this to match excel
@@ -138,10 +139,12 @@ void Elevator::receiverThread() {
 void Elevator::mainThread() {
     while (true){
     // this will just have elevator move through floors until reaches it's destination.
-        travel(); // may need to modify to change e_struct elevators data?
+        //travel(); // may need to modify to change e_struct elevators data?
+        std::lock_guard<std::mutex> lock(mtx2);
         send_e_struct_.elevatorID = ID;
         send_e_struct_.transmittedFloor = current_floor;
         send_e_struct_.direction = direction;
+        send_e_struct_.arrived = arrived;
     }
 }
 
@@ -150,7 +153,7 @@ void Elevator::senderThread() {
 }
 
 
-Elevator::Elevator(Scheduler& object, int elevatorID) : scheduler_object(object),  current_floor(1), direction(IDLE) , ID(elevatorID), sendSocket(), receiveSocket(PORT+elevatorID) {
+Elevator::Elevator(Scheduler& object, int elevatorID) : arrived(false), currentState(new eWaitingForInput), floor_to_go_to(), scheduler_object(object),  current_floor(1), direction(IDLE) , ID(elevatorID), sendSocket(), receiveSocket(PORT+elevatorID) {
 } // initializes the elevator class to object.
 
 void Elevator::operator()() { // defines how the Elevator object acts when called
@@ -212,21 +215,63 @@ void Elevator::handle() {
 
 void eWaitingForInput::handle(Elevator* context) {
     std::cout << "Elevator " << context->ID << "Waiting for input / IDLE" << std::endl;
-    while (context->myQueue.empty()) {}
+
+    if (true) { // lock scope
+        std::unique_lock<std::mutex> lock(context->mtx);
+        while (context->myQueue.empty()) context->cv.wait(lock);
+        context->floor_to_go_to = context->myQueue.front();
+    }
     std::cout << "Elevator " << context->ID << "Received Request" << std::endl;
-    context->setState(new ProcessRequest());
+    context->setState(new CruiseAndWait());
     context->handle();
 }
-void ProcessRequest::handle(Elevator* context) {}
-void eCalculation::handle(Elevator* context) {}
-void Accelerate::handle(Elevator* context) {}
-void CruiseAndWait::handle(Elevator* context) {}
-void Recalculate::handle(Elevator* context) {}
-void Deaccelerate::handle(Elevator* context) {}
+void ProcessRequest::handle(Elevator* context) {
+    std::cout << "Elevator " << context->ID << "Processed Request" << std::endl;
+    context->setState(new CruiseAndWait());
+    context->handle();
+
+}
+
+void CruiseAndWait::handle(Elevator* context) {
+    std::cout << "Moving..." << std::endl;
+    while (context->floor_to_go_to != context->current_floor) {
+        std::this_thread::sleep_for(std::chrono::seconds(3));//change this to match excel
+        context->current_floor += 1; // increments the floor by 1. (later worry about hard limit)
+        std::cout << "Just passed, floor: " << context->current_floor << std::endl;
+
+        //check if we receive a new request and need to change floor_to_go_to
+        int new_state = false;
+        std::unique_lock<std::mutex> lock(context->mtx);
+        if (context->myQueue.front() != context->floor_to_go_to) {
+            std::cout <<"New input received" << std::endl;
+            context->floor_to_go_to = context->myQueue.front();
+            new_state = true;
+
+        }
+        if (new_state == true) {
+            context->setState(new ProcessRequest());
+            context->handle();
+        }
+
+    }
+
+    context->setState(new Stopped());
+}
+
 void Stopped::handle(Elevator* context) {}
 void DoorsOpening::handle(Elevator* context) {}
 void DoorsOpened::handle(Elevator* context) {}
-void InformSchedulerOfArrival::handle(Elevator* context) {}
+void InformSchedulerOfArrival::handle(Elevator* context) {
+    std::cout << "Informing Scheduler of Arrival" << std::endl;
+    if (true) {
+        std::lock_guard<std::mutex> lock(context->mtx2);
+        context->send_e_struct_.arrived = true;
+    }
+    context->setState(new DoorsClosed());
+    context->handle();
+
+
+}
 void ClosingDoors::handle(Elevator* context) {}
 void DoorsClosed::handle(Elevator* context) {}
 
