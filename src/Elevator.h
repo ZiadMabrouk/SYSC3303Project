@@ -76,7 +76,7 @@ public:
 class Elevator
 {
 private:
-    int ID; // elevator ID
+
     eState* currentState;
     std::string threadName; // string name to be used in Ziads interface.
     std::mutex mtx; // Mutex for myQueue and threads
@@ -93,7 +93,7 @@ private:
     void travel(); // controls
 
 public:
-
+    int ID; // elevator ID
     DatagramSocket sendSocket; // double check, this is a guess
     DatagramSocket receiveSocket; // double check, this is a guess
 

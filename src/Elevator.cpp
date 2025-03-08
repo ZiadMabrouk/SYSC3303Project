@@ -33,6 +33,9 @@ void Elevator::doors() {
     std::cout << "Doors Closed. " << std::endl;
 }
 
+
+
+
 // AS OF NOW this only to be called by .addtoQueue Method so make sure to set to this private later
 // calculates direction issue with this, is that it needs the floo
 void Elevator::calcdirection(short int pfloor) {
@@ -208,6 +211,7 @@ void Elevator::handle() {
 }
 
 void eWaitingForInput::handle(Elevator* context) {
+    std::cout << "Elevator " << context->ID << "Waiting for input / IDLE" << std::endl;
 
 }
 void ProcessRequest::handle(Elevator* context) {}
