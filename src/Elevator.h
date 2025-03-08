@@ -28,32 +28,11 @@ class ProcessRequest : public eState {
 public:
     void handle(Elevator* context) override;
 };
-
-class eCalculation : public eState {
-public:
-    void handle(Elevator* context) override;
-};
-class Accelerate : public eState {
-public:
-    void handle(Elevator* context) override;
-};
 class CruiseAndWait : public eState {
 public:
     void handle(Elevator* context) override;
 };
-class Recalculate : public eState {
-public:
-    void handle(Elevator* context) override;
-};
-class Deaccelerate : public eState {
-public:
-    void handle(Elevator* context) override;
-};
 class Stopped : public eState {
-public:
-    void handle(Elevator* context) override;
-};
-class DoorsOpening : public eState {
 public:
     void handle(Elevator* context) override;
 };
@@ -62,10 +41,6 @@ public:
     void handle(Elevator* context) override;
 };
 class InformSchedulerOfArrival : public eState {
-public:
-    void handle(Elevator* context) override;
-};
-class ClosingDoors : public eState {
 public:
     void handle(Elevator* context) override;
 };
