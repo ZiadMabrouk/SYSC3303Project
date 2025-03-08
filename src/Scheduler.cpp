@@ -6,11 +6,9 @@
 #define MAX_RETRIES 5
 
 
-Scheduler::Scheduler() :  sendSocket(), receiveSocket(SERVER_PORT), currentState(new WaitingForInput()) {
 
-}
 
-Scheduler::Scheduler(int num_elevators) :  currentState(new WaitingForInput()), numElevators(num_elevators) {
+Scheduler::Scheduler(int num_elevators) :  sendData(), receiveData(),currentState(new WaitingForInput()), numElevators(num_elevators), sendSocket(),receiveSocket(SERVER_PORT) {
 
     elevators.resize(numElevators);
     for (int i = 0; i < numElevators; i++) {
