@@ -17,19 +17,25 @@ Scheduler::Scheduler(int num_elevators) :  sendData(), receiveData(),currentStat
     }
 }
 
+
+
 DatagramSocket &Scheduler::getSendSocket() {
     return sendSocket;
 }
+
+
 
 DatagramSocket& Scheduler::getReceiveSocket() {
     return receiveSocket;
 }
 
+
 void Scheduler::send_and_wait_for_ack(std::string name, e_struct sendingData, int port, DatagramSocket &iReceiveSocket, DatagramSocket &iSendSocket) {
     std::vector<uint8_t> buffer(sizeof(e_struct));  // Create a buffer for the struct
     sendingData.serialize(buffer.data());
 
-    DatagramPacket sendPacket(buffer, buffer.size(), InetAddress::getLocalHost(), htons(port));
+
+    DatagramPacket sendPacket(buffer, buffer.size(), InetAddress::getLocalHost(), port);
 
     fd_set readfds;
     struct timeval timeout; // Structure to store timeout duration
@@ -117,12 +123,20 @@ e_struct Scheduler::wait_and_receive_with_ack(std::string name, DatagramSocket& 
         exit(1);
     }
 
+
+
+
     return receivedData;
+
 }
+
+
 
 void Scheduler::handle() {
     currentState->handle(this);
 }
+
+
 
 void Calculation::handle(Scheduler *context) {
     std::cout<<"Calculating..."<<std::endl;
@@ -213,6 +227,17 @@ int Scheduler::calculateBestScore(int requestedFloor, Direction requestedDirecti
 
     return bestElevatorIndex;
 }
+
+
+
+
+
+
+
+
+
+
+
 
 void Scheduler::operator()() {
     handle();
