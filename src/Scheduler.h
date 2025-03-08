@@ -67,8 +67,7 @@ private:
     State* currentState;
     DatagramSocket sendSocket;
     DatagramSocket receiveSocket;
-    fd_set readfds;
-    struct timeval timeout;
+
 
 
 
@@ -87,7 +86,7 @@ public:
     void operator()();
 
     e_struct wait_and_receive_with_ack(std::string name, DatagramSocket& iReceiveSocket, DatagramSocket& iSendSocket);
-    void send_and_wait_for_ack(std::string name, DatagramSocket& iReceiveSocket, DatagramSocket& iSendSocket);
+    void send_and_wait_for_ack(std::string name, e_struct sendingData, int port, DatagramSocket &iReceiveSocket, DatagramSocket &iSendSocket);
 
 
 
