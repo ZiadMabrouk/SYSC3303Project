@@ -88,6 +88,7 @@ void Elevator::printQueue() {
     std::cout << std::endl;
 }
 
+// for now have a method
 
 
 Elevator::Elevator(Scheduler& object) : scheduler_object(object),  current_floor(0), direction("IDLE") {} // initializes the elevator class to object.

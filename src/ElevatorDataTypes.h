@@ -7,6 +7,15 @@
 #include <ctime>
 #include <iostream>
 
+enum Direction { UP, DOWN, IDLE };
+
+struct carData {
+    short int elevator;
+    std::string elevator_direction;
+    short int elevator
+};
+
+
 typedef struct ElevatorData {
     tm datetime; // datetime data type: https://www.w3schools.com/cpp/cpp_date.asp
     short int floor_number; // 2 bytes long (more than enough)

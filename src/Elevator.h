@@ -7,12 +7,9 @@
 
 #include "Scheduler.h"
 #include "ElevatorDataTypes.h"
+#include "Datagram2.h"
 
-// New struct to share with Daniel.
-struct carData {
-    short int floor_number;
-    std::string elevator_direction;
-};
+
 
 class Elevator
 {
@@ -41,7 +38,12 @@ public:
 
     void printQueue(); // should print the current queue.
 
-    void doors();
+    void doors(); // time taken for an elevator to both open and close its doors.
+
+    DatagramPacket sendSocket(); //
+
+    DatagramPacket receiveSocket(); //
+
 };
 
 
