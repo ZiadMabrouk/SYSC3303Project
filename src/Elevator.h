@@ -76,37 +76,33 @@ public:
 class Elevator
 {
 private:
+    int ID; // elevator ID
+    eState* currentState;
+    std::string threadName; // string name to be used in Ziads interface.
+    std::mutex mtx; // Mutex for myQueue and threads
+    std::condition_variable cv; // Condition variable for signaling
     e_struct received_e_struct_;
     e_struct send_e_struct_;
     Scheduler& scheduler_object;
     short int current_floor;
-    // added a vector of short int
-    std::vector<short int> myQueue;
-    // direction
-    Direction direction;
-    // add in new struct to pass to daniel? potentially
+    std::vector<short int> myQueue; // added a vector of short int
+    Direction direction; // direction
 
     void calcdirection(short int floor); // for now only used by addtoQueue.
 
     void travel(); // controls
 
-    // elevator ID
-    int myID;
-
-    // string name to be used in Ziads interface.
-    std::string threadName;
-
-    std::mutex mtx; // Mutex for myQueue and threads
-    std::condition_variable cv;         // Condition variable for signaling
-
-
-
 public:
+
+    DatagramSocket sendSocket; // double check, this is a guess
+    DatagramSocket receiveSocket; // double check, this is a guess
+
     // modified consructor so the scheduler
     Elevator(Scheduler &object, int elevatorID);
 
-
     void operator()();
+
+    std::vector<short int> getQueue();
 
     short int getCurrentFloor(); // simply gets current floor of the elevator instance
 
@@ -116,11 +112,9 @@ public:
 
     std::string stringDirection(Direction direction);
 
+    void handle();
+
     void doors(); // time taken for an elevator to both open and close its doors.
-
-    DatagramSocket sendSocket; // double check, this is a guess
-
-    DatagramSocket receiveSocket; // double check, this is a guess
 
     void receiverThread();
 
