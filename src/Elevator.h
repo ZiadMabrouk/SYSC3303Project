@@ -20,7 +20,7 @@ private:
     // added a vector of short int
     std::vector<short int> myQueue;
     // direction
-    std::string direction;
+    Direction direction;
     // add in new struct to pass to daniel? potentially
 
     void calcdirection(short int floor); // for now only used by addtoQueue.

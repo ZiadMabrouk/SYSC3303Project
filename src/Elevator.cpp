@@ -38,10 +38,10 @@ void Elevator::doors() {
 // calculates direction issue with this, is that it needs the floo
 void Elevator::calcdirection(short int pfloor) {
     if (current_floor < pfloor)
-        direction = "UP";
+        direction = UP;
 
     else if (current_floor > pfloor){
-        direction = "DOWN";
+        direction = DOWN;
     }
     // don't account for the case where they are equal, because when travel is called this will get auto detected and accounted for.
     //std::cerr << "Did not pass in floor number, or at least not one that exists in this building!Try again" << std::endl;
@@ -54,12 +54,12 @@ void Elevator::addtoQueue(short int floor) {
         calcdirection(floor); // sets the direction
         myQueue.push_back(floor); // edge cases
     }
-    else if (direction == "UP") //this part sorts the vector ascending order(up direction).
+    else if (direction == UP) //this part sorts the vector ascending order(up direction).
     {
         myQueue.push_back(floor);
         std::sort(myQueue.begin(), myQueue.end());
     }
-    else if (direction == "DOWN")//this part sorts the vector in descending order(down direction).
+    else if (direction == DOWN)//this part sorts the vector in descending order(down direction).
     {
         myQueue.push_back(floor);
         std::sort(myQueue.begin(), myQueue.end(), std::greater<short int>());  // Descending order
@@ -83,7 +83,7 @@ void Elevator::travel() {
     //could have iterator function change the direction state to idle, give myQueue is empty.
     if (myQueue.empty()) {
         std::cout << "Elevator Queue is empty, direction is now IDLE" << std::endl;
-        direction = "IDLE";
+        direction = IDLE;
         return;
     }
 }
@@ -121,7 +121,7 @@ Elevator::Elevator(Scheduler& object) : scheduler_object(object),  current_floor
             // scheduler_object.put(elevator_data, ELEVATOR_ID);
 
             this->addtoQueue(3);
-            std::cout << "elevators current direction is " << direction << std::endl;
+            std::cout << "elevators current direction is " << direction << std::endl; //TODO: Change Direction to a string before passing it into a print
             travel();
             this->printQueue();
             this->addtoQueue(1);
