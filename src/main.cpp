@@ -18,11 +18,12 @@ int main() {
 
     std::thread floor_thread( floor); // creates a floor thread
     std::thread elevatorthread(elevator); // creates an elevator thread
+    std::thread schedulerthread(&Scheduler::operator(), &scheduler);
 
 
     floor_thread.join();
     elevatorthread.join();
-
+    schedulerthread.join();
     
     return 0;
 }
