@@ -77,12 +77,8 @@ public:
     bool requestInList = false;
     e_struct sendData;
     e_struct receiveData;
-    Scheduler();	// Constructor
-    Scheduler(int num_elevators);
+    explicit Scheduler(int num_elevators);
 
-
-    fd_set &getReadfds();
-    struct timeval &getTimeout();
     DatagramSocket& getReceiveSocket();
     DatagramSocket& getSendSocket();
     void handle();
