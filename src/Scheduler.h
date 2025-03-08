@@ -67,9 +67,9 @@ private:
     State* currentState;
     DatagramSocket sendSocket;
     DatagramSocket receiveSocket;
-    std::vector<e_struct> elevators;
     int numElevators;
 public:
+    std::vector<e_struct> elevators;
     bool elevatorOccupied = false;
     bool floorProduced = false;
     bool elevatorProduced = false;

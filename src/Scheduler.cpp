@@ -141,7 +141,9 @@ void Scheduler::handle() {
 
 void Calculation::handle(Scheduler *context) {
     std::cout<<"Calculating..."<<std::endl;
-
+    int index = context->receiveData.elevatorID;
+    context->elevators[index].direction = context->receiveData.direction;
+    context->elevators[index].transmittedFloor = context->receiveData.transmittedFloor;
     std::cout<<"Calculated"<<std::endl;
     context->setState(new WaitingForInput());
     context->handle();
@@ -154,14 +156,15 @@ void WaitingForInput::handle(Scheduler *context) {
     //logic
 
     context->receiveData = context->wait_and_receive_with_ack("Server", context->getReceiveSocket(), context->getSendSocket());
-
-
+    if (context->receiveData.elevatorID < 0) {
+        context->setState(new Dispatching());
+    } else {
+        context->setState(new Calculation());
+    }
 
 
     std::cout<<"Input received... "<<std::endl;
-    context->setState(new Dispatching());
     context->handle();
-
 
     delete this;
 }
