@@ -149,7 +149,7 @@ void Elevator::senderThread() {
 }
 
 
-Elevator::Elevator(Scheduler& object) : scheduler_object(object),  current_floor(0), direction(IDLE) , myID(23), sendSocket(object.getSendSocket()),receiveSocket(object.getReceiveSocket()),send_e_struct_{} {
+Elevator::Elevator(Scheduler& object, int elevatorID) : scheduler_object(object),  current_floor(1), direction(IDLE) , myID(elevatorID), sendSocket(), receiveSocket(PORT+elevatorID) {
 } // initializes the elevator class to object.
 
     void Elevator::operator()() { // defines how the Elevator object acts when called

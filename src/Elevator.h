@@ -103,7 +103,7 @@ private:
 
 public:
     // modified consructor so the scheduler
-    Elevator(Scheduler& object);
+    Elevator(Scheduler &object, int elevatorID);
 
 
     void operator()();
