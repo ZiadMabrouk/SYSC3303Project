@@ -41,13 +41,31 @@ void Elevator::addtoQueue(short int floor) {
     }
     else if (direction == UP) //this part sorts the vector ascending order(up direction).
     {
-        myQueue.push_back(floor);
-        std::sort(myQueue.begin(), myQueue.end());
+        bool inQueue = false;
+        for (auto i : myQueue) {
+            if (i == floor) {
+                inQueue = true;
+            }
+        }
+
+        if (!inQueue) {
+            myQueue.push_back(floor);
+            std::sort(myQueue.begin(), myQueue.end());
+        }
+
     }
     else if (direction == DOWN)//this part sorts the vector in descending order(down direction).
     {
-        myQueue.push_back(floor);
-        std::sort(myQueue.begin(), myQueue.end(), std::greater<short int>());  // Descending order
+        bool inQueue = false;
+        for (auto i : myQueue) {
+            if (i == floor) {
+                inQueue = true;
+            }
+        }
+        if (!inQueue) {
+            myQueue.push_back(floor);
+            std::sort(myQueue.begin(), myQueue.end(), std::greater<short int>());  // Descending order
+        }
 
     }
     cv.notify_all();  // Notify waiting thread
@@ -107,8 +125,8 @@ void Elevator::receiverThread() {
         received_e_struct_ = wait_and_receive_with_ack("Elevator", receiveSocket, sendSocket);
         // now pass it into add_queue, to update myQueue vector
         addtoQueue(received_e_struct_.transmittedFloor); // only thread to call addtoQueue is this one, but myQueue itself will change
-        // as other threads exeucute
-
+        // as other threads
+        printQueue();
         std::cout << "Elevator " << ID << "'s current direction is " << stringDirection(direction) << std::endl;
 
     }

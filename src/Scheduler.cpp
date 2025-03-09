@@ -174,10 +174,11 @@ void Dispatching::handle(Scheduler *context) {
     //logic
     int elevatorID = context->calculateBestScore(context->receiveData.transmittedFloor, context->receiveData.direction);
     e_struct sendtoElevator;
-    sendtoElevator.elevatorID = elevatorID;
+    sendtoElevator.elevatorID = elevatorID+1;
+    std::cout << "Elevator ID: " << sendtoElevator.elevatorID << std::endl;
     sendtoElevator.transmittedFloor = context->receiveData.floor_number;
     sendtoElevator.direction = context->receiveData.direction;
-    context->send_and_wait_for_ack("Scheduler", sendtoElevator, PORT+1, context->getReceiveSocket(), context->getSendSocket());
+    context->send_and_wait_for_ack("Scheduler", sendtoElevator, PORT+sendtoElevator.elevatorID, context->getReceiveSocket(), context->getSendSocket());
 
     std::cout<<"Dispatched"<<std::endl;
     context->setState(new WaitingForInput());
