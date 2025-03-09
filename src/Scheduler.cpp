@@ -155,6 +155,7 @@ void WaitingForInput::handle(Scheduler *context) {
     //logic
 
     context->receiveData = context->wait_and_receive_with_ack("Server", context->getReceiveSocket(), context->getSendSocket());
+    std::cout << "Floor Number: " << context->receiveData.floor_number << std::endl;
     if (context->receiveData.elevatorID < 0) {
         context->setState(new Dispatching());
     } else {
@@ -174,9 +175,9 @@ void Dispatching::handle(Scheduler *context) {
     int elevatorID = context->calculateBestScore(context->receiveData.transmittedFloor, context->receiveData.direction);
     e_struct sendtoElevator;
     sendtoElevator.elevatorID = elevatorID;
-    sendtoElevator.transmittedFloor = context->receiveData.transmittedFloor;
+    sendtoElevator.transmittedFloor = context->receiveData.floor_number;
     sendtoElevator.direction = context->receiveData.direction;
-    context->send_and_wait_for_ack("Scheduler", sendtoElevator, PORT+elevatorID, context->getReceiveSocket(), context->getSendSocket());
+    context->send_and_wait_for_ack("Scheduler", sendtoElevator, PORT+1, context->getReceiveSocket(), context->getSendSocket());
 
     std::cout<<"Dispatched"<<std::endl;
     context->setState(new WaitingForInput());
@@ -228,18 +229,8 @@ int Scheduler::calculateBestScore(int requestedFloor, Direction requestedDirecti
     return bestElevatorIndex;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-void Scheduler::operator()() {
-    handle();
+int main() {
+    Scheduler scheduler(1);
+    scheduler.handle();
 }
 

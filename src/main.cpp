@@ -12,7 +12,7 @@
 
 int main() {
     Scheduler scheduler(2); // create a scheduler object
-    Elevator  elevator(scheduler); // create an elevator object with reference to the scheduler object on the first line
+    Elevator  elevator(scheduler, 1); // create an elevator object with reference to the scheduler object on the first line
 
     Floor floor(scheduler); //create a floor object with reference to the scheduler object on the first line.
 

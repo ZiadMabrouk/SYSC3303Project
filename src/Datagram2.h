@@ -9,10 +9,13 @@
 #include <cassert>
 #include <vector>
 #include <exception>
+#include <stdexcept>
 #include <cstring>
 #include <sys/errno.h>
 #include <sys/types.h> 
-#include <sys/socket.h> 
+#include <sys/socket.h>
+#include <unistd.h>
+#include <string>
 #include <arpa/inet.h> 
 #include <netinet/in.h> 
 

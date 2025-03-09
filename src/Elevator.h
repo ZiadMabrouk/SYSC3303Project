@@ -11,6 +11,8 @@
 #include <mutex>
 #include <condition_variable>
 #include <thread>
+#include <algorithm>
+
 class Elevator;
 class eState {
 public:
@@ -53,14 +55,6 @@ class Elevator
 private:
 
     eState* currentState;
-    std::string threadName; // string name to be used in Ziads interface.
-
-    e_struct received_e_struct_;
-
-    Scheduler& scheduler_object;
-
-
-    Direction direction; // direction
 
     void calcdirection(short int floor); // for now only used by addtoQueue.
 
@@ -71,9 +65,10 @@ public:
     int arrived;
     short int current_floor;
     int floor_to_go_to;
-    void setState(eState* state) {
-        currentState = state;
-    }
+    Direction direction; // direction
+    std::string threadName; // string name to be used in Ziads interface.
+    e_struct received_e_struct_;
+
     std::mutex mtx; // Mutex for myQueue and threads
     std::mutex mtx2; // Mutex for send_elevator_data and threads
     std::condition_variable cv; // Condition variable for signaling
@@ -83,7 +78,7 @@ public:
     DatagramSocket receiveSocket; // double check, this is a guess
 
     // modified consructor so the scheduler
-    Elevator(Scheduler &object, int elevatorID);
+    Elevator(int elevatorID);
 
     void operator()();
 
@@ -95,9 +90,18 @@ public:
 
     void printQueue(); // should print the current queue.
 
+    void setState(eState* state) {
+        currentState = state;
+    }
+
     std::string stringDirection(Direction direction);
 
     void handle();
+
+    void send_and_wait_for_ack(std::string name, e_struct sendingData, int port, DatagramSocket &iReceiveSocket,
+                               DatagramSocket &iSendSocket);
+
+    e_struct wait_and_receive_with_ack(std::string name, DatagramSocket &iReceiveSocket, DatagramSocket &iSendSocket);
 
     void doors(); // time taken for an elevator to both open and close its doors.
 

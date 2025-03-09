@@ -4,10 +4,6 @@
 #include <iostream>
 #include <fstream>
 
-#define ELEVATOR_ID 0
-#define NOT_ARRIVED 0
-#define ARRIVED_FOR_PICKUP 1
-#define ARRIVED_FOR_DROPOFF 2
 // Assuming scheduler will not send me a floor that is lower than my current floor, if I am moving in the UP direction
 // Scheduler can only do the above if car direction is set to "IDLE" aka stopped.
 // assume all caps will be used for direction data from scheduler.
@@ -20,21 +16,6 @@
 // What I have left.
 // communications
 //
-
-//gets current floor
-short int Elevator::getCurrentFloor() {
-    return current_floor;
-}
-
-// opens and closes doors and simulate live data from excel sheet.
-void Elevator::doors() {
-    std::cout << "Doors Open. " << std::endl;
-    std::this_thread::sleep_for(std::chrono::seconds(1)); //change this to exact value later
-    std::cout << "Doors Closed. " << std::endl;
-}
-
-
-
 
 // AS OF NOW this only to be called by .addtoQueue Method so make sure to set to this private later
 // calculates direction issue with this, is that it needs the floo
@@ -54,6 +35,7 @@ void Elevator::addtoQueue(short int floor) {
     std::lock_guard<std::mutex> lock(mtx);
     if (myQueue.empty())
     {// adds floor number, to queue.
+        std::cout << " adding floor " << floor << std::endl;
         calcdirection(floor); // sets the direction
         myQueue.push_back(floor); // edge cases
     }
@@ -74,6 +56,7 @@ void Elevator::addtoQueue(short int floor) {
 
 // need to check if myQueue is empty at some point after a pop, so I can change its direction to IDLE
 //when traveling to next element.
+/**
 void Elevator::travel() {
     std::unique_lock<std::mutex> lock(mtx);
     while (myQueue.empty()) cv.wait(lock);
@@ -96,7 +79,7 @@ void Elevator::travel() {
     cv.notify_all();  // Notify waiting thread
 
 }
-
+**/
 
 // prints queue
 void Elevator::printQueue() {
@@ -121,20 +104,16 @@ void Elevator::receiverThread() {
     // does the name for receiving matter, when elevator is receiving can't it just be sheduler?
     // have ziad check, my sockets, becuase what I did was scuffed.
     while (true) { // may have to consider removing some of this logic into mainThread instead.
-        received_e_struct_ = scheduler_object.wait_and_receive_with_ack("Scheduler", receiveSocket, sendSocket);
+        received_e_struct_ = wait_and_receive_with_ack("Elevator", receiveSocket, sendSocket);
         // now pass it into add_queue, to update myQueue vector
         addtoQueue(received_e_struct_.transmittedFloor); // only thread to call addtoQueue is this one, but myQueue itself will change
         // as other threads exeucute
 
-        if (ID != received_e_struct_.elevatorID) {
-            ID = received_e_struct_.elevatorID; // sets the ID for the sender string name, should only do this once
-            threadName = "Elevator " + std::to_string(ID); // sets the threadName for the senderThread, to be able to properly communicate
-        }
-        std::cout << threadName << "'s current direction is " << stringDirection(direction) << std::endl;
+        std::cout << "Elevator " << ID << "'s current direction is " << stringDirection(direction) << std::endl;
 
     }
 }
-
+/**
 void Elevator::mainThread() {
     while (true){
     // this will just have elevator move through floors until reaches it's destination.
@@ -146,13 +125,14 @@ void Elevator::mainThread() {
         send_e_struct_.arrived = arrived;
     }
 }
-
+**/
+/**
 void Elevator::senderThread() {
     scheduler_object.send_and_wait_for_ack(threadName, send_e_struct_,PORT + ID, sendSocket, receiveSocket);
 }
+**/
 
-
-Elevator::Elevator(Scheduler& object, int elevatorID) : arrived(false), currentState(new eWaitingForInput), floor_to_go_to(), scheduler_object(object),  current_floor(1), direction(IDLE) , ID(elevatorID), sendSocket(), receiveSocket(PORT+elevatorID) {
+Elevator::Elevator(int elevatorID) : arrived(false), currentState(new eWaitingForInput), floor_to_go_to(1),  current_floor(1), direction(IDLE) , ID(elevatorID), sendSocket(), receiveSocket(PORT+elevatorID) {
 } // initializes the elevator class to object.
 
 void Elevator::operator()() { // defines how the Elevator object acts when called
@@ -196,12 +176,10 @@ void Elevator::operator()() { // defines how the Elevator object acts when calle
     //i--;
 
     std::thread t1(&Elevator::receiverThread, this);
-    std::thread t2(&Elevator::mainThread, this);
-    std::thread t3(&Elevator::senderThread, this);
+    handle();
 
-    t1.detach();
-    t2.detach();
-    t3.detach();
+
+    t1.join();
 }
 
 std::vector<short int> Elevator::getQueue() {
@@ -212,49 +190,163 @@ void Elevator::handle() {
     currentState->handle(this);
 }
 
+void Elevator::send_and_wait_for_ack(std::string name, e_struct sendingData, int port, DatagramSocket &iReceiveSocket, DatagramSocket &iSendSocket) {
+    std::vector<uint8_t> buffer(sizeof(e_struct));  // Create a buffer for the struct
+    sendingData.serialize(buffer.data());
+
+
+    DatagramPacket sendPacket(buffer, buffer.size(), InetAddress::getLocalHost(), port);
+
+    fd_set readfds;
+    struct timeval timeout; // Structure to store timeout duration
+
+    std::vector<uint8_t> ackData(sizeof(e_struct));
+    DatagramPacket ackPacket(ackData, ackData.size());
+
+    int retries = 0;  // Counter for retry attempts
+
+    while (retries < MAX_RETRIES) {
+        try {
+            // Send the message to the server
+            std::cout << name << "Sending message to server..." << std::endl;
+            iSendSocket.send(sendPacket);
+        } catch (const std::runtime_error& e) {
+            std::cerr << "Send failed: " << e.what() << std::endl;
+            return exit(1); // Exit on send failure
+        }
+        retries++;
+        // Clear and set file descriptor set
+        FD_ZERO(&readfds);
+        FD_SET(iSendSocket.socket_fd, &readfds);
+
+        // Set timeout duration
+        timeout.tv_sec = TIMEOUT_SEC;
+        timeout.tv_usec = 0;
+        std::cout << name << "Waiting for acknowledgment..." << std::endl;
+
+        int activity = select(iSendSocket.socket_fd + 1, &readfds, NULL, NULL, &timeout);
+
+        if (activity < 0) {
+            // Error in select()
+            std::cerr << "Error in select()" << std::endl;
+            return exit(1);
+        } else if (activity == 0) {
+            // Timeout expired, no ACK received
+            std::cout << name << ": Timeout! No acknowledgment received." << std::endl;
+            continue; // Exit loop after timeout
+        }
+
+        break;
+    }
+}
+
+e_struct Elevator::wait_and_receive_with_ack(std::string name, DatagramSocket& iReceiveSocket, DatagramSocket& iSendSocket) {
+    std::vector<uint8_t> data(sizeof(e_struct));
+    DatagramPacket receivePacket(data, data.size());
+
+    std::cout << name << ": Waiting for Packet." << std::endl;
+
+    try {
+        std::cout << "Waiting..." << std::endl;
+        iReceiveSocket.receive(receivePacket);
+    } catch (const std::runtime_error& e) {
+        std::cerr << "IO Exception: Receive Socket Timed Out.\n" << e.what() << std::endl;
+        exit(1);
+    }
+
+    std::cout << name << ": Packet received:\n";
+    std::cout << "From host: " << receivePacket.getAddressAsString() << std::endl;
+    std::cout << "Host port: " << receivePacket.getPort() << std::endl;
+
+    // Deserialize received struct
+    e_struct receivedData = e_struct::deserialize(data.data());
+    std::cout << "Received Struct - ID: " << receivedData.elevatorID << std::endl;
+    /**
+     *Here you can use receivedData.(value) to access a member of the e_struct passed)
+     *
+     **/
+    //Uncomment if there are timing issues
+    //std::this_thread::sleep_for(std::chrono::seconds());
+
+    e_struct sendStruct = receivedData;
+    sendStruct.acknowledged = true;
+    sendStruct.serialize(data.data()); // compress the struct to bytes
+
+    DatagramPacket sendPacket(data, receivePacket.getLength(),
+                                  receivePacket.getAddress(), receivePacket.getPort());
+
+    std::cout << name << "Sending acknowledgement back to client...\n";
+    try {
+        iSendSocket.send(sendPacket);  // Send response back to client
+    } catch (const std::runtime_error& e) {
+        std::cerr << e.what() << std::endl;
+        exit(1);
+    }
+
+
+
+
+    return receivedData;
+
+}
+
+
 void eWaitingForInput::handle(Elevator* context) {
-    std::cout << "Elevator " << context->ID << "Waiting for input / IDLE" << std::endl;
+    std::cout << "Elevator " << context->ID << ": Waiting for input / IDLE" << std::endl;
 
     if (true) { // lock scope
         std::unique_lock<std::mutex> lock(context->mtx);
         while (context->myQueue.empty()) context->cv.wait(lock);
         context->floor_to_go_to = context->myQueue.front();
     }
-    std::cout << "Elevator " << context->ID << "Received Request" << std::endl;
+    std::cout << "Elevator " << context->ID << ": Received Request" << std::endl;
     context->setState(new ProcessRequest());
     context->handle();
 }
 
 void ProcessRequest::handle(Elevator* context) {
-    std::cout << "Elevator " << context->ID << "Processed Request" << std::endl;
+    std::cout << "Elevator " << context->ID << ": Processed Request" << std::endl;
     context->setState(new CruiseAndWait());
     context->handle();
 
 }
 
 void CruiseAndWait::handle(Elevator* context) {
+
     std::cout << "Moving..." << std::endl;
     while (context->floor_to_go_to != context->current_floor) {
         std::this_thread::sleep_for(std::chrono::seconds(3));//change this to match excel
-        context->current_floor += 1; // increments the floor by 1. (later worry about hard limit)
-        std::cout << "Just passed, floor: " << context->current_floor << std::endl;
+        if (true) {
+            std::unique_lock<std::mutex> lock(context->mtx);
+            std::cout << "Current Direction: " << context->stringDirection(context->direction) << std::endl;
+            if (context->direction == UP) {
+                context->current_floor += 1; // increments the floor by 1. (later worry about hard limit)
+            } else if (context->direction == DOWN) {
+                context->current_floor -= 1;
+            }// increments the floor by 1. (later worry about hard limit)
+        }
+        context->send_e_struct_.transmittedFloor = context->current_floor;
+        context->send_and_wait_for_ack(context->threadName, context->send_e_struct_,PORT + context->ID, context->sendSocket, context->receiveSocket);
+
+        std::cout <<  "Elevator " << context->ID <<": Just passed, floor " << context->current_floor << std::endl;
 
         //check if we receive a new request and need to change floor_to_go_to
         int new_state = false;
-        std::unique_lock<std::mutex> lock(context->mtx);
-        if (context->myQueue.front() != context->floor_to_go_to) {
-            std::cout <<"New input received" << std::endl;
-            context->floor_to_go_to = context->myQueue.front();
-            new_state = true;
+        if (true) {
+            std::unique_lock<std::mutex> lock(context->mtx);
+            if (context->myQueue.front() != context->floor_to_go_to) {
+                std::cout <<"New input received" << std::endl;
+                context->floor_to_go_to = context->myQueue.front();
+                new_state = true;
+            }
         }
         if (new_state == true) {
             context->setState(new ProcessRequest());
             context->handle();
         }
-
     }
-
     context->setState(new Stopped());
+    context->handle();
 }
 
 void Stopped::handle(Elevator* context) {
@@ -273,10 +365,22 @@ void DoorsOpened::handle(Elevator* context) {
 
 void InformSchedulerOfArrival::handle(Elevator* context) {
     std::cout << "Informing Scheduler of Arrival" << std::endl;
+
+
     if (true) {
-        std::lock_guard<std::mutex> lock(context->mtx2);
+        std::unique_lock<std::mutex> lock(context->mtx);
         context->send_e_struct_.arrived = true;
+
+        context->myQueue.erase(context->myQueue.begin()); // only erase once you arrive at the floor. Isolate this garbage from the rest so make an doors() method. and call that
+
+        if (context->myQueue.empty()) {
+            std::cout << "Elevator Queue is empty, direction is now IDLE" << std::endl;
+            context->direction = IDLE;
+        }
     }
+
+    context->send_and_wait_for_ack(context->threadName, context->send_e_struct_,PORT + context->ID, context->sendSocket, context->receiveSocket);
+
     context->setState(new DoorsClosed());
     context->handle();
 }
@@ -284,14 +388,24 @@ void InformSchedulerOfArrival::handle(Elevator* context) {
 void DoorsClosed::handle(Elevator* context) {
     std::cout << "Elevator " << context->ID << ": Doors Closed." << std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(1));
+
     if (true) {
-        std::lock_guard<std::mutex> lock(context->mtx2);
+        std::unique_lock<std::mutex> lock(context->mtx);
         context->send_e_struct_.arrived = false;
+
+        if (context->direction == IDLE) {
+            context->setState(new eWaitingForInput());
+        } else {
+            context->floor_to_go_to = context->myQueue.front();
+            context->setState(new CruiseAndWait());
+        }
     }
-    context->setState(new eWaitingForInput());
     context->handle();
 }
 
-
+int main() {
+    Elevator elevator(1);
+    elevator.operator()();
+}
 
 

@@ -7,6 +7,7 @@
 
 #include "Scheduler.h"
 #include "ElevatorDataTypes.h"
+#include "Datagram2.h"
 #include <chrono>
 #include <thread>
 #include <iostream>
@@ -19,10 +20,15 @@
 
 
 class Floor {
-private:
-    Scheduler& scheduler;
+
 public:
-    Floor(Scheduler& scheduler) : scheduler(scheduler) {}
+    Floor();
+
+    DatagramSocket receiveSocket;
+    DatagramSocket sendSocket;
+
+    void send_and_wait_for_ack(std::string name, e_struct sendingData, int port, DatagramSocket &iReceiveSocket,
+                               DatagramSocket &iSendSocket);
 
     void readFile();
 
