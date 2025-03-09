@@ -41,14 +41,31 @@ void Elevator::addtoQueue(short int floor) {
     }
     else if (direction == UP) //this part sorts the vector ascending order(up direction).
     {
-        myQueue.push_back(floor);
-        std::sort(myQueue.begin(), myQueue.end());
+        bool inQueue = false;
+        for (auto i : myQueue) {
+            if (i == floor) {
+                inQueue = true;
+            }
+        }
+
+        if (!inQueue) {
+            myQueue.push_back(floor);
+            std::sort(myQueue.begin(), myQueue.end());
+        }
 
     }
     else if (direction == DOWN)//this part sorts the vector in descending order(down direction).
     {
-        myQueue.push_back(floor);
-        std::sort(myQueue.begin(), myQueue.end(), std::greater<short int>());  // Descending order
+        bool inQueue = false;
+        for (auto i : myQueue) {
+            if (i == floor) {
+                inQueue = true;
+            }
+        }
+        if (!inQueue) {
+            myQueue.push_back(floor);
+            std::sort(myQueue.begin(), myQueue.end(), std::greater<short int>());  // Descending order
+        }
 
     }
     cv.notify_all();  // Notify waiting thread
@@ -133,8 +150,6 @@ void Elevator::senderThread() {
 **/
 
 Elevator::Elevator(int elevatorID) : arrived(false), currentState(new eWaitingForInput), floor_to_go_to(1),  current_floor(1), direction(IDLE) , ID(elevatorID), sendSocket(), receiveSocket(PORT+elevatorID) {
-    send_e_struct_.elevatorID = ID;
-
 } // initializes the elevator class to object.
 
 void Elevator::operator()() { // defines how the Elevator object acts when called
@@ -328,7 +343,6 @@ void CruiseAndWait::handle(Elevator* context) {
                 context->current_floor -= 1;
             }// increments the floor by 1. (later worry about hard limit)
         }
-
         context->send_e_struct_.transmittedFloor = context->current_floor;
         context->send_and_wait_for_ack(context->threadName, context->send_e_struct_,PORT, context->sendSocket, context->receiveSocket);
 
@@ -379,7 +393,7 @@ void InformSchedulerOfArrival::handle(Elevator* context) {
         context->send_e_struct_.arrived = true;
 
         context->myQueue.erase(context->myQueue.begin()); // only erase once you arrive at the floor. Isolate this garbage from the rest so make an doors() method. and call that
-        context->printQueue();
+
         if (context->myQueue.empty()) {
             std::cout << "Elevator Queue is empty, direction is now IDLE" << std::endl;
             context->direction = IDLE;

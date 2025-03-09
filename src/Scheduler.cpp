@@ -156,7 +156,6 @@ void WaitingForInput::handle(Scheduler *context) {
 
     context->receiveData = context->wait_and_receive_with_ack("Server", context->getReceiveSocket(), context->getSendSocket());
     std::cout << "Floor Number: " << context->receiveData.floor_number << std::endl;
-    std::cout << "Floor Transmitted: " << context->receiveData.transmittedFloor << std::endl;
     if (context->receiveData.elevatorID < 0) {
         context->setState(new Dispatching());
     } else {
