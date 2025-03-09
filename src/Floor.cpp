@@ -117,13 +117,13 @@ tm Floor::formatTime(const std::string& str) {
 
     return datetime;
 }
-
+#ifndef UNIT_TEST
 // invokes the readFile() method.
 int main(int argc, char *argv[]) {
     Floor floor;
     floor.readFile();
 }
-
+#endif
 
 
 

@@ -68,7 +68,6 @@ private:
     State* currentState;
     DatagramSocket sendSocket;
     DatagramSocket receiveSocket;
-    int numElevators;
 public:
     std::vector<e_struct> elevators;
     bool elevatorOccupied = false;
@@ -78,6 +77,7 @@ public:
     e_struct sendData;
     e_struct receiveData;
     explicit Scheduler(int num_elevators);
+    int numElevators;
 
     DatagramSocket& getReceiveSocket();
     DatagramSocket& getSendSocket();
