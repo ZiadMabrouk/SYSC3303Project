@@ -122,12 +122,14 @@ void Elevator::receiverThread() {
     // does the name for receiving matter, when elevator is receiving can't it just be sheduler?
     // have ziad check, my sockets, becuase what I did was scuffed.
     while (true) { // may have to consider removing some of this logic into mainThread instead.
-        received_e_struct_ = wait_and_receive_with_ack("Elevator", receiveSocket, sendSocket);
         // now pass it into add_queue, to update myQueue vector
+        received_e_struct_ = wait_and_receive_with_ack("Elevator", receiveSocket, sendSocket);
+
         addtoQueue(received_e_struct_.transmittedFloor); // only thread to call addtoQueue is this one, but myQueue itself will change
         // as other threads
         printQueue();
         std::cout << "Elevator " << ID << "'s current direction is " << stringDirection(direction) << std::endl;
+        //std::this_thread::
     }
 }
 /**
@@ -343,8 +345,10 @@ void CruiseAndWait::handle(Elevator* context) {
                 context->current_floor -= 1;
             }// increments the floor by 1. (later worry about hard limit)
         }
+        context->send_e_struct_.elevatorID = 2;
+
         context->send_e_struct_.transmittedFloor = context->current_floor;
-        context->send_and_wait_for_ack(context->threadName, context->send_e_struct_,PORT, context->sendSocket, context->receiveSocket);
+        context->send_and_wait_for_ack(context->threadName, context->send_e_struct_,PORT, context->receiveSocket, context->sendSocket);
 
         std::cout <<  "Elevator " << context->ID <<": Just passed, floor " << context->current_floor << std::endl;
 
@@ -400,7 +404,7 @@ void InformSchedulerOfArrival::handle(Elevator* context) {
         }
     }
 
-    context->send_and_wait_for_ack(context->threadName, context->send_e_struct_,PORT, context->sendSocket, context->receiveSocket);
+    context->send_and_wait_for_ack(context->threadName, context->send_e_struct_,PORT, context->receiveSocket, context->sendSocket);
 
     context->setState(new DoorsClosed());
     context->handle();
