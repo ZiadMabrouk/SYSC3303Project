@@ -78,7 +78,7 @@ public:
     DatagramSocket receiveSocket; // double check, this is a guess
 
     // modified consructor so the scheduler
-    Elevator(int elevatorID);
+    explicit Elevator(int elevatorID);
 
     void operator()();
 

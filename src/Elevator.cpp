@@ -315,6 +315,7 @@ void eWaitingForInput::handle(Elevator* context) {
     if (true) { // lock scope
         std::unique_lock<std::mutex> lock(context->mtx);
         while (context->myQueue.empty()) context->cv.wait(lock);
+        context->printQueue();
         context->floor_to_go_to = context->myQueue.front();
     }
     std::cout << "Elevator " << context->ID << ": Received Request" << std::endl;
@@ -363,8 +364,11 @@ void CruiseAndWait::handle(Elevator* context) {
             context->handle();
         }
     }
-    context->setState(new Stopped());
-    context->handle();
+    if (context->floor_to_go_to == context->current_floor) {
+        context->setState(new Stopped());
+        context->handle();
+    }
+
 }
 
 void Stopped::handle(Elevator* context) {
