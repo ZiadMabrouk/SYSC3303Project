@@ -1,23 +1,22 @@
+#ifndef DATAGRAM_H
+#define DATAGRAM_H
+
 /* -*- c++-mode -*-
  * Helper classes modelled on the Java versions for interfacing to the internet.
  *
  * A work in progress.
  */
-#ifndef datagram_H
-#define datagram_H
 
-#include <cassert>
 #include <vector>
 #include <exception>
-#include <stdexcept>
 #include <cstring>
 #include <sys/errno.h>
 #include <sys/types.h> 
-#include <sys/socket.h>
-#include <unistd.h>
-#include <string>
+#include <sys/socket.h> 
 #include <arpa/inet.h> 
-#include <netinet/in.h> 
+#include <netinet/in.h>
+#include <unistd.h>
+#include <stdexcept>
 
 class InetAddress
 {
@@ -78,7 +77,7 @@ public:
 	address.sin_addr.s_addr = INADDR_ANY;		/* Bind to all local interfaces */
 
 	if ( bind(socket_fd, (const struct sockaddr *)&address, sizeof(address) ) < 0 ) {
-	    throw std::runtime_error( std::string("socket bind failed") + strerror(errno) + "\n" );
+	    throw std::runtime_error( std::string("socket bind failed") + strerror(errno) );
 	}
 	
     }
@@ -90,7 +89,7 @@ public:
     ssize_t send( DatagramPacket& packet ) {
 	ssize_t sent = sendto( socket_fd, packet.getData(), packet.getLength(), 0, packet.address(), sizeof(*packet.address()) );
 	if ( sent == -1 ) {
-	    throw std::runtime_error( std::string("sendto failed: ") + strerror(errno) + "\n" );
+	    throw std::runtime_error( std::string("sendto failed: ") + strerror(errno) );
 	}
 	return sent;
     }
@@ -99,38 +98,12 @@ public:
 	socklen_t len = sizeof(*packet.address());
 	int received = recvfrom(socket_fd, packet.getData(), MAXLINE, MSG_WAITALL, packet.address(), &len);
 	if ( received < 0 ) {
-	    throw std::runtime_error( std::string("recvfrom failed: ") + strerror(errno) + "\n" );
+	    throw std::runtime_error( std::string("recvfrom failed: ") + strerror(errno) );
 	}
 	packet.setLength(received);
     }
-
-    /* Set Socket receive timeout in milliseconds */
-    void setSoTimeout( long time ) {
-	struct timeval timeout;      
-	timeout.tv_sec = time / 1000;	/* Integer divide, int portion */
-	timeout.tv_usec = (time % 1000) * 1000;	/* remainder */
-	if ( setsockopt( socket_fd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof timeout ) < 0 ) {
-	    throw std::runtime_error( std::string("setsockopt failed: ") + strerror(errno) );
-	}
-    }
-
-    /* Get Socket receive timeout in milliseconds */
-    long getSoTimeout() {
-	struct timeval timeout;
-	socklen_t length;
-	if ( getsockopt( socket_fd, SOL_SOCKET, SO_RCVTIMEO, &timeout, &length ) < 0 ) {
-	    throw std::runtime_error( std::string("setsockopt failed: ") + strerror(errno) );
-	}
-	assert( length == sizeof timeout );
-	/* Convert to milliseconds */
-	return timeout.tv_sec * 1000 + timeout.tv_usec / 1000;
-    }
-
 	int socket_fd;
 private:
-
     static const size_t MAXLINE=1024;
 };
-
-
-#endif //datagram_H
+#endif
