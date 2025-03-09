@@ -41,31 +41,31 @@ void Elevator::addtoQueue(short int floor) {
     }
     else if (direction == UP) //this part sorts the vector ascending order(up direction).
     {
-        bool inQueue = false;
-        for (auto i : myQueue) {
-            if (i == floor) {
-                inQueue = true;
-            }
-        }
-
-        if (!inQueue) {
+        // bool inQueue = false;
+        // for (auto i : myQueue) {
+        //     if (i == floor) {
+        //         inQueue = true;
+        //     }
+        // }
+        //
+        // if (!inQueue) {
             myQueue.push_back(floor);
             std::sort(myQueue.begin(), myQueue.end());
-        }
+        // }
 
     }
     else if (direction == DOWN)//this part sorts the vector in descending order(down direction).
     {
-        bool inQueue = false;
-        for (auto i : myQueue) {
-            if (i == floor) {
-                inQueue = true;
-            }
-        }
-        if (!inQueue) {
+        // bool inQueue = false;
+        // for (auto i : myQueue) {
+        //     if (i == floor) {
+        //         inQueue = true;
+        //     }
+        // }
+        // if (!inQueue) {
             myQueue.push_back(floor);
             std::sort(myQueue.begin(), myQueue.end(), std::greater<short int>());  // Descending order
-        }
+        // }
 
     }
     cv.notify_all();  // Notify waiting thread
@@ -345,8 +345,7 @@ void CruiseAndWait::handle(Elevator* context) {
                 context->current_floor -= 1;
             }// increments the floor by 1. (later worry about hard limit)
         }
-        context->send_e_struct_.elevatorID = 2;
-
+        context->send_e_struct_.elevatorID = context->ID;
         context->send_e_struct_.transmittedFloor = context->current_floor;
         context->send_and_wait_for_ack(context->threadName, context->send_e_struct_,PORT, context->receiveSocket, context->sendSocket);
 
@@ -428,9 +427,11 @@ void DoorsClosed::handle(Elevator* context) {
     context->handle();
 }
 
-int main() {
-    Elevator elevator(1);
+#ifndef UNIT_TEST
+int main(int argc, char* argv[]) {
+    Elevator elevator(std::atoi(argv[1]));
     elevator.operator()();
 }
+#endif
 
 

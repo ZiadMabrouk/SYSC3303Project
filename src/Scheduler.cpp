@@ -101,6 +101,10 @@ e_struct Scheduler::wait_and_receive_with_ack(std::string name, DatagramSocket& 
     // Deserialize received struct
     e_struct receivedData = e_struct::deserialize(data.data());
     std::cout << "Received Struct - ID: " << receivedData.elevatorID << std::endl;
+    std::cout << "Floor ID: " << receivedData.transmittedFloor<< std::endl;
+    elevators[receivedData.elevatorID- 1].transmittedFloor = receivedData.transmittedFloor;
+    elevators[receivedData.elevatorID- 1].direction = receivedData.direction;
+
     /**
      *Here you can use receivedData.(value) to access a member of the e_struct passed)
      *
@@ -201,16 +205,21 @@ int Scheduler::calculateScore(e_struct& elevator, int requestedFloor, Direction 
 
     // If elevator is idle, that's the whole score.
     if (elevator.direction == IDLE) {
-        return score;
+        return score / 10;
     }
 
     // If elevator is already heading in the right direction and will pass the requested floor, increase the score.
     if ((elevator.direction == UP && requestedFloor > elevator.transmittedFloor && requestedDirection == UP) || (elevator.direction == DOWN && requestedFloor < elevator.transmittedFloor && requestedDirection == DOWN)) {
-        return score * 2;
+        return score / 2;
     }
 
+    // if floor requests is higher than elevator current floor and direction is up then put it in
+    // if floor requests is lower than elevator current floor and direction is down then put it in
+    // else if direction is idle place it in
+    // else calculateScore again
+
     // Otherwise the elevator is moving away from the requested floor, or it's moving in the wrong direction
-    return score / 2;
+    return score * 2;
 }
 
 // Determines the elevator with the best(biggest) score and returns its index.
@@ -221,7 +230,7 @@ int Scheduler::calculateBestScore(int requestedFloor, Direction requestedDirecti
 
     for (int i = 1; i < numElevators; i++) {
         int score = calculateScore(elevators[i], requestedFloor, requestedDirection);
-        if (score > bestScore) {
+        if (score < bestScore) {
             bestScore = score;
             bestElevatorIndex = i;
         }
@@ -230,8 +239,10 @@ int Scheduler::calculateBestScore(int requestedFloor, Direction requestedDirecti
     return bestElevatorIndex;
 }
 
+#ifndef UNIT_TEST
 int main() {
-    Scheduler scheduler(1);
+    Scheduler scheduler(2);
     scheduler.handle();
 }
+#endif
 

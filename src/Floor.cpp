@@ -104,7 +104,7 @@ void Floor::readFile() {
         elevatorData.elevatorID = -1;
 
         send_and_wait_for_ack("Floor", elevatorData, PORT, receiveSocket, sendSocket);
-        std::this_thread::sleep_for(std::chrono::seconds(25));
+        std::this_thread::sleep_for(std::chrono::seconds(10));
     }
 }
 
