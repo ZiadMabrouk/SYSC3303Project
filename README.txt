@@ -19,7 +19,7 @@ Test file is found in the tests directory. (run ./runTests.sh to see it in actio
 
 Contributions:
 
-Sami - Elevator.cpp
-Ziad - Scheduler.cpp
-Jinan - Sequence, Class and State Diagrams, Main.cpp
-Daniel - Test Cases for every function used, README file
+Daniel - Scheduler: Making the Alg, States, ReceiveSocket (UDP)
+Ziad - Scheduler: Establishing the Connections (UDP), States, ReceiveSocket (UDP), Test cases, Floor: Sends Data to Scheduler
+Sami - Elevator: States, ReceiveSocket (UDP), ReceiveSocket (UDP)
+Jinan - Test cases, Floor: Sends Data to Scheduler, UML

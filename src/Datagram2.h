@@ -1,12 +1,12 @@
+#ifndef DATAGRAM_H
+#define DATAGRAM_H
+
 /* -*- c++-mode -*-
  * Helper classes modelled on the Java versions for interfacing to the internet.
  *
  * A work in progress.
  */
-#ifndef datagram_H
-#define datagram_H
 
-#include <cassert>
 #include <vector>
 #include <exception>
 #include <cstring>
@@ -14,7 +14,12 @@
 #include <sys/types.h> 
 #include <sys/socket.h> 
 #include <arpa/inet.h> 
-#include <netinet/in.h> 
+#include <netinet/in.h>
+#include <unistd.h>
+#include <stdexcept>
+#include <iostream>
+
+#include "ElevatorDataTypes.h"
 
 class InetAddress
 {
@@ -75,7 +80,7 @@ public:
 	address.sin_addr.s_addr = INADDR_ANY;		/* Bind to all local interfaces */
 
 	if ( bind(socket_fd, (const struct sockaddr *)&address, sizeof(address) ) < 0 ) {
-	    throw std::runtime_error( std::string("socket bind failed") + strerror(errno) + "\n" );
+	    throw std::runtime_error( std::string("socket bind failed") + strerror(errno) );
 	}
 	
     }
@@ -87,7 +92,7 @@ public:
     ssize_t send( DatagramPacket& packet ) {
 	ssize_t sent = sendto( socket_fd, packet.getData(), packet.getLength(), 0, packet.address(), sizeof(*packet.address()) );
 	if ( sent == -1 ) {
-	    throw std::runtime_error( std::string("sendto failed: ") + strerror(errno) + "\n" );
+	    throw std::runtime_error( std::string("sendto failed: ") + strerror(errno) );
 	}
 	return sent;
     }
@@ -96,38 +101,115 @@ public:
 	socklen_t len = sizeof(*packet.address());
 	int received = recvfrom(socket_fd, packet.getData(), MAXLINE, MSG_WAITALL, packet.address(), &len);
 	if ( received < 0 ) {
-	    throw std::runtime_error( std::string("recvfrom failed: ") + strerror(errno) + "\n" );
+	    throw std::runtime_error( std::string("recvfrom failed: ") + strerror(errno) );
 	}
 	packet.setLength(received);
     }
-
-    /* Set Socket receive timeout in milliseconds */
-    void setSoTimeout( long time ) {
-	struct timeval timeout;      
-	timeout.tv_sec = time / 1000;	/* Integer divide, int portion */
-	timeout.tv_usec = (time % 1000) * 1000;	/* remainder */
-	if ( setsockopt( socket_fd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof timeout ) < 0 ) {
-	    throw std::runtime_error( std::string("setsockopt failed: ") + strerror(errno) );
-	}
-    }
-
-    /* Get Socket receive timeout in milliseconds */
-    long getSoTimeout() {
-	struct timeval timeout;
-	socklen_t length;
-	if ( getsockopt( socket_fd, SOL_SOCKET, SO_RCVTIMEO, &timeout, &length ) < 0 ) {
-	    throw std::runtime_error( std::string("setsockopt failed: ") + strerror(errno) );
-	}
-	assert( length == sizeof timeout );
-	/* Convert to milliseconds */
-	return timeout.tv_sec * 1000 + timeout.tv_usec / 1000;
-    }
-
 	int socket_fd;
 private:
-
     static const size_t MAXLINE=1024;
 };
 
+#define TIMEOUT_SEC 5
+#define MAX_RETRIES 5
 
-#endif //datagram_H
+void inline send_and_wait_for_ack(std::string name, e_struct sendingData, int port, DatagramSocket &iReceiveSocket, DatagramSocket &iSendSocket) {
+    std::vector<uint8_t> buffer(sizeof(e_struct));  // Create a buffer for the struct
+    sendingData.serialize(buffer.data());
+
+
+    DatagramPacket sendPacket(buffer, buffer.size(), InetAddress::getLocalHost(), port);
+
+    fd_set readfds;
+    struct timeval timeout; // Structure to store timeout duration
+
+    std::vector<uint8_t> ackData(sizeof(e_struct));
+    DatagramPacket ackPacket(ackData, ackData.size());
+
+    int retries = 0;  // Counter for retry attempts
+
+    while (retries < MAX_RETRIES) {
+        try {
+            // Send the message to the server
+            std::cout << name << "Sending message to server..." << std::endl;
+            iSendSocket.send(sendPacket);
+        } catch (const std::runtime_error& e) {
+            std::cerr << "Send failed: " << e.what() << std::endl;
+            return exit(1); // Exit on send failure
+        }
+        retries++;
+        // Clear and set file descriptor set
+        FD_ZERO(&readfds);
+        FD_SET(iSendSocket.socket_fd, &readfds);
+
+        // Set timeout duration
+        timeout.tv_sec = TIMEOUT_SEC;
+        timeout.tv_usec = 0;
+        std::cout << name << "Waiting for acknowledgment..." << std::endl;
+
+        int activity = select(iSendSocket.socket_fd + 1, &readfds, NULL, NULL, &timeout);
+
+        if (activity < 0) {
+            // Error in select()
+            std::cerr << "Error in select()" << std::endl;
+            return exit(1);
+        } else if (activity == 0) {
+            // Timeout expired, no ACK received
+            std::cout << name << ": Timeout! No acknowledgment received." << std::endl;
+            continue; // Exit loop after timeout
+        }
+
+        break;
+    }
+}
+
+e_struct inline wait_and_receive_with_ack(std::string name, DatagramSocket& iReceiveSocket, DatagramSocket& iSendSocket) {
+    std::vector<uint8_t> data(sizeof(e_struct));
+    DatagramPacket receivePacket(data, data.size());
+
+    std::cout << name << ": Waiting for Packet." << std::endl;
+
+    try {
+        std::cout << "Waiting..." << std::endl;
+        iReceiveSocket.receive(receivePacket);
+    } catch (const std::runtime_error& e) {
+        std::cerr << "IO Exception: Receive Socket Timed Out.\n" << e.what() << std::endl;
+        exit(1);
+    }
+
+    std::cout << name << ": Packet received:\n";
+    std::cout << "From host: " << receivePacket.getAddressAsString() << std::endl;
+    std::cout << "Host port: " << receivePacket.getPort() << std::endl;
+
+    // Deserialize received struct
+    e_struct receivedData = e_struct::deserialize(data.data());
+
+    /**
+     *Here you can use receivedData.(value) to access a member of the e_struct passed)
+     *
+     **/
+    //Uncomment if there are timing issues
+    //std::this_thread::sleep_for(std::chrono::seconds());
+
+    e_struct sendStruct = receivedData;
+    sendStruct.acknowledged = true;
+    sendStruct.serialize(data.data()); // compress the struct to bytes
+
+    DatagramPacket sendPacket(data, receivePacket.getLength(),
+                                  receivePacket.getAddress(), receivePacket.getPort());
+
+    std::cout << name << "Sending acknowledgement back to client...\n";
+    try {
+        iSendSocket.send(sendPacket);  // Send response back to client
+    } catch (const std::runtime_error& e) {
+        std::cerr << e.what() << std::endl;
+        exit(1);
+    }
+
+
+
+
+    return receivedData;
+
+}
+#endif

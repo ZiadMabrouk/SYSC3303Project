@@ -68,7 +68,6 @@ private:
     State* currentState;
     DatagramSocket sendSocket;
     DatagramSocket receiveSocket;
-    int numElevators;
 public:
     std::vector<e_struct> elevators;
     bool elevatorOccupied = false;
@@ -78,23 +77,17 @@ public:
     e_struct sendData;
     e_struct receiveData;
     explicit Scheduler(int num_elevators);
+    int numElevators;
 
     DatagramSocket& getReceiveSocket();
     DatagramSocket& getSendSocket();
     void handle();
 
-    void operator()();
-
-    //Ziads  if using same socket copy them twice, returns e_struct
-    e_struct wait_and_receive_with_ack(std::string name, DatagramSocket& iReceiveSocket, DatagramSocket& iSendSocket);
-
-
-    void send_and_wait_for_ack(std::string name, e_struct sendingData, int port, DatagramSocket& iReceiveSocket, DatagramSocket& iSendSocket);
-
-
-    int calculateScore(e_struct& elevator, int requestedFloor, Direction direction);
+    double calculateScore(e_struct &elevator, int requestedFloor, Direction requestedDirection);
 
     int calculateBestScore(int requestedFloor, Direction requestedDirection);
+
+    std::string stringDirection(Direction direction);
 
     void setState(State* state) {
         currentState = state;

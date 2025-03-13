@@ -7,16 +7,16 @@
 #include <thread>
 
 #include <random>
-#include <mutex>
-#include <condition_variable>
 #include "ElevatorDataTypes.h"
-#include "Scheduler.h"
 #include <ctime>
 #include <iostream>
 #include <sstream>
 #include <iomanip>
 #include <string>
 #include <fstream>
+
+Floor::Floor() = default;
+
 // this method reads a line from the input file and converts it into e_struct then invokes put into the scheduler object.
 void Floor::readFile() {
     std::ifstream file("../data/tests/SamTestCase.txt");//open the file for reading
@@ -31,6 +31,7 @@ void Floor::readFile() {
 
         std::getline(ss, token, ' ');
         elevatorData.floor_number = atoi(token.c_str());
+        std::cout << "Floor Number: " << elevatorData.floor_number << std::endl;
 
         std::getline(ss, token, ' ');
         if (token == "Up") {
@@ -43,8 +44,10 @@ void Floor::readFile() {
 
         std::getline(ss, token, ' ');
         elevatorData.car_to_floor_number = atoi(token.c_str());
+        elevatorData.elevatorID = -1;
 
-        //scheduler.put(elevatorData,1);//change me
+        send_and_wait_for_ack("Floor", elevatorData, PORT, receiveSocket, sendSocket);
+        std::this_thread::sleep_for(std::chrono::seconds(5));
     }
 }
 
@@ -57,13 +60,13 @@ tm Floor::formatTime(const std::string& str) {
 
     return datetime;
 }
-
+#ifndef UNIT_TEST
 // invokes the readFile() method.
-void Floor::operator()() {
-    readFile();
+int main(int argc, char *argv[]) {
+    Floor floor;
+    floor.readFile();
 }
-
-
+#endif
 
 
 
