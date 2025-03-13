@@ -45,10 +45,11 @@ public:
     // modified consructor so the scheduler
     Elevator(Scheduler& object);
 
-
     void operator()();
 
     short int getCurrentFloor(); // simply gets current floor of the elevator instance
+
+    void setCurrentFloor(int floor);
 
     void addtoQueue(short int floor); // logic for elevators path.
 

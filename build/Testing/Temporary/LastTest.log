@@ -1,0 +1,63 @@
+Start testing: Mar 13 15:06 EDT
+----------------------------------------------------------
+1/3 Testing: ElevatorTest - getCurrentFloor()
+1/3 Test: ElevatorTest - getCurrentFloor()
+Command: "/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/tests/unit_tests" "ElevatorTest - getCurrentFloor()"
+Directory: /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/tests
+"ElevatorTest - getCurrentFloor()" start time: Mar 13 15:06 EDT
+Output:
+----------------------------------------------------------
+Filters: "ElevatorTest - getCurrentFloor()"
+Randomness seeded to: 522663317
+===============================================================================
+All tests passed (2 assertions in 1 test case)
+
+<end of output>
+Test time =   0.19 sec
+----------------------------------------------------------
+Test Passed.
+"ElevatorTest - getCurrentFloor()" end time: Mar 13 15:06 EDT
+"ElevatorTest - getCurrentFloor()" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/3 Testing: FloorTest - formatTime(tm datetime)
+2/3 Test: FloorTest - formatTime(tm datetime)
+Command: "/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/tests/unit_tests" "FloorTest - formatTime(tm datetime)"
+Directory: /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/tests
+"FloorTest - formatTime(tm datetime)" start time: Mar 13 15:06 EDT
+Output:
+----------------------------------------------------------
+Filters: "FloorTest - formatTime(tm datetime)"
+Randomness seeded to: 1931438641
+===============================================================================
+All tests passed (3 assertions in 1 test case)
+
+<end of output>
+Test time =   0.16 sec
+----------------------------------------------------------
+Test Passed.
+"FloorTest - formatTime(tm datetime)" end time: Mar 13 15:06 EDT
+"FloorTest - formatTime(tm datetime)" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/3 Testing: Scheduler put() & get()
+3/3 Test: Scheduler put() & get()
+Command: "/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/tests/unit_tests" "Scheduler put() & get()"
+Directory: /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/tests
+"Scheduler put() & get()" start time: Mar 13 15:06 EDT
+Output:
+----------------------------------------------------------
+Filters: "Scheduler put() & get()"
+Randomness seeded to: 3237336639
+===============================================================================
+All tests passed (7 assertions in 1 test case)
+
+<end of output>
+Test time =   0.22 sec
+----------------------------------------------------------
+Test Passed.
+"Scheduler put() & get()" end time: Mar 13 15:06 EDT
+"Scheduler put() & get()" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Mar 13 15:06 EDT

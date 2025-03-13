@@ -1,0 +1,7 @@
+add_test( [==[ElevatorTest - getCurrentFloor()]==] /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/tests/unit_tests [==[ElevatorTest - getCurrentFloor()]==]  )
+set_tests_properties( [==[ElevatorTest - getCurrentFloor()]==] PROPERTIES WORKING_DIRECTORY /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/tests SKIP_RETURN_CODE 4)
+add_test( [==[FloorTest - formatTime(tm datetime)]==] /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/tests/unit_tests [==[FloorTest - formatTime(tm datetime)]==]  )
+set_tests_properties( [==[FloorTest - formatTime(tm datetime)]==] PROPERTIES WORKING_DIRECTORY /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/tests SKIP_RETURN_CODE 4)
+add_test( [==[Scheduler put() & get()]==] /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/tests/unit_tests [==[Scheduler put() & get()]==]  )
+set_tests_properties( [==[Scheduler put() & get()]==] PROPERTIES WORKING_DIRECTORY /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/tests SKIP_RETURN_CODE 4)
+set( unit_tests_TESTS [==[ElevatorTest - getCurrentFloor()]==] [==[FloorTest - formatTime(tm datetime)]==] [==[Scheduler put() & get()]==])

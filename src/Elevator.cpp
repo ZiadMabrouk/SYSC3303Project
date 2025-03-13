@@ -26,6 +26,10 @@ short int Elevator::getCurrentFloor() {
     return current_floor;
 }
 
+void Elevator::setCurrentFloor(int floor) {
+    current_floor = floor;
+}
+
 // opens and closes doors and simulate live data from excel sheet.
 void Elevator::doors() {
     std::cout << "Doors Open. " << std::endl;

@@ -1,0 +1,17 @@
+CalculatorTest 0 0
+CalculatorTest 0 0
+CalculatorTest 0 0
+ElevatorTest 0 0
+ElevatorTest 0 0
+ElevatorTest 0 0
+FloorTest 0 0
+ElevatorTest 0 0
+FloorTest 0 0
+Scheduler 0 0
+ElevatorTest 0 0
+FloorTest 0 0
+Scheduler 0 0
+ElevatorTest - getCurrentFloor() 1 0.1921
+FloorTest - formatTime(tm datetime) 1 0.158438
+Scheduler put() & get() 1 0.223376
+---

@@ -11,7 +11,7 @@ Scheduler::Scheduler(int num_elevators) :  sendData(), receiveData(),currentStat
 
     elevators.resize(numElevators);
     for (int i = 0; i < numElevators; i++) {
-        elevators[i].elevatorID = i;
+        elevators[i].elevatorID = i + 1;
         elevators[i].transmittedFloor = 1;
         elevators[i].direction = IDLE;
     }

@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/SYSC3303Project.dir/src/main.cpp.o CMakeFiles/SYSC3303Project.dir/src/Elevator.cpp.o CMakeFiles/SYSC3303Project.dir/src/Scheduler.cpp.o CMakeFiles/SYSC3303Project.dir/src/Floor.cpp.o -o SYSC3303Project  src/libsource.a 
