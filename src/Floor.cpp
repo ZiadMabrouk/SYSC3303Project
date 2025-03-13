@@ -15,64 +15,7 @@
 #include <string>
 #include <fstream>
 
-Floor::Floor() {
-
-}
-
-
-void Floor::send_and_wait_for_ack(std::string name, e_struct sendingData, int port, DatagramSocket &iReceiveSocket, DatagramSocket &iSendSocket) {
-    std::vector<uint8_t> buffer(sizeof(e_struct));  // Create a buffer for the struct
-    sendingData.serialize(buffer.data());
-
-
-    DatagramPacket sendPacket(buffer, buffer.size(), InetAddress::getLocalHost(), port);
-
-    fd_set readfds;
-    struct timeval timeout; // Structure to store timeout duration
-
-    std::vector<uint8_t> ackData(sizeof(e_struct));
-    DatagramPacket ackPacket(ackData, ackData.size());
-
-    int retries = 0;  // Counter for retry attempts
-
-    while (retries < MAX_RETRIES) {
-        try {
-            // Send the message to the server
-            std::cout << name << "Sending message to server..." << std::endl;
-            iSendSocket.send(sendPacket);
-        } catch (const std::runtime_error& e) {
-            std::cerr << "Send failed: " << e.what() << std::endl;
-            return exit(1); // Exit on send failure
-        }
-        retries++;
-        // Clear and set file descriptor set
-        FD_ZERO(&readfds);
-        FD_SET(iSendSocket.socket_fd, &readfds);
-
-        // Set timeout duration
-        timeout.tv_sec = TIMEOUT_SEC;
-        timeout.tv_usec = 0;
-        std::cout << name << "Waiting for acknowledgment..." << std::endl;
-
-        int activity = select(iSendSocket.socket_fd + 1, &readfds, NULL, NULL, &timeout);
-
-        if (activity < 0) {
-            // Error in select()
-            std::cerr << "Error in select()" << std::endl;
-            return exit(1);
-        } else if (activity == 0) {
-            // Timeout expired, no ACK received
-            std::cout << name << ": Timeout! No acknowledgment received." << std::endl;
-            continue; // Exit loop after timeout
-        }
-
-        break;
-    }
-    if (retries == MAX_RETRIES) {
-        std::cout << "Max retries." << std::endl;
-        exit(1);
-    }
-}
+Floor::Floor() = default;
 
 // this method reads a line from the input file and converts it into e_struct then invokes put into the scheduler object.
 void Floor::readFile() {
@@ -104,7 +47,7 @@ void Floor::readFile() {
         elevatorData.elevatorID = -1;
 
         send_and_wait_for_ack("Floor", elevatorData, PORT, receiveSocket, sendSocket);
-        std::this_thread::sleep_for(std::chrono::seconds(10));
+        std::this_thread::sleep_for(std::chrono::seconds(5));
     }
 }
 

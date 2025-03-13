@@ -58,8 +58,6 @@ private:
 
     void calcdirection(short int floor); // for now only used by addtoQueue.
 
-    void travel(); // controls
-
 public:
     e_struct send_e_struct_;
     int arrived;
@@ -84,8 +82,6 @@ public:
 
     std::vector<short int> getQueue();
 
-    short int getCurrentFloor(); // simply gets current floor of the elevator instance
-
     void addtoQueue(short int floor); // logic for elevators path.
 
     void printQueue(); // should print the current queue.
@@ -98,18 +94,7 @@ public:
 
     void handle();
 
-    void send_and_wait_for_ack(std::string name, e_struct sendingData, int port, DatagramSocket &iReceiveSocket,
-                               DatagramSocket &iSendSocket);
-
-    e_struct wait_and_receive_with_ack(std::string name, DatagramSocket &iReceiveSocket, DatagramSocket &iSendSocket);
-
-    void doors(); // time taken for an elevator to both open and close its doors.
-
     void receiverThread();
-
-    void mainThread();
-
-    void senderThread();
 };
 
 

@@ -27,9 +27,6 @@ public:
     DatagramSocket receiveSocket;
     DatagramSocket sendSocket;
 
-    void send_and_wait_for_ack(std::string name, e_struct sendingData, int port, DatagramSocket &iReceiveSocket,
-                               DatagramSocket &iSendSocket);
-
     void readFile();
 
     tm formatTime(const std::string& str);
