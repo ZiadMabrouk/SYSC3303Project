@@ -93,8 +93,8 @@ unit_tests_EXTERNAL_OBJECTS =
 tests/unit_tests: tests/CMakeFiles/unit_tests.dir/ProjectTest.cpp.o
 tests/unit_tests: tests/CMakeFiles/unit_tests.dir/build.make
 tests/unit_tests: src/libsource.a
-tests/unit_tests: Catch2/src/libCatch2Main.a
-tests/unit_tests: Catch2/src/libCatch2.a
+tests/unit_tests: Catch2/src/libCatch2Maind.a
+tests/unit_tests: Catch2/src/libCatch2d.a
 tests/unit_tests: tests/CMakeFiles/unit_tests.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable unit_tests"
 	cd /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/tests && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/unit_tests.dir/link.txt --verbose=$(VERBOSE)

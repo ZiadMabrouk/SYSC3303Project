@@ -22,7 +22,7 @@ short int Elevator::getCurrentFloor() {
     return current_floor;
 }
 
-void Elevator::setCurrentFloor(int floor) {
+void Elevator::setCurrentFloor(short int floor) {
     current_floor = floor;
 }
 

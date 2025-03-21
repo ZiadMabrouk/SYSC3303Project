@@ -1,4 +1,3 @@
-/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/CMakeFiles/SYSC3303Project.dir
 /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/CMakeFiles/test.dir
 /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/CMakeFiles/edit_cache.dir
 /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/CMakeFiles/rebuild_cache.dir
@@ -11,6 +10,9 @@
 /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/Catch2/src/CMakeFiles/edit_cache.dir
 /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/Catch2/src/CMakeFiles/rebuild_cache.dir
 /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/src/CMakeFiles/source.dir
+/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/src/CMakeFiles/Scheduler.dir
+/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/src/CMakeFiles/Elevator.dir
+/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/src/CMakeFiles/Floor.dir
 /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/src/CMakeFiles/test.dir
 /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/src/CMakeFiles/edit_cache.dir
 /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/src/CMakeFiles/rebuild_cache.dir

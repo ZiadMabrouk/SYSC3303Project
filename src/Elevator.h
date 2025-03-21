@@ -95,6 +95,9 @@ public:
     void handle();
 
     void receiverThread();
+
+    void setCurrentFloor(short int floor);
+    short int getCurrentFloor();
 };
 
 

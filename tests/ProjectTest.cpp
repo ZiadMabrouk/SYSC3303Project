@@ -5,18 +5,16 @@
 
 #include "../src/ElevatorDataTypes.h"
 #include "../src/Elevator.h"
-#include "../src/Elevator.cpp"
 #include "../src/Scheduler.h"
-#include "../src/Scheduler.cpp"
 #include "../src/Floor.h"
-#include "../src/Floor.cpp"
+
 
 #include <catch2/catch_test_macros.hpp>
 
 
 TEST_CASE("ElevatorTest - getCurrentFloor()", "[Calculator]") {
     Scheduler scheduler(5);
-    Elevator elevator(scheduler);
+    Elevator elevator(1);
     int floorToSet = 5;
     REQUIRE(floorToSet == 5);
     elevator.setCurrentFloor(floorToSet);
@@ -27,7 +25,7 @@ TEST_CASE("ElevatorTest - getCurrentFloor()", "[Calculator]") {
 // Given Input: 14:15:47.876, Expected Output: tm object with hours, mins and secs formatted into it.
 TEST_CASE("FloorTest - formatTime(tm datetime)", "[Floor]") {
     Scheduler scheduler(3);
-    Floor floor(scheduler);
+    Floor floor;
 
     tm time = floor.formatTime("14:15:47.876");
 
@@ -36,35 +34,8 @@ TEST_CASE("FloorTest - formatTime(tm datetime)", "[Floor]") {
     REQUIRE(time.tm_sec == 47);
 }
 
-/**
-// Expected: setCurrentFloor() should update the current floor and getCurrentFloor() should get the floor where elevator is at currently.
-void testElevatorSetGetCurrentFloor() {
-    Scheduler scheduler;
-    Elevator elevator(scheduler);
 
-    // Check the initial floor.
-    assert(elevator.getCurrentFloor() == 0);
 
-    // Update the elevator's current floor and verify.
-    elevator.setCurrentFloor(7);
-    assert(elevator.getCurrentFloor() == 7);
-
-    std::cout << "Elevator set/get current floor test passed." << std::endl;
-}
-
-// Given Input: 14:15:47.876, Expected Output: tm object with hours, mins and secs formatted into it.
-void testFloorFormatTime() {
-    Scheduler scheduler;
-    Floor floor(scheduler);
-
-    tm time = floor.formatTime("14:15:47.876");
-
-    assert(time.tm_hour == 14);
-    assert(time.tm_min == 15);
-    assert(time.tm_sec == 47);
-}
-
-**/
 TEST_CASE("Scheduler put() & get()", "[Scheduler]") {
     Scheduler scheduler(4);
 

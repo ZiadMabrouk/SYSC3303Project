@@ -127,19 +127,6 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named SYSC3303Project
-
-# Build rule for target.
-SYSC3303Project: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 SYSC3303Project
-.PHONY : SYSC3303Project
-
-# fast build rule for target.
-SYSC3303Project/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SYSC3303Project.dir/build.make CMakeFiles/SYSC3303Project.dir/build
-.PHONY : SYSC3303Project/fast
-
-#=============================================================================
 # Target rules for targets named Catch2
 
 # Build rule for target.
@@ -177,6 +164,45 @@ source: cmake_check_build_system
 source/fast:
 	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/source.dir/build.make src/CMakeFiles/source.dir/build
 .PHONY : source/fast
+
+#=============================================================================
+# Target rules for targets named Scheduler
+
+# Build rule for target.
+Scheduler: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Scheduler
+.PHONY : Scheduler
+
+# fast build rule for target.
+Scheduler/fast:
+	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/Scheduler.dir/build.make src/CMakeFiles/Scheduler.dir/build
+.PHONY : Scheduler/fast
+
+#=============================================================================
+# Target rules for targets named Elevator
+
+# Build rule for target.
+Elevator: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Elevator
+.PHONY : Elevator
+
+# fast build rule for target.
+Elevator/fast:
+	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/Elevator.dir/build.make src/CMakeFiles/Elevator.dir/build
+.PHONY : Elevator/fast
+
+#=============================================================================
+# Target rules for targets named Floor
+
+# Build rule for target.
+Floor: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Floor
+.PHONY : Floor
+
+# fast build rule for target.
+Floor/fast:
+	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/Floor.dir/build.make src/CMakeFiles/Floor.dir/build
+.PHONY : Floor/fast
 
 #=============================================================================
 # Target rules for targets named unit_tests
@@ -555,102 +581,6 @@ ContinuousSubmit/fast:
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/ContinuousSubmit.dir/build.make tests/CMakeFiles/ContinuousSubmit.dir/build
 .PHONY : ContinuousSubmit/fast
 
-src/Elevator.o: src/Elevator.cpp.o
-.PHONY : src/Elevator.o
-
-# target to build an object file
-src/Elevator.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SYSC3303Project.dir/build.make CMakeFiles/SYSC3303Project.dir/src/Elevator.cpp.o
-.PHONY : src/Elevator.cpp.o
-
-src/Elevator.i: src/Elevator.cpp.i
-.PHONY : src/Elevator.i
-
-# target to preprocess a source file
-src/Elevator.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SYSC3303Project.dir/build.make CMakeFiles/SYSC3303Project.dir/src/Elevator.cpp.i
-.PHONY : src/Elevator.cpp.i
-
-src/Elevator.s: src/Elevator.cpp.s
-.PHONY : src/Elevator.s
-
-# target to generate assembly for a file
-src/Elevator.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SYSC3303Project.dir/build.make CMakeFiles/SYSC3303Project.dir/src/Elevator.cpp.s
-.PHONY : src/Elevator.cpp.s
-
-src/Floor.o: src/Floor.cpp.o
-.PHONY : src/Floor.o
-
-# target to build an object file
-src/Floor.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SYSC3303Project.dir/build.make CMakeFiles/SYSC3303Project.dir/src/Floor.cpp.o
-.PHONY : src/Floor.cpp.o
-
-src/Floor.i: src/Floor.cpp.i
-.PHONY : src/Floor.i
-
-# target to preprocess a source file
-src/Floor.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SYSC3303Project.dir/build.make CMakeFiles/SYSC3303Project.dir/src/Floor.cpp.i
-.PHONY : src/Floor.cpp.i
-
-src/Floor.s: src/Floor.cpp.s
-.PHONY : src/Floor.s
-
-# target to generate assembly for a file
-src/Floor.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SYSC3303Project.dir/build.make CMakeFiles/SYSC3303Project.dir/src/Floor.cpp.s
-.PHONY : src/Floor.cpp.s
-
-src/Scheduler.o: src/Scheduler.cpp.o
-.PHONY : src/Scheduler.o
-
-# target to build an object file
-src/Scheduler.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SYSC3303Project.dir/build.make CMakeFiles/SYSC3303Project.dir/src/Scheduler.cpp.o
-.PHONY : src/Scheduler.cpp.o
-
-src/Scheduler.i: src/Scheduler.cpp.i
-.PHONY : src/Scheduler.i
-
-# target to preprocess a source file
-src/Scheduler.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SYSC3303Project.dir/build.make CMakeFiles/SYSC3303Project.dir/src/Scheduler.cpp.i
-.PHONY : src/Scheduler.cpp.i
-
-src/Scheduler.s: src/Scheduler.cpp.s
-.PHONY : src/Scheduler.s
-
-# target to generate assembly for a file
-src/Scheduler.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SYSC3303Project.dir/build.make CMakeFiles/SYSC3303Project.dir/src/Scheduler.cpp.s
-.PHONY : src/Scheduler.cpp.s
-
-src/main.o: src/main.cpp.o
-.PHONY : src/main.o
-
-# target to build an object file
-src/main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SYSC3303Project.dir/build.make CMakeFiles/SYSC3303Project.dir/src/main.cpp.o
-.PHONY : src/main.cpp.o
-
-src/main.i: src/main.cpp.i
-.PHONY : src/main.i
-
-# target to preprocess a source file
-src/main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SYSC3303Project.dir/build.make CMakeFiles/SYSC3303Project.dir/src/main.cpp.i
-.PHONY : src/main.cpp.i
-
-src/main.s: src/main.cpp.s
-.PHONY : src/main.s
-
-# target to generate assembly for a file
-src/main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SYSC3303Project.dir/build.make CMakeFiles/SYSC3303Project.dir/src/main.cpp.s
-.PHONY : src/main.cpp.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -690,21 +620,11 @@ help:
 	@echo "... NightlyUpdate"
 	@echo "... Catch2"
 	@echo "... Catch2WithMain"
-	@echo "... SYSC3303Project"
+	@echo "... Elevator"
+	@echo "... Floor"
+	@echo "... Scheduler"
 	@echo "... source"
 	@echo "... unit_tests"
-	@echo "... src/Elevator.o"
-	@echo "... src/Elevator.i"
-	@echo "... src/Elevator.s"
-	@echo "... src/Floor.o"
-	@echo "... src/Floor.i"
-	@echo "... src/Floor.s"
-	@echo "... src/Scheduler.o"
-	@echo "... src/Scheduler.i"
-	@echo "... src/Scheduler.s"
-	@echo "... src/main.o"
-	@echo "... src/main.i"
-	@echo "... src/main.s"
 .PHONY : help
 
 

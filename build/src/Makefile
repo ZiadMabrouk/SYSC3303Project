@@ -140,12 +140,55 @@ source/fast:
 	cd /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/source.dir/build.make src/CMakeFiles/source.dir/build
 .PHONY : source/fast
 
+# Convenience name for target.
+src/CMakeFiles/Scheduler.dir/rule:
+	cd /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/CMakeFiles/Scheduler.dir/rule
+.PHONY : src/CMakeFiles/Scheduler.dir/rule
+
+# Convenience name for target.
+Scheduler: src/CMakeFiles/Scheduler.dir/rule
+.PHONY : Scheduler
+
+# fast build rule for target.
+Scheduler/fast:
+	cd /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/Scheduler.dir/build.make src/CMakeFiles/Scheduler.dir/build
+.PHONY : Scheduler/fast
+
+# Convenience name for target.
+src/CMakeFiles/Elevator.dir/rule:
+	cd /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/CMakeFiles/Elevator.dir/rule
+.PHONY : src/CMakeFiles/Elevator.dir/rule
+
+# Convenience name for target.
+Elevator: src/CMakeFiles/Elevator.dir/rule
+.PHONY : Elevator
+
+# fast build rule for target.
+Elevator/fast:
+	cd /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/Elevator.dir/build.make src/CMakeFiles/Elevator.dir/build
+.PHONY : Elevator/fast
+
+# Convenience name for target.
+src/CMakeFiles/Floor.dir/rule:
+	cd /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/CMakeFiles/Floor.dir/rule
+.PHONY : src/CMakeFiles/Floor.dir/rule
+
+# Convenience name for target.
+Floor: src/CMakeFiles/Floor.dir/rule
+.PHONY : Floor
+
+# fast build rule for target.
+Floor/fast:
+	cd /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/Floor.dir/build.make src/CMakeFiles/Floor.dir/build
+.PHONY : Floor/fast
+
 Elevator.o: Elevator.cpp.o
 .PHONY : Elevator.o
 
 # target to build an object file
 Elevator.cpp.o:
 	cd /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/source.dir/build.make src/CMakeFiles/source.dir/Elevator.cpp.o
+	cd /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/Elevator.dir/build.make src/CMakeFiles/Elevator.dir/Elevator.cpp.o
 .PHONY : Elevator.cpp.o
 
 Elevator.i: Elevator.cpp.i
@@ -154,6 +197,7 @@ Elevator.i: Elevator.cpp.i
 # target to preprocess a source file
 Elevator.cpp.i:
 	cd /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/source.dir/build.make src/CMakeFiles/source.dir/Elevator.cpp.i
+	cd /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/Elevator.dir/build.make src/CMakeFiles/Elevator.dir/Elevator.cpp.i
 .PHONY : Elevator.cpp.i
 
 Elevator.s: Elevator.cpp.s
@@ -162,6 +206,7 @@ Elevator.s: Elevator.cpp.s
 # target to generate assembly for a file
 Elevator.cpp.s:
 	cd /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/source.dir/build.make src/CMakeFiles/source.dir/Elevator.cpp.s
+	cd /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/Elevator.dir/build.make src/CMakeFiles/Elevator.dir/Elevator.cpp.s
 .PHONY : Elevator.cpp.s
 
 Floor.o: Floor.cpp.o
@@ -170,6 +215,7 @@ Floor.o: Floor.cpp.o
 # target to build an object file
 Floor.cpp.o:
 	cd /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/source.dir/build.make src/CMakeFiles/source.dir/Floor.cpp.o
+	cd /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/Floor.dir/build.make src/CMakeFiles/Floor.dir/Floor.cpp.o
 .PHONY : Floor.cpp.o
 
 Floor.i: Floor.cpp.i
@@ -178,6 +224,7 @@ Floor.i: Floor.cpp.i
 # target to preprocess a source file
 Floor.cpp.i:
 	cd /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/source.dir/build.make src/CMakeFiles/source.dir/Floor.cpp.i
+	cd /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/Floor.dir/build.make src/CMakeFiles/Floor.dir/Floor.cpp.i
 .PHONY : Floor.cpp.i
 
 Floor.s: Floor.cpp.s
@@ -186,6 +233,7 @@ Floor.s: Floor.cpp.s
 # target to generate assembly for a file
 Floor.cpp.s:
 	cd /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/source.dir/build.make src/CMakeFiles/source.dir/Floor.cpp.s
+	cd /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/Floor.dir/build.make src/CMakeFiles/Floor.dir/Floor.cpp.s
 .PHONY : Floor.cpp.s
 
 Scheduler.o: Scheduler.cpp.o
@@ -194,6 +242,7 @@ Scheduler.o: Scheduler.cpp.o
 # target to build an object file
 Scheduler.cpp.o:
 	cd /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/source.dir/build.make src/CMakeFiles/source.dir/Scheduler.cpp.o
+	cd /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/Scheduler.dir/build.make src/CMakeFiles/Scheduler.dir/Scheduler.cpp.o
 .PHONY : Scheduler.cpp.o
 
 Scheduler.i: Scheduler.cpp.i
@@ -202,6 +251,7 @@ Scheduler.i: Scheduler.cpp.i
 # target to preprocess a source file
 Scheduler.cpp.i:
 	cd /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/source.dir/build.make src/CMakeFiles/source.dir/Scheduler.cpp.i
+	cd /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/Scheduler.dir/build.make src/CMakeFiles/Scheduler.dir/Scheduler.cpp.i
 .PHONY : Scheduler.cpp.i
 
 Scheduler.s: Scheduler.cpp.s
@@ -210,6 +260,7 @@ Scheduler.s: Scheduler.cpp.s
 # target to generate assembly for a file
 Scheduler.cpp.s:
 	cd /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/source.dir/build.make src/CMakeFiles/source.dir/Scheduler.cpp.s
+	cd /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/Scheduler.dir/build.make src/CMakeFiles/Scheduler.dir/Scheduler.cpp.s
 .PHONY : Scheduler.cpp.s
 
 # Help Target
@@ -221,6 +272,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... test"
+	@echo "... Elevator"
+	@echo "... Floor"
+	@echo "... Scheduler"
 	@echo "... source"
 	@echo "... Elevator.o"
 	@echo "... Elevator.i"

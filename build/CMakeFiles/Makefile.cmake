@@ -72,10 +72,12 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/SYSC3303Project.dir/DependInfo.cmake"
   "Catch2/src/CMakeFiles/Catch2.dir/DependInfo.cmake"
   "Catch2/src/CMakeFiles/Catch2WithMain.dir/DependInfo.cmake"
   "src/CMakeFiles/source.dir/DependInfo.cmake"
+  "src/CMakeFiles/Scheduler.dir/DependInfo.cmake"
+  "src/CMakeFiles/Elevator.dir/DependInfo.cmake"
+  "src/CMakeFiles/Floor.dir/DependInfo.cmake"
   "tests/CMakeFiles/unit_tests.dir/DependInfo.cmake"
   "tests/CMakeFiles/Experimental.dir/DependInfo.cmake"
   "tests/CMakeFiles/Nightly.dir/DependInfo.cmake"

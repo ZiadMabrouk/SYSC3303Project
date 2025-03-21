@@ -63,7 +63,6 @@ CMAKE_BINARY_DIR = /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/SYSC3303Project.dir/all
 all: Catch2/all
 all: src/all
 all: tests/all
@@ -76,7 +75,6 @@ preinstall: tests/preinstall
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/SYSC3303Project.dir/clean
 clean: Catch2/clean
 clean: src/clean
 clean: tests/clean
@@ -119,6 +117,9 @@ Catch2/src/clean: Catch2/src/CMakeFiles/Catch2WithMain.dir/clean
 
 # Recursive "all" directory target.
 src/all: src/CMakeFiles/source.dir/all
+src/all: src/CMakeFiles/Scheduler.dir/all
+src/all: src/CMakeFiles/Elevator.dir/all
+src/all: src/CMakeFiles/Floor.dir/all
 .PHONY : src/all
 
 # Recursive "preinstall" directory target.
@@ -127,6 +128,9 @@ src/preinstall:
 
 # Recursive "clean" directory target.
 src/clean: src/CMakeFiles/source.dir/clean
+src/clean: src/CMakeFiles/Scheduler.dir/clean
+src/clean: src/CMakeFiles/Elevator.dir/clean
+src/clean: src/CMakeFiles/Floor.dir/clean
 .PHONY : src/clean
 
 #=============================================================================
@@ -173,44 +177,18 @@ tests/clean: tests/CMakeFiles/ContinuousSubmit.dir/clean
 .PHONY : tests/clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/SYSC3303Project.dir
-
-# All Build rule for target.
-CMakeFiles/SYSC3303Project.dir/all: src/CMakeFiles/source.dir/all
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SYSC3303Project.dir/build.make CMakeFiles/SYSC3303Project.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SYSC3303Project.dir/build.make CMakeFiles/SYSC3303Project.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/CMakeFiles --progress-num=91,92,93,94 "Built target SYSC3303Project"
-.PHONY : CMakeFiles/SYSC3303Project.dir/all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/SYSC3303Project.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/CMakeFiles 8
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/SYSC3303Project.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/CMakeFiles 0
-.PHONY : CMakeFiles/SYSC3303Project.dir/rule
-
-# Convenience name for target.
-SYSC3303Project: CMakeFiles/SYSC3303Project.dir/rule
-.PHONY : SYSC3303Project
-
-# clean rule for target.
-CMakeFiles/SYSC3303Project.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SYSC3303Project.dir/build.make CMakeFiles/SYSC3303Project.dir/clean
-.PHONY : CMakeFiles/SYSC3303Project.dir/clean
-
-#=============================================================================
 # Target rules for target Catch2/src/CMakeFiles/Catch2.dir
 
 # All Build rule for target.
 Catch2/src/CMakeFiles/Catch2.dir/all:
 	$(MAKE) $(MAKESILENT) -f Catch2/src/CMakeFiles/Catch2.dir/build.make Catch2/src/CMakeFiles/Catch2.dir/depend
 	$(MAKE) $(MAKESILENT) -f Catch2/src/CMakeFiles/Catch2.dir/build.make Catch2/src/CMakeFiles/Catch2.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89 "Built target Catch2"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88 "Built target Catch2"
 .PHONY : Catch2/src/CMakeFiles/Catch2.dir/all
 
 # Build rule for subdir invocation for target.
 Catch2/src/CMakeFiles/Catch2.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/CMakeFiles 89
+	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/CMakeFiles 88
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Catch2/src/CMakeFiles/Catch2.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/CMakeFiles 0
 .PHONY : Catch2/src/CMakeFiles/Catch2.dir/rule
@@ -231,7 +209,7 @@ Catch2/src/CMakeFiles/Catch2.dir/clean:
 Catch2/src/CMakeFiles/Catch2WithMain.dir/all: Catch2/src/CMakeFiles/Catch2.dir/all
 	$(MAKE) $(MAKESILENT) -f Catch2/src/CMakeFiles/Catch2WithMain.dir/build.make Catch2/src/CMakeFiles/Catch2WithMain.dir/depend
 	$(MAKE) $(MAKESILENT) -f Catch2/src/CMakeFiles/Catch2WithMain.dir/build.make Catch2/src/CMakeFiles/Catch2WithMain.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/CMakeFiles --progress-num=90 "Built target Catch2WithMain"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/CMakeFiles --progress-num=89,90 "Built target Catch2WithMain"
 .PHONY : Catch2/src/CMakeFiles/Catch2WithMain.dir/all
 
 # Build rule for subdir invocation for target.
@@ -257,12 +235,12 @@ Catch2/src/CMakeFiles/Catch2WithMain.dir/clean:
 src/CMakeFiles/source.dir/all:
 	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/source.dir/build.make src/CMakeFiles/source.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/source.dir/build.make src/CMakeFiles/source.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/CMakeFiles --progress-num=95,96,97,98 "Built target source"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/CMakeFiles --progress-num=96,97,98 "Built target source"
 .PHONY : src/CMakeFiles/source.dir/all
 
 # Build rule for subdir invocation for target.
 src/CMakeFiles/source.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/CMakeFiles 4
+	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/CMakeFiles 3
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/CMakeFiles/source.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/CMakeFiles 0
 .PHONY : src/CMakeFiles/source.dir/rule
@@ -275,6 +253,84 @@ source: src/CMakeFiles/source.dir/rule
 src/CMakeFiles/source.dir/clean:
 	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/source.dir/build.make src/CMakeFiles/source.dir/clean
 .PHONY : src/CMakeFiles/source.dir/clean
+
+#=============================================================================
+# Target rules for target src/CMakeFiles/Scheduler.dir
+
+# All Build rule for target.
+src/CMakeFiles/Scheduler.dir/all:
+	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/Scheduler.dir/build.make src/CMakeFiles/Scheduler.dir/depend
+	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/Scheduler.dir/build.make src/CMakeFiles/Scheduler.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/CMakeFiles --progress-num=94,95 "Built target Scheduler"
+.PHONY : src/CMakeFiles/Scheduler.dir/all
+
+# Build rule for subdir invocation for target.
+src/CMakeFiles/Scheduler.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/CMakeFiles/Scheduler.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/CMakeFiles 0
+.PHONY : src/CMakeFiles/Scheduler.dir/rule
+
+# Convenience name for target.
+Scheduler: src/CMakeFiles/Scheduler.dir/rule
+.PHONY : Scheduler
+
+# clean rule for target.
+src/CMakeFiles/Scheduler.dir/clean:
+	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/Scheduler.dir/build.make src/CMakeFiles/Scheduler.dir/clean
+.PHONY : src/CMakeFiles/Scheduler.dir/clean
+
+#=============================================================================
+# Target rules for target src/CMakeFiles/Elevator.dir
+
+# All Build rule for target.
+src/CMakeFiles/Elevator.dir/all:
+	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/Elevator.dir/build.make src/CMakeFiles/Elevator.dir/depend
+	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/Elevator.dir/build.make src/CMakeFiles/Elevator.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/CMakeFiles --progress-num=91 "Built target Elevator"
+.PHONY : src/CMakeFiles/Elevator.dir/all
+
+# Build rule for subdir invocation for target.
+src/CMakeFiles/Elevator.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/CMakeFiles 1
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/CMakeFiles/Elevator.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/CMakeFiles 0
+.PHONY : src/CMakeFiles/Elevator.dir/rule
+
+# Convenience name for target.
+Elevator: src/CMakeFiles/Elevator.dir/rule
+.PHONY : Elevator
+
+# clean rule for target.
+src/CMakeFiles/Elevator.dir/clean:
+	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/Elevator.dir/build.make src/CMakeFiles/Elevator.dir/clean
+.PHONY : src/CMakeFiles/Elevator.dir/clean
+
+#=============================================================================
+# Target rules for target src/CMakeFiles/Floor.dir
+
+# All Build rule for target.
+src/CMakeFiles/Floor.dir/all:
+	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/Floor.dir/build.make src/CMakeFiles/Floor.dir/depend
+	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/Floor.dir/build.make src/CMakeFiles/Floor.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/CMakeFiles --progress-num=92,93 "Built target Floor"
+.PHONY : src/CMakeFiles/Floor.dir/all
+
+# Build rule for subdir invocation for target.
+src/CMakeFiles/Floor.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/CMakeFiles/Floor.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/CMakeFiles 0
+.PHONY : src/CMakeFiles/Floor.dir/rule
+
+# Convenience name for target.
+Floor: src/CMakeFiles/Floor.dir/rule
+.PHONY : Floor
+
+# clean rule for target.
+src/CMakeFiles/Floor.dir/clean:
+	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/Floor.dir/build.make src/CMakeFiles/Floor.dir/clean
+.PHONY : src/CMakeFiles/Floor.dir/clean
 
 #=============================================================================
 # Target rules for target tests/CMakeFiles/unit_tests.dir
@@ -290,7 +346,7 @@ tests/CMakeFiles/unit_tests.dir/all: src/CMakeFiles/source.dir/all
 
 # Build rule for subdir invocation for target.
 tests/CMakeFiles/unit_tests.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/CMakeFiles 96
+	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/CMakeFiles 95
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/unit_tests.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/CMakeFiles 0
 .PHONY : tests/CMakeFiles/unit_tests.dir/rule
