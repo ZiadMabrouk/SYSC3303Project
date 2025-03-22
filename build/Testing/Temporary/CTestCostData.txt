@@ -1,4 +1,71 @@
-ElevatorTest - getCurrentFloor() 1 0.170229
-FloorTest - formatTime(tm datetime) 1 0.05136
-Scheduler put() & get() 1 0.0444938
+State 0 0
+UDP 0 0
+UDP 0 0
+ElevatorTest 0 0
+FloorTest 0 0
+Scheduler 0 0
+State 0 0
+UDP 0 0
+UDP 0 0
+ElevatorTest 0 0
+FloorTest 0 0
+Scheduler 0 0
+State 0 0
+State 0 0
+UDP 0 0
+UDP 0 0
+ElevatorTest 0 0
+FloorTest 0 0
+Scheduler 0 0
+State 0 0
+State 0 0
+UDP 0 0
+UDP 0 0
+ElevatorTest 0 0
+FloorTest 0 0
+Scheduler 0 0
+State 0 0
+State 0 0
+UDP 0 0
+UDP 0 0
+ElevatorTest 0 0
+FloorTest 0 0
+Scheduler 0 0
+State 0 0
+State 0 0
+UDP 0 0
+UDP 0 0
+ElevatorTest 0 0
+FloorTest 0 0
+Scheduler 0 0
+State 0 0
+State 0 0
+UDP 0 0
+UDP 0 0
+ElevatorTest 0 0
+FloorTest 0 0
+Scheduler 0 0
+State 0 0
+State 0 0
+UDP 0 0
+UDP 0 0
+ElevatorTest 0 0
+FloorTest 0 0
+Scheduler 0 0
+State 0 0
+State 0 0
+UDP 0 0
+UDP 0 0
+Algorithm 0 0
+ElevatorTest 0 0
+FloorTest 0 0
+Scheduler 0 0
+State Machines (Scheduler) - handle()  1 0.119826
+State Machines (Elevator) - Inital State  1 0.10408
+UDP Communication (Scheduler) - Socket.send() - Socket.receive() 1 0.0730433
+UDP Communication (Elevator) - Socket.send() - Socket.receive() 1 0.101059
+Algorithm - Scheduler  1 0.0877698
+ElevatorTest - getCurrentFloor() 1 0.0815128
+FloorTest - Subsystem 1 0.113403
+Scheduler put() & get() 1 0.154695
 ---

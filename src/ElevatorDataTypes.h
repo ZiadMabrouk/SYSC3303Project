@@ -23,6 +23,7 @@ typedef struct ElevatorData {
     int elevatorID = 0;
     int transmittedFloor = 0;
     Direction direction = Direction::IDLE;
+    bool stateTest = false;
     // Serialize struct into byte array
     void serialize(uint8_t* buffer) const {
         std::memcpy(buffer, this, sizeof(ElevatorData));

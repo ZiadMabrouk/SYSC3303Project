@@ -54,11 +54,13 @@ class Elevator
 {
 private:
 
-    eState* currentState;
+
 
     void calcdirection(short int floor); // for now only used by addtoQueue.
 
 public:
+    bool stateTest = false;
+    eState* currentState;
     e_struct send_e_struct_;
     int arrived;
     short int current_floor;

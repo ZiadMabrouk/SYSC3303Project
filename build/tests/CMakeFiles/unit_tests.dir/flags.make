@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -I/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/src -I/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/Catch2/src/catch2/.. -I/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/Catch2/generated-includes
 
-CXX_FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+CXX_FLAGS = -std=gnu++20
 

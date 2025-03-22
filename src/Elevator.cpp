@@ -226,8 +226,9 @@ void Elevator::handle() {
 }
 
 void eWaitingForInput::handle(Elevator* context) {
-    std::cout << "Elevator " << context->ID << ": Waiting for input / IDLE" << std::endl;
-
+    std::cout << "Elevator " << context->ID << ": Waiting for input / IDLE. Opening Doors" << std::endl;
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    std::cout << "Elevator " << context->ID << ": Doors Open" << std::endl;
     if (true) { // lock scope
         std::unique_lock<std::mutex> lock(context->mtx);
         while (context->myQueue.empty()) context->cv.wait(lock);
@@ -240,14 +241,17 @@ void eWaitingForInput::handle(Elevator* context) {
 }
 
 void ProcessRequest::handle(Elevator* context) {
-    std::cout << "Elevator " << context->ID << ": Processed Request" << std::endl;
-    context->setState(new CruiseAndWait());
-    context->handle();
-
+    if (!context->stateTest) {
+        std::cout << "Elevator " << context->ID << ": Processed Request" << std::endl;
+        context->setState(new CruiseAndWait());
+        context->handle();
+    }
 }
 
 void CruiseAndWait::handle(Elevator* context) {
-
+    std::cout << "Elevator " << context->ID << ": Doors Closing" << std::endl;
+    std::this_thread::sleep_for(std::chrono::milliseconds(800));
+    std::cout << "Elevator " << context->ID << ": Doors Closed" << std::endl;
     std::cout << "Moving..." << std::endl;
     while (context->floor_to_go_to != context->current_floor) {
         std::this_thread::sleep_for(std::chrono::seconds(3));//change this to match excel

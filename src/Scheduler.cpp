@@ -64,25 +64,29 @@ void WaitingForInput::handle(Scheduler *context) {
 void Dispatching::handle(Scheduler *context) {
     std::cout<<"Dispatching"<<std::endl;
     int elevatorID = 0;
+    if (!context->receiveData.stateTest) {
+        //test
+        e_struct sendtoElevator;
+        if (context->receiveData.floor_up_button) {
+            elevatorID = context->calculateBestScore(context->receiveData.floor_number, UP);
+            sendtoElevator.direction = UP;
+        } else {
+            elevatorID = context->calculateBestScore(context->receiveData.floor_number, DOWN);
+            sendtoElevator.direction = DOWN;
+        }
+        sendtoElevator.elevatorID = elevatorID+1;
+        std::cout << "Elevator ID: " << sendtoElevator.elevatorID << std::endl;
+        sendtoElevator.transmittedFloor = context->receiveData.floor_number;
 
-    e_struct sendtoElevator;
-    if (context->receiveData.floor_up_button) {
-        elevatorID = context->calculateBestScore(context->receiveData.floor_number, UP);
-        sendtoElevator.direction = UP;
-    } else {
-        elevatorID = context->calculateBestScore(context->receiveData.floor_number, DOWN);
-        sendtoElevator.direction = DOWN;
+        send_and_wait_for_ack("Scheduler", sendtoElevator, PORT+sendtoElevator.elevatorID, context->getReceiveSocket(), context->getSendSocket());
+
+        std::cout<<"Dispatched"<<std::endl;
+
+        context->setState(new WaitingForInput());
+        context->handle();
+        delete this;
     }
-    sendtoElevator.elevatorID = elevatorID+1;
-    std::cout << "Elevator ID: " << sendtoElevator.elevatorID << std::endl;
-    sendtoElevator.transmittedFloor = context->receiveData.floor_number;
 
-    send_and_wait_for_ack("Scheduler", sendtoElevator, PORT+sendtoElevator.elevatorID, context->getReceiveSocket(), context->getSendSocket());
-
-    std::cout<<"Dispatched"<<std::endl;
-    context->setState(new WaitingForInput());
-    context->handle();
-    delete this;
 }
 
 void AddingRequestToQueue::handle(Scheduler *context) {

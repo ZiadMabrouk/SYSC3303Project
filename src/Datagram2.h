@@ -113,6 +113,24 @@ private:
 #define TIMEOUT_SEC 5
 #define MAX_RETRIES 5
 
+void inline send_no_wait(std::string name, e_struct sendingData, int port, DatagramSocket &iReceiveSocket, DatagramSocket &iSendSocket) {
+	std::vector<uint8_t> buffer(sizeof(e_struct));  // Create a buffer for the struct
+	sendingData.serialize(buffer.data());
+
+
+	DatagramPacket sendPacket(buffer, buffer.size(), InetAddress::getLocalHost(), port);
+	try {
+		// Send the message to the server
+		std::cout << name << "Sending message to server..." << std::endl;
+		iSendSocket.send(sendPacket);
+	} catch (const std::runtime_error& e) {
+		std::cerr << "Send failed: " << e.what() << std::endl;
+		return exit(1); // Exit on send failure
+	}
+	std::cout << "Packet Sent!" << std::endl;
+
+}
+
 void inline send_and_wait_for_ack(std::string name, e_struct sendingData, int port, DatagramSocket &iReceiveSocket, DatagramSocket &iSendSocket) {
     std::vector<uint8_t> buffer(sizeof(e_struct));  // Create a buffer for the struct
     sendingData.serialize(buffer.data());
@@ -162,7 +180,27 @@ void inline send_and_wait_for_ack(std::string name, e_struct sendingData, int po
         break;
     }
 }
+e_struct inline receive_no_wait(std::string name, DatagramSocket& iReceiveSocket, DatagramSocket& iSendSocket) {
+	std::vector<uint8_t> data(sizeof(e_struct));
+	DatagramPacket receivePacket(data, data.size());
 
+	std::cout << name << ": Waiting for Packet." << std::endl;
+	try {
+		std::cout << "Waiting..." << std::endl;
+		iReceiveSocket.receive(receivePacket);
+	} catch (const std::runtime_error& e) {
+		std::cerr << "IO Exception: Receive Socket Timed Out.\n" << e.what() << std::endl;
+		exit(1);
+	}
+
+	std::cout << name << ": Packet received:\n";
+	std::cout << "From host: " << receivePacket.getAddressAsString() << std::endl;
+	std::cout << "Host port: " << receivePacket.getPort() << std::endl;
+
+	// Deserialize received struct
+	e_struct receivedData = e_struct::deserialize(data.data());
+	return receivedData;
+}
 e_struct inline wait_and_receive_with_ack(std::string name, DatagramSocket& iReceiveSocket, DatagramSocket& iSendSocket) {
     std::vector<uint8_t> data(sizeof(e_struct));
     DatagramPacket receivePacket(data, data.size());

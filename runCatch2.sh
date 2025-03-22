@@ -9,7 +9,7 @@ case "$choice" in
     Y|y)
         echo "Starting the test..."
         # Continue with the rest of the script
-        cmake --fresh -S . -B build
+        cmake -S . -B build
         cmake --build build
         cd build || exit
         ctest

@@ -1,3 +1,3 @@
 file(REMOVE_RECURSE
-  "libCatch2d.a"
+  "libCatch2.a"
 )

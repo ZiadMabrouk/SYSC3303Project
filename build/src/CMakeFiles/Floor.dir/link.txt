@@ -1,1 +1,1 @@
-/usr/bin/c++ -g CMakeFiles/Floor.dir/Floor.cpp.o -o Floor 
+/usr/bin/c++ CMakeFiles/Floor.dir/Floor.cpp.o -o Floor 

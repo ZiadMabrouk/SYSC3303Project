@@ -65,10 +65,11 @@ public:
 class Scheduler
 {
 private:
-    State* currentState;
+
     DatagramSocket sendSocket;
     DatagramSocket receiveSocket;
 public:
+    State* currentState;
     std::vector<e_struct> elevators;
     bool elevatorOccupied = false;
     bool floorProduced = false;
