@@ -4,18 +4,8 @@
 #include <iostream>
 #include <fstream>
 
-// Assuming scheduler will not send me a floor that is lower than my current floor, if I am moving in the UP direction
-// Scheduler can only do the above if car direction is set to "IDLE" aka stopped.
-// assume all caps will be used for direction data from scheduler.
+//TODO:  opens and closes doors time value needs to be changed to simulate live data from excel sheet.
 
-// 1 thread or 3 lol.
-// receiving data socket
-// travel there
-// send data to scheduler
-
-// What I have left.
-// communications
-//
 
 //gets current floor
 short int Elevator::getCurrentFloor() {
@@ -26,37 +16,48 @@ void Elevator::setCurrentFloor(short int floor) {
     current_floor = floor;
 }
 
-// opens and closes doors and simulate live data from excel sheet.
+void Elevator::setDirection(Direction set2) {
+    direction = set2;
+}
 
+//Delete if unused.
+Direction Elevator::getDirection() {
+    return direction;
+}
 
+// returns reference and not a copy of myQueue. if this fails then go the setter function route.
+std::vector<short int> &Elevator::getQueue() {
+    return myQueue;
+}
 
 
 
 // AS OF NOW this only to be called by .addtoQueue Method so make sure to set to this private later
 // calculates direction issue with this, is that it needs the floo
-void Elevator::calcdirection(short int pfloor) {
-    if (current_floor < pfloor)
-        direction = UP;
+void ElevatorSubsystem::calcdirection(short int pfloor) {
+    if (myElevator.getCurrentFloor() < pfloor) // need to get elevators current floor.
+        myElevator.setDirection(UP); // need to be able set elevators directon via ElevatorSubsytsem
 
-    else if (current_floor > pfloor){
-        direction = DOWN;
+    else if (myElevator.getCurrentFloor() > pfloor){
+        myElevator.setDirection(DOWN);
     }
     // don't account for the case where they are equal, because when travel is called this will get auto detected and accounted for.
     //std::cerr << "Did not pass in floor number, or at least not one that exists in this building!Try again" << std::endl;
 }
 
+// TODO: Test to see if get by refenrence works as expected.
 //Im gonna assume that a floor lower than the elevators current floor, when
-void Elevator::addtoQueue(short int floor) {
+void ElevatorSubsystem::addtoQueue(short int floor) {
     std::lock_guard<std::mutex> lock(mtx);
-    if (myQueue.empty())
+    if (myElevator.getQueue().empty())
     {// adds floor number, to queue.
         std::cout << " adding floor " << floor << std::endl;
         calcdirection(floor); // sets the direction
-        myQueue.push_back(floor); // edge cases
+        myElevator.getQueue().push_back(floor); // edge cases
     }
-    else if (direction == UP) //this part sorts the vector ascending order(up direction).
+    else if (myElevator.getDirection() == UP) //this part sorts the vector ascending order(up direction).
     {
-        // bool inQueue = false;
+        // bool inQueue = false; may be duplicate checking logic in which case, this should be readded.
         // for (auto i : myQueue) {
         //     if (i == floor) {
         //         inQueue = true;
@@ -64,12 +65,12 @@ void Elevator::addtoQueue(short int floor) {
         // }
         //
         // if (!inQueue) {
-            myQueue.push_back(floor);
-            std::sort(myQueue.begin(), myQueue.end());
+        myElevator.getQueue().push_back(floor);
+        std::sort(myElevator.getQueue().begin(), myElevator.getQueue().end());
         // }
 
     }
-    else if (direction == DOWN)//this part sorts the vector in descending order(down direction).
+    else if (myElevator.getDirection() == DOWN)//this part sorts the vector in descending order(down direction).
     {
         // bool inQueue = false;
         // for (auto i : myQueue) {
@@ -78,8 +79,8 @@ void Elevator::addtoQueue(short int floor) {
         //     }
         // }
         // if (!inQueue) {
-            myQueue.push_back(floor);
-            std::sort(myQueue.begin(), myQueue.end(), std::greater<short int>());  // Descending order
+        myElevator.getQueue().push_back(floor);
+        std::sort(myElevator.getQueue().begin(), myElevator.getQueue().end(), std::greater<short int>());  // Descending order
         // }
 
     }
@@ -87,8 +88,7 @@ void Elevator::addtoQueue(short int floor) {
 
 }
 
-// need to check if myQueue is empty at some point after a pop, so I can change its direction to IDLE
-//when traveling to next element.
+
 /**
 void Elevator::travel() {
     std::unique_lock<std::mutex> lock(mtx);
@@ -132,88 +132,41 @@ std::string Elevator::stringDirection(Direction direction) {
     }
 }
 
+// should work.
 // this thread will communicate will be receiving from scheduler.
-void Elevator::receiverThread() {
+void ElevatorSubsystem::receiverThread() {
     // does the name for receiving matter, when elevator is receiving can't it just be sheduler?
     // have ziad check, my sockets, becuase what I did was scuffed.
     while (true) { // may have to consider removing some of this logic into mainThread instead.
 
         // now pass it into add_queue, to update myQueue vector
+        // TODO: Consider changing Elevator to ElevatorSubystem if needed.
         received_e_struct_ = wait_and_receive_with_ack("Elevator", receiveSocket, sendSocket);
 
         addtoQueue(received_e_struct_.transmittedFloor); // only thread to call addtoQueue is this one, but myQueue itself will change
         // as other threads
-        printQueue();
-        std::cout << "Elevator " << ID << "'s current direction is " << stringDirection(direction) << std::endl;
+        myElevator.printQueue();
+        std::cout << "Elevator " << programID << "'s current direction is " << myElevator.stringDirection(myElevator.getDirection()) << std::endl;
         //std::this_thread::
     }
 }
-/**
-void Elevator::mainThread() {
-    while (true){
-    // this will just have elevator move through floors until reaches it's destination.
-        //travel(); // may need to modify to change e_struct elevators data?
-        std::lock_guard<std::mutex> lock(mtx2);
-        send_e_struct_.elevatorID = ID;
-        send_e_struct_.transmittedFloor = current_floor;
-        send_e_struct_.direction = direction;
-        send_e_struct_.arrived = arrived;
-    }
-}
-**/
-/**
-void Elevator::senderThread() {
-    scheduler_object.send_and_wait_for_ack(threadName, send_e_struct_,PORT + ID, sendSocket, receiveSocket);
-}
-**/
 
-Elevator::Elevator(int elevatorID) : arrived(false), currentState(new eWaitingForInput), floor_to_go_to(1),  current_floor(1), direction(IDLE) , ID(elevatorID), sendSocket(), receiveSocket(PORT+elevatorID) {
+
+
+// make sure to pass the now Elevator Substystem programID as elevatorID
+Elevator::Elevator(int elevatorID) : arrived(false), floor_to_go_to(1),  current_floor(1), direction(IDLE) , ID(elevatorID) {
 } // initializes the elevator class to object.
 
-void Elevator::operator()() { // defines how the Elevator object acts when called
-    //int i = 1;
-    //while (true) { // infinite loop
-    // elevator_data = scheduler_object.get();
-    //
-    // std::cout <<"Grab request " << "Floor Number:" << elevator_data.floor_number << std::endl;
-    // current_floor = elevator_data.floor_number;
-    //
-    // elevator_data.arrived = ARRIVED_FOR_PICKUP;
-    // std::cout << "Elevator has arrived at Floor Number:" << current_floor << " and the doors are open, waiting for button request"<< std::endl;
-    // scheduler_object.put(elevator_data, ELEVATOR_ID); // put elevator_data back into the scheduler object. to update the scheduler on elevators arrival.
-    //
-    // std::cout << "Elevator is now travelling to: " << elevator_data.car_to_floor_number << std::endl;
-    // current_floor = elevator_data.car_to_floor_number;
-    // elevator_data.arrived = ARRIVED_FOR_DROPOFF;
-    // std::cout << "Elevator has arrived at Floor Number:" << current_floor << " for drop off and the doors are now closed "<< std::endl;
-    // scheduler_object.put(elevator_data, ELEVATOR_ID);
+//TODO: Define the constructor for ElevatorSubsystem.
+// may not need programID member.
+ElevatorSubsystem::ElevatorSubsystem(int elevatorID) : myElevator(elevatorID) , programID(elevatorID),currentState(new eWaitingForInput), sendSocket(), receiveSocket(PORT+elevatorID){
 
-    // e_struct that will tell me what to add into my queue.
-    //elevator_data = scheduler_object.wait_and_receive_with_ack("elevatorX", receiveSocket, sendSocket);
-
-    //void return type what I am sending the scheduler so my e_struct with my shit, which will just call somet
-
-    //elevator will have positive id and floor will be negative.
-
-    //scheduler_object.send_and_wait_for_ack("elevatorX", elevator_data,5000, sendSocket, receiveSocket);
+}
 
 
-
-    //this->addtoQueue(3);
-    //std::cout << "elevators current direction is " << direction << std::endl; //Change Direction to a string before passing it into a print
-    //travel();
-    //this->printQueue();
-    //this->addtoQueue(1);
-    //this->addtoQueue(16);
-    //this->addtoQueue(2);
-    //this->printQueue();
-    //travel();
-    //i--;
-
-    std::thread t1(&Elevator::receiverThread, this);
-    handle();
-
-
+void ElevatorSubsystem::operator()() {
+    std::thread t1(&ElevatorSubsystem::receiverThread, this);
+    handle(); // check that this works as expected.
     t1.join();
 }
 
@@ -221,63 +174,62 @@ std::vector<short int> Elevator::getQueue() {
     return myQueue;
 }
 
-void Elevator::handle() {
+void ElevatorSubsystem::handle() {
     currentState->handle(this);
 }
 
-void eWaitingForInput::handle(Elevator* context) {
-    std::cout << "Elevator " << context->ID << ": Waiting for input / IDLE. Opening Doors" << std::endl;
+void eWaitingForInput::handle(ElevatorSubsystem* context) {
+    std::cout << "Elevator " << context->programID << ": Waiting for input / IDLE. Opening Doors" << std::endl;
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
-    std::cout << "Elevator " << context->ID << ": Doors Open" << std::endl;
+    std::cout << "Elevator " << context->programID << ": Doors Open" << std::endl;
     if (true) { // lock scope
         std::unique_lock<std::mutex> lock(context->mtx);
-        while (context->myQueue.empty()) context->cv.wait(lock);
-        context->printQueue();
-        context->floor_to_go_to = context->myQueue.front();
+        while (context->myElevator.getQueue().empty()) context->cv.wait(lock);
+        context->myElevator.printQueue();
+        //review this line. was confused about it before.
+        context->myElevator.floor_to_go_to = context->myElevator.getQueue().front();
     }
-    std::cout << "Elevator " << context->ID << ": Received Request" << std::endl;
+    std::cout << "Elevator " << context->programID << ": Received Request" << std::endl;
     context->setState(new ProcessRequest());
     context->handle();
 }
 
-void ProcessRequest::handle(Elevator* context) {
-    if (!context->stateTest) {
-        std::cout << "Elevator " << context->ID << ": Processed Request" << std::endl;
-        context->setState(new CruiseAndWait());
-        context->handle();
-    }
-}
+void ProcessRequest::handle(ElevatorSubsystem* context) {
+    std::cout << "Elevator " << context->programID << ": Processed Request" << std::endl;
+    context->setState(new CruiseAndWait());
+    context->handle();
 
-void CruiseAndWait::handle(Elevator* context) {
-    std::cout << "Elevator " << context->ID << ": Doors Closing" << std::endl;
-    std::this_thread::sleep_for(std::chrono::milliseconds(800));
-    std::cout << "Elevator " << context->ID << ": Doors Closed" << std::endl;
+}
+//DOUBLE CHECK FLOOR_TO_GO_TO
+
+void CruiseAndWait::handle(ElevatorSubsystem* context) {
+    //Review the context swith changes.
     std::cout << "Moving..." << std::endl;
-    while (context->floor_to_go_to != context->current_floor) {
+    while (context->myElevator.floor_to_go_to != context->myElevator.getCurrentFloor()) {
         std::this_thread::sleep_for(std::chrono::seconds(3));//change this to match excel
         if (true) {
             std::unique_lock<std::mutex> lock(context->mtx);
-            std::cout << "Current Direction: " << context->stringDirection(context->direction) << std::endl;
-            if (context->direction == UP) {
-                context->current_floor += 1; // increments the floor by 1. (later worry about hard limit)
-            } else if (context->direction == DOWN) {
-                context->current_floor -= 1;
+            std::cout << "Current Direction: " << context->myElevator.stringDirection(context->myElevator.getDirection()) << std::endl;
+            if (context->myElevator.getDirection() == UP) {
+                context->myElevator.setCurrentFloor(context->myElevator.getCurrentFloor()+ 1); // Check that this works properly. increments the floor by 1. (later worry about hard limit)
+            } else if (context->myElevator.getDirection()== DOWN) {
+                context->myElevator.setCurrentFloor(context->myElevator.getCurrentFloor()-1);
             }// increments the floor by 1. (later worry about hard limit)
         }
-        context->send_e_struct_.elevatorID = context->ID;
-        context->send_e_struct_.transmittedFloor = context->current_floor;
-        context->send_e_struct_.direction = context->direction;
+        context->send_e_struct_.elevatorID = context->programID;
+        context->send_e_struct_.transmittedFloor = context->myElevator.getCurrentFloor();
+        context->send_e_struct_.direction = context->myElevator.getDirection();
         send_and_wait_for_ack(context->threadName, context->send_e_struct_,PORT, context->receiveSocket, context->sendSocket);
 
-        std::cout <<  "Elevator " << context->ID <<": Just passed, floor " << context->current_floor << std::endl;
+        std::cout <<  "Elevator " << context->programID <<": Just passed, floor " << context->myElevator.getCurrentFloor() << std::endl;
 
         //check if we receive a new request and need to change floor_to_go_to
         int new_state = false;
         if (true) {
             std::unique_lock<std::mutex> lock(context->mtx);
-            if (context->myQueue.front() != context->floor_to_go_to) {
+            if (context->myElevator.getQueue().front() != context->myElevator.floor_to_go_to) {
                 std::cout <<"New input received" << std::endl;
-                context->floor_to_go_to = context->myQueue.front();
+                context->myElevator.floor_to_go_to = context->myElevator.getQueue().front();
                 new_state = true;
             }
         }
@@ -286,28 +238,28 @@ void CruiseAndWait::handle(Elevator* context) {
             context->handle();
         }
     }
-    if (context->floor_to_go_to == context->current_floor) {
+    if (context->myElevator.floor_to_go_to == context->myElevator.getCurrentFloor()) {
         context->setState(new Stopped());
         context->handle();
     }
 
 }
 
-void Stopped::handle(Elevator* context) {
-    std::cout << "Elevator " << context->ID << ": Stopped." << std::endl;
+void Stopped::handle(ElevatorSubsystem* context) {
+    std::cout << "Elevator " << context->programID << ": Stopped." << std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(1));
     context->setState(new DoorsOpened());
     context->handle();
 }
 
-void DoorsOpened::handle(Elevator* context) {
-    std::cout << "Elevator " << context->ID << ": Doors Opened." << std::endl;
+void DoorsOpened::handle(ElevatorSubsystem* context) {
+    std::cout << "Elevator " << context->programID << ": Doors Opened." << std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(1));
     context->setState(new InformSchedulerOfArrival());
     context->handle();
 }
 
-void InformSchedulerOfArrival::handle(Elevator* context) {
+void InformSchedulerOfArrival::handle(ElevatorSubsystem* context) {
     std::cout << "Informing Scheduler of Arrival" << std::endl;
 
 
@@ -315,11 +267,11 @@ void InformSchedulerOfArrival::handle(Elevator* context) {
         std::unique_lock<std::mutex> lock(context->mtx);
         context->send_e_struct_.arrived = true;
 
-        context->myQueue.erase(context->myQueue.begin()); // only erase once you arrive at the floor. Isolate this garbage from the rest so make an doors() method. and call that
+        context->myElevator.getQueue().erase(context->myElevator.getQueue().begin()); // only erase once you arrive at the floor. Isolate this garbage from the rest so make an doors() method. and call that
 
-        if (context->myQueue.empty()) {
+        if (context->myElevator.getQueue().empty()) {
             std::cout << "Elevator Queue is empty, direction is now IDLE" << std::endl;
-            context->direction = IDLE;
+            context->myElevator.setDirection(IDLE);
         }
     }
 
@@ -329,28 +281,30 @@ void InformSchedulerOfArrival::handle(Elevator* context) {
     context->handle();
 }
 
-void DoorsClosed::handle(Elevator* context) {
-    std::cout << "Elevator " << context->ID << ": Doors Closed." << std::endl;
+void DoorsClosed::handle(ElevatorSubsystem* context) {
+    std::cout << "Elevator " << context->programID << ": Doors Closed." << std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(1));
 
     if (true) {
         std::unique_lock<std::mutex> lock(context->mtx);
         context->send_e_struct_.arrived = false;
 
-        if (context->direction == IDLE) {
+        if (context->myElevator.getDirection() == IDLE) {
             context->setState(new eWaitingForInput());
         } else {
-            context->floor_to_go_to = context->myQueue.front();
+            context->myElevator.floor_to_go_to = context->myElevator.getQueue().front();
             context->setState(new CruiseAndWait());
         }
     }
     context->handle();
 }
 
+
+//
 #ifndef UNIT_TEST
 int main(int argc, char* argv[]) {
-    Elevator elevator(std::atoi(argv[1]));
-    elevator.operator()();
+    ElevatorSubsystem elevator_subsystem(std::atoi(argv[1]));
+    elevator_subsystem.operator()();
 }
 #endif
 
