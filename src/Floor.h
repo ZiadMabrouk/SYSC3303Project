@@ -22,10 +22,11 @@
 class Floor {
 
 public:
-    Floor();
+    Floor(int num_floors) : numFloors(num_floors) {}
 
     DatagramSocket receiveSocket;
     DatagramSocket sendSocket;
+    int numFloors;
 
     void readFile();
 

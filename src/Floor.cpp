@@ -15,7 +15,7 @@
 #include <string>
 #include <fstream>
 
-Floor::Floor() = default;
+
 
 // this method reads a line from the input file and converts it into e_struct then invokes put into the scheduler object.
 void Floor::readFile() {
@@ -30,6 +30,11 @@ void Floor::readFile() {
         elevatorData.datetime = formatTime(token);
 
         std::getline(ss, token, ' ');
+        if (atoi(token.c_str()) > numFloors || atoi(token.c_str()) < 1) {
+            std::cout << "Invalid floor number: " << atoi(token.c_str()) << std::endl;
+            std::cout << "Skipping this line in the input file..." << std::endl;
+            continue;
+        }
         elevatorData.floor_number = atoi(token.c_str());
         std::cout << "Floor Number: " << elevatorData.floor_number << std::endl;
 
@@ -43,8 +48,14 @@ void Floor::readFile() {
         }
 
         std::getline(ss, token, ' ');
+        if (atoi(token.c_str()) > numFloors || atoi(token.c_str()) < 1) {
+            std::cout << "Invalid destination floor number: " << atoi(token.c_str()) << std::endl;
+            std::cout << "Skipping this line in the input file..." << std::endl;
+            continue;
+        }
         elevatorData.car_to_floor_number = atoi(token.c_str());
-        elevatorData.elevatorID = -1;
+
+        elevatorData.elevatorID = -1; // Helps discern that this e_struct is just data read from a file and not actual elevator data.
 
         send_and_wait_for_ack("Floor", elevatorData, PORT, receiveSocket, sendSocket);
         std::this_thread::sleep_for(std::chrono::seconds(5));
@@ -63,7 +74,7 @@ tm Floor::formatTime(const std::string& str) {
 #ifndef UNIT_TEST
 // invokes the readFile() method.
 int main(int argc, char *argv[]) {
-    Floor floor;
+    Floor floor(std::atoi(argv[1]));
     floor.readFile();
 }
 #endif
