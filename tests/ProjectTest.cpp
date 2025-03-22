@@ -33,16 +33,16 @@ TEST_CASE("State Machines (Scheduler) - handle() ", "[StateMachine]") {
     }
 }
 TEST_CASE("State Machines (Elevator) - Inital State ", "[StateMachine]") {
-    Elevator elevator(5);
+    ElevatorSubsystem elevator_subsystem(5);
     SECTION("Elevator starts in WaitingForInput state") {
-        eWaitingForInput* castedState = dynamic_cast<eWaitingForInput *>(elevator.currentState);
+        eWaitingForInput* castedState = dynamic_cast<eWaitingForInput *>(elevator_subsystem.currentState);
         REQUIRE(castedState != nullptr);
     }
     SECTION("Elevator goes into ProcessingRequest after receiving message") {
-        elevator.myQueue.push_back(5);
-        elevator.stateTest = true;
-        elevator.handle();
-        ProcessRequest* castedState2 = dynamic_cast<ProcessRequest *>(elevator.currentState);
+        elevator_subsystem.myElevator.getQueue().push_back(5);
+        elevator_subsystem.stateTest = true;
+        elevator_subsystem.handle();
+        ProcessRequest* castedState2 = dynamic_cast<ProcessRequest *>(elevator_subsystem.currentState);
         REQUIRE(castedState2 != nullptr);
     }
 
@@ -90,7 +90,7 @@ TEST_CASE("ElevatorTest - getCurrentFloor()", "[Calculator]") {
 // Given Input: 14:15:47.876, Expected Output: tm object with hours, mins and secs formatted into it.
 TEST_CASE("FloorTest - Subsystem", "[Floor]") {
     Scheduler scheduler(3);
-    Floor floor;
+    Floor floor(22);
 
     tm time = floor.formatTime("14:15:47.876");
 

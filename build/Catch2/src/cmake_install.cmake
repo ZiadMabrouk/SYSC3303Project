@@ -1,4 +1,4 @@
-# Install script for directory: /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/Catch2/src
+# Install script for directory: /home/nelspc/CLionProjects/SYSC3303Project/Catch2/src
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

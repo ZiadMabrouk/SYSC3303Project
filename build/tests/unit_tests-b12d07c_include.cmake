@@ -1,5 +1,5 @@
-if(EXISTS "/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/tests/unit_tests-b12d07c_tests.cmake")
-  include("/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/tests/unit_tests-b12d07c_tests.cmake")
+if(EXISTS "/home/nelspc/CLionProjects/SYSC3303Project/build/tests/unit_tests-b12d07c_tests.cmake")
+  include("/home/nelspc/CLionProjects/SYSC3303Project/build/tests/unit_tests-b12d07c_tests.cmake")
 else()
   add_test(unit_tests_NOT_BUILT-b12d07c unit_tests_NOT_BUILT-b12d07c)
 endif()

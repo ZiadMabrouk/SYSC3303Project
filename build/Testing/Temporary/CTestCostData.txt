@@ -1,71 +1,9 @@
-State 0 0
-UDP 0 0
-UDP 0 0
-ElevatorTest 0 0
-FloorTest 0 0
-Scheduler 0 0
-State 0 0
-UDP 0 0
-UDP 0 0
-ElevatorTest 0 0
-FloorTest 0 0
-Scheduler 0 0
-State 0 0
-State 0 0
-UDP 0 0
-UDP 0 0
-ElevatorTest 0 0
-FloorTest 0 0
-Scheduler 0 0
-State 0 0
-State 0 0
-UDP 0 0
-UDP 0 0
-ElevatorTest 0 0
-FloorTest 0 0
-Scheduler 0 0
-State 0 0
-State 0 0
-UDP 0 0
-UDP 0 0
-ElevatorTest 0 0
-FloorTest 0 0
-Scheduler 0 0
-State 0 0
-State 0 0
-UDP 0 0
-UDP 0 0
-ElevatorTest 0 0
-FloorTest 0 0
-Scheduler 0 0
-State 0 0
-State 0 0
-UDP 0 0
-UDP 0 0
-ElevatorTest 0 0
-FloorTest 0 0
-Scheduler 0 0
-State 0 0
-State 0 0
-UDP 0 0
-UDP 0 0
-ElevatorTest 0 0
-FloorTest 0 0
-Scheduler 0 0
-State 0 0
-State 0 0
-UDP 0 0
-UDP 0 0
-Algorithm 0 0
-ElevatorTest 0 0
-FloorTest 0 0
-Scheduler 0 0
-State Machines (Scheduler) - handle()  1 0.119826
-State Machines (Elevator) - Inital State  1 0.10408
-UDP Communication (Scheduler) - Socket.send() - Socket.receive() 1 0.0730433
-UDP Communication (Elevator) - Socket.send() - Socket.receive() 1 0.101059
-Algorithm - Scheduler  1 0.0877698
-ElevatorTest - getCurrentFloor() 1 0.0815128
-FloorTest - Subsystem 1 0.113403
-Scheduler put() & get() 1 0.154695
+State Machines (Scheduler) - handle()  1 0.00275006
+State Machines (Elevator) - Inital State  1 0.502863
+UDP Communication (Scheduler) - Socket.send() - Socket.receive() 1 0.00351463
+UDP Communication (Elevator) - Socket.send() - Socket.receive() 1 0.0046335
+Algorithm - Scheduler  1 0.0038959
+ElevatorTest - getCurrentFloor() 1 0.00255377
+FloorTest - Subsystem 1 0.00350126
+Scheduler put() & get() 1 0.00292678
 ---

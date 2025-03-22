@@ -170,10 +170,6 @@ void ElevatorSubsystem::operator()() {
     t1.join();
 }
 
-std::vector<short int> Elevator::getQueue() {
-    return myQueue;
-}
-
 void ElevatorSubsystem::handle() {
     currentState->handle(this);
 }
@@ -195,10 +191,11 @@ void eWaitingForInput::handle(ElevatorSubsystem* context) {
 }
 
 void ProcessRequest::handle(ElevatorSubsystem* context) {
-    std::cout << "Elevator " << context->programID << ": Processed Request" << std::endl;
-    context->setState(new CruiseAndWait());
-    context->handle();
-
+    if (!context->stateTest) {
+        std::cout << "Elevator " << context->programID << ": Processed Request" << std::endl;
+        context->setState(new CruiseAndWait());
+        context->handle();
+    }
 }
 //DOUBLE CHECK FLOOR_TO_GO_TO
 

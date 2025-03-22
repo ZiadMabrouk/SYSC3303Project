@@ -60,8 +60,7 @@ private:
     //void calcdirection(short int floor); // for now only used by addtoQueue. Will need to be Removed.
 
 public:
-    bool stateTest = false;
-    eState* currentState;
+
     //e_struct send_e_struct_;
     int arrived;
     short int current_floor;
@@ -113,6 +112,7 @@ public:
 
     std::vector<short int> &getQueue();
 
+
 };
 
 
@@ -120,10 +120,12 @@ public:
 // The wrapper class.
 class ElevatorSubsystem {
 private:
-    eState* currentState;
+
 
 
 public:
+    bool stateTest = false;
+    eState* currentState;
     std::mutex mtx; // Mutex for myQueue and threads
     std::condition_variable cv; // Condition variable for signaling
     e_struct send_e_struct_; // for UDP communication to scheduler

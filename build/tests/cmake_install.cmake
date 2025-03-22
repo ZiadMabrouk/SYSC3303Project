@@ -1,4 +1,4 @@
-# Install script for directory: /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/tests
+# Install script for directory: /home/nelspc/CLionProjects/SYSC3303Project/tests
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

@@ -8,6 +8,7 @@ read -r choice
 case "$choice" in
     Y|y)
         echo "Starting the test..."
+        rm -rf build
         # Continue with the rest of the script
         cmake -S . -B build
         cmake --build build
