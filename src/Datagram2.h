@@ -111,7 +111,7 @@ private:
 };
 
 #define TIMEOUT_SEC 5
-#define MAX_RETRIES 5
+#define MAX_RETRIES 2
 
 void inline send_no_wait(std::string name, e_struct sendingData, int port, DatagramSocket &iReceiveSocket, DatagramSocket &iSendSocket) {
 	std::vector<uint8_t> buffer(sizeof(e_struct));  // Create a buffer for the struct
@@ -131,7 +131,7 @@ void inline send_no_wait(std::string name, e_struct sendingData, int port, Datag
 
 }
 
-void inline send_and_wait_for_ack(std::string name, e_struct sendingData, int port, DatagramSocket &iReceiveSocket, DatagramSocket &iSendSocket) {
+int inline send_and_wait_for_ack(std::string name, e_struct sendingData, int port, DatagramSocket &iReceiveSocket, DatagramSocket &iSendSocket) {
     std::vector<uint8_t> buffer(sizeof(e_struct));  // Create a buffer for the struct
     sendingData.serialize(buffer.data());
 
@@ -153,7 +153,7 @@ void inline send_and_wait_for_ack(std::string name, e_struct sendingData, int po
             iSendSocket.send(sendPacket);
         } catch (const std::runtime_error& e) {
             std::cerr << "Send failed: " << e.what() << std::endl;
-            return exit(1); // Exit on send failure
+            return 0; // Exit on send failure
         }
         retries++;
         // Clear and set file descriptor set
@@ -170,15 +170,17 @@ void inline send_and_wait_for_ack(std::string name, e_struct sendingData, int po
         if (activity < 0) {
             // Error in select()
             std::cerr << "Error in select()" << std::endl;
-            return exit(1);
+            return 0;
         } else if (activity == 0) {
             // Timeout expired, no ACK received
             std::cout << name << ": Timeout! No acknowledgment received." << std::endl;
             continue; // Exit loop after timeout
         }
 
-        break;
+        return 1;
     }
+
+    return 0;
 }
 e_struct inline receive_no_wait(std::string name, DatagramSocket& iReceiveSocket, DatagramSocket& iSendSocket) {
 	std::vector<uint8_t> data(sizeof(e_struct));

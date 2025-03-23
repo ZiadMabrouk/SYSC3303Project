@@ -26,8 +26,6 @@
 #include <sys/select.h>    // For using select() to monitor multiple clients
 #include <unistd.h>        // For close()
 #define SERVER_PORT 5000
-#define TIMEOUT_SEC 5
-#define MAX_RETRIES 5
 
 class Scheduler;
 class State {

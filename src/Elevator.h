@@ -13,6 +13,9 @@
 #include <thread>
 #include <algorithm>
 
+#define ELEVATOR_TIME 3
+#define DOORS_TIME 1
+
 class ElevatorSubsystem;
 class eState {
 public:
@@ -47,6 +50,10 @@ public:
     void handle(ElevatorSubsystem* context) override;
 };
 class DoorsClosed : public eState {
+public:
+    void handle(ElevatorSubsystem* context) override;
+};
+class BrokenState : public eState {
 public:
     void handle(ElevatorSubsystem* context) override;
 };

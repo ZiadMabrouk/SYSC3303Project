@@ -26,8 +26,19 @@ void Floor::readFile() {
     while (std::getline(file, line)) { //read each from file and store into line
         std::stringstream ss(line);
 
-        std::getline(ss, token, ' ');// read from ss(line but converted into stream) and store into token up until the first space.
-        elevatorData.datetime = formatTime(token);
+        std::getline(ss, token, ' ');// read first word in that line
+        if (token == "Elevator") {
+            std::cout << ss.str() << std::endl;
+            std::getline(ss, token, ' ');
+            elevatorData.elevatorID = -10;
+            elevatorData.broken = true;
+            send_and_wait_for_ack("Floor", elevatorData, PORT, receiveSocket, sendSocket);
+            std::this_thread::sleep_for(std::chrono::seconds(5));
+            continue;
+        } else {
+            elevatorData.datetime = formatTime(token);
+            elevatorData.broken = false;
+        }
 
         std::getline(ss, token, ' ');
         if (atoi(token.c_str()) > numFloors || atoi(token.c_str()) < 1) {
@@ -58,7 +69,7 @@ void Floor::readFile() {
         elevatorData.elevatorID = -1; // Helps discern that this e_struct is just data read from a file and not actual elevator data.
 
         send_and_wait_for_ack("Floor", elevatorData, PORT, receiveSocket, sendSocket);
-        std::this_thread::sleep_for(std::chrono::seconds(5));
+        std::this_thread::sleep_for(std::chrono::seconds(10));
     }
 }
 

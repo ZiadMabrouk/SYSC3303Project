@@ -10,7 +10,7 @@
 
 #define PORT 5000
 
-enum Direction { UP, DOWN, IDLE };
+enum Direction { UP, DOWN, IDLE, BROKEN };
 
 typedef struct ElevatorData {
     tm datetime{};  // Initialize to zero
@@ -24,6 +24,7 @@ typedef struct ElevatorData {
     int transmittedFloor = 0;
     Direction direction = Direction::IDLE;
     bool stateTest = false;
+    bool broken = false;
     // Serialize struct into byte array
     void serialize(uint8_t* buffer) const {
         std::memcpy(buffer, this, sizeof(ElevatorData));

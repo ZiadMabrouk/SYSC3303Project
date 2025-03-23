@@ -49,8 +49,7 @@ void ElevatorSubsystem::calcdirection(short int pfloor) {
 //Im gonna assume that a floor lower than the elevators current floor, when
 void ElevatorSubsystem::addtoQueue(short int floor) {
     std::lock_guard<std::mutex> lock(mtx);
-    if (myElevator.getQueue().empty())
-    {// adds floor number, to queue.
+    if (myElevator.getQueue().empty()) {// adds floor number, to queue.
         std::cout << " adding floor " << floor << std::endl;
         calcdirection(floor); // sets the direction
         myElevator.getQueue().push_back(floor); // edge cases
@@ -128,6 +127,7 @@ std::string Elevator::stringDirection(Direction direction) {
         case UP: return "UP";
         case DOWN: return "DOWN";
         case IDLE: return "IDLE";
+        case BROKEN: return "BROKEN";
         default: return "UNKNOWN";
     }
 }
@@ -142,6 +142,12 @@ void ElevatorSubsystem::receiverThread() {
         // now pass it into add_queue, to update myQueue vector
         // TODO: Consider changing Elevator to ElevatorSubystem if needed.
         received_e_struct_ = wait_and_receive_with_ack("Elevator", receiveSocket, sendSocket);
+
+        if (received_e_struct_.direction == BROKEN) {
+            addtoQueue(0);
+            myElevator.setDirection(BROKEN);
+        }
+
 
         addtoQueue(received_e_struct_.transmittedFloor); // only thread to call addtoQueue is this one, but myQueue itself will change
         // as other threads
@@ -181,6 +187,10 @@ void eWaitingForInput::handle(ElevatorSubsystem* context) {
     if (true) { // lock scope
         std::unique_lock<std::mutex> lock(context->mtx);
         while (context->myElevator.getQueue().empty()) context->cv.wait(lock);
+        if (context->myElevator.getDirection() == BROKEN) {
+          context->setState(new BrokenState());
+          context->handle();
+        }
         context->myElevator.printQueue();
         //review this line. was confused about it before.
         context->myElevator.floor_to_go_to = context->myElevator.getQueue().front();
@@ -203,7 +213,7 @@ void CruiseAndWait::handle(ElevatorSubsystem* context) {
     //Review the context swith changes.
     std::cout << "Moving..." << std::endl;
     while (context->myElevator.floor_to_go_to != context->myElevator.getCurrentFloor()) {
-        std::this_thread::sleep_for(std::chrono::seconds(3));//change this to match excel
+        std::this_thread::sleep_for(std::chrono::seconds(ELEVATOR_TIME));//change this to match excel
         if (true) {
             std::unique_lock<std::mutex> lock(context->mtx);
             std::cout << "Current Direction: " << context->myElevator.stringDirection(context->myElevator.getDirection()) << std::endl;
@@ -294,6 +304,11 @@ void DoorsClosed::handle(ElevatorSubsystem* context) {
         }
     }
     context->handle();
+}
+
+void BrokenState::handle(ElevatorSubsystem* context) {
+    std::cout << "Elevator " << context->programID << ": Stuck Between Floors." << std::endl; // <--- START HERE FOR NEXT ITERATION
+    while (1){}
 }
 
 
