@@ -26,7 +26,7 @@ Floor Timer Fault error is triggered by 'Elevator Breaks Down'.
 Door not Closed Fault is triggered by 'Doors Stuck'. The doors are jammed for a total of 5 seconds before going back to normal.
 
 Contributions (Iteration 5):
-Daniel - Made Floor more configurable, Error Faults
-Ziad - Adjusting Elevator Doors, Test Cases
-Sami - Error Faults, Elevator Subsystem
+Daniel - Made Floor more configurable, Error Faults, Interfacing
+Ziad - Adjusting Elevator Doors, Test Cases, Interfacing
+Sami - Error Faults, Elevator Subsystem, Interfacing
 Jinan - Timing Diagram
