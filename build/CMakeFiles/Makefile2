@@ -336,9 +336,9 @@ src/CMakeFiles/Floor.dir/clean:
 # Target rules for target tests/CMakeFiles/unit_tests.dir
 
 # All Build rule for target.
+tests/CMakeFiles/unit_tests.dir/all: src/CMakeFiles/source.dir/all
 tests/CMakeFiles/unit_tests.dir/all: Catch2/src/CMakeFiles/Catch2.dir/all
 tests/CMakeFiles/unit_tests.dir/all: Catch2/src/CMakeFiles/Catch2WithMain.dir/all
-tests/CMakeFiles/unit_tests.dir/all: src/CMakeFiles/source.dir/all
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/unit_tests.dir/build.make tests/CMakeFiles/unit_tests.dir/depend
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/unit_tests.dir/build.make tests/CMakeFiles/unit_tests.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/nelspc/CLionProjects/SYSC3303Project/build/CMakeFiles --progress-num=99,100 "Built target unit_tests"

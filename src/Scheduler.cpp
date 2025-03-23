@@ -67,8 +67,15 @@ void Dispatching::handle(Scheduler *context) {
     if (!context->receiveData.stateTest) {
         //test
         e_struct sendtoElevator;
-        if (context->receiveData.elevatorID != -10) {
 
+        if (context->receiveData.elevatorID == -10) {
+            sendtoElevator.elevatorID = 1;
+            sendtoElevator.direction = BROKEN;
+            context->elevators[0].direction = BROKEN;
+        } else if (context->receiveData.elevatorID == -20) {
+            sendtoElevator.elevatorID = 2;
+            sendtoElevator.doorJammed = true;
+        } else {
             if (context->receiveData.floor_up_button) {
                 elevatorID = context->calculateBestScore(context->receiveData.floor_number, UP);
                 sendtoElevator.direction = UP;
@@ -80,10 +87,6 @@ void Dispatching::handle(Scheduler *context) {
             sendtoElevator.elevatorID = elevatorID+1;
             std::cout << "Elevator ID: " << sendtoElevator.elevatorID << std::endl;
             sendtoElevator.transmittedFloor = context->receiveData.floor_number;
-        } else {
-          sendtoElevator.elevatorID = 1;
-          sendtoElevator.direction = BROKEN;
-          context->elevators[0].direction = BROKEN;
         }
 
         int ack = send_and_wait_for_ack("Scheduler", sendtoElevator, PORT+sendtoElevator.elevatorID, context->getReceiveSocket(), context->getSendSocket());

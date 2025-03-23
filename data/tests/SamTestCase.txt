@@ -4,7 +4,8 @@
 Elevator Breaks Down
 16:42:59.654 3 Down 2
 11:10:05.789 5 Up 1
-08:55:33.222 2 Down 3
+Doors Stuck
+08:55:33.222 7 Down 3
 13:27:44.987 4 Up 1
 17:59:08.543 1 Up 4
 10:14:22.654 3 Down 4

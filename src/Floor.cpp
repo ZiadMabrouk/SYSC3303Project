@@ -29,15 +29,22 @@ void Floor::readFile() {
         std::getline(ss, token, ' ');// read first word in that line
         if (token == "Elevator") {
             std::cout << ss.str() << std::endl;
-            std::getline(ss, token, ' ');
             elevatorData.elevatorID = -10;
             elevatorData.broken = true;
+            send_and_wait_for_ack("Floor", elevatorData, PORT, receiveSocket, sendSocket);
+            std::this_thread::sleep_for(std::chrono::seconds(5));
+            continue;
+        } else if (token == "Doors") {
+            std::cout << ss.str() << std::endl;
+            elevatorData.elevatorID = -20;
+            elevatorData.doorJammed = true;
             send_and_wait_for_ack("Floor", elevatorData, PORT, receiveSocket, sendSocket);
             std::this_thread::sleep_for(std::chrono::seconds(5));
             continue;
         } else {
             elevatorData.datetime = formatTime(token);
             elevatorData.broken = false;
+            elevatorData.doorJammed = false;
         }
 
         std::getline(ss, token, ' ');

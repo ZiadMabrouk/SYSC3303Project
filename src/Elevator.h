@@ -57,6 +57,10 @@ class BrokenState : public eState {
 public:
     void handle(ElevatorSubsystem* context) override;
 };
+class JammedState : public eState {
+public:
+    void handle(ElevatorSubsystem* context) override;
+};
 
 class Elevator
 {
@@ -144,6 +148,7 @@ public:
     Elevator myElevator;
     DatagramSocket sendSocket; // double check, this is a guess Remove.
     DatagramSocket receiveSocket; // double check, this is a guess Remove.
+    bool doorsJammed = false;
 
     // constructor header for ElevatorSubsytem Constructor
     explicit ElevatorSubsystem(int elevatorID);

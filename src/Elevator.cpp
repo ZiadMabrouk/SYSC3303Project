@@ -148,6 +148,11 @@ void ElevatorSubsystem::receiverThread() {
             myElevator.setDirection(BROKEN);
         }
 
+        if (received_e_struct_.doorJammed) {
+            doorsJammed = true;
+            continue;
+        }
+
 
         addtoQueue(received_e_struct_.transmittedFloor); // only thread to call addtoQueue is this one, but myQueue itself will change
         // as other threads
@@ -255,7 +260,12 @@ void CruiseAndWait::handle(ElevatorSubsystem* context) {
 void Stopped::handle(ElevatorSubsystem* context) {
     std::cout << "Elevator " << context->programID << ": Stopped." << std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(1));
-    context->setState(new DoorsOpened());
+
+    if (context->doorsJammed) {
+      context->setState(new JammedState());
+    } else {
+      context->setState(new DoorsOpened());
+    }
     context->handle();
 }
 
@@ -311,6 +321,14 @@ void BrokenState::handle(ElevatorSubsystem* context) {
     while (1){}
 }
 
+void JammedState::handle(ElevatorSubsystem* context) {
+    std::cout << "Doors Jammed.... Initated Fixed Doors Routine." << std::endl;
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+    context->doorsJammed = false;
+    std::cout << "Doors have been fixed!!" << std::endl;
+    context->setState(new DoorsOpened());
+    context->handle();
+}
 
 //
 #ifndef UNIT_TEST
