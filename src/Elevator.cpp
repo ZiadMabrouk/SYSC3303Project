@@ -26,7 +26,7 @@ Direction Elevator::getDirection() {
 }
 
 // returns reference and not a copy of myQueue. if this fails then go the setter function route.
-std::vector<short int> &Elevator::getQueue() {
+std::vector<e_struct> &Elevator::getQueue() {
     return myQueue;
 }
 
@@ -47,42 +47,26 @@ void ElevatorSubsystem::calcdirection(short int pfloor) {
 
 // TODO: Test to see if get by refenrence works as expected.
 //Im gonna assume that a floor lower than the elevators current floor, when
-void ElevatorSubsystem::addtoQueue(short int floor) {
-    std::lock_guard<std::mutex> lock(mtx);
-    if (myElevator.getQueue().empty()) {// adds floor number, to queue.
-        std::cout << " adding floor " << floor << std::endl;
-        calcdirection(floor); // sets the direction
-        myElevator.getQueue().push_back(floor); // edge cases
-    }
-    else if (myElevator.getDirection() == UP) //this part sorts the vector ascending order(up direction).
-    {
-        // bool inQueue = false; may be duplicate checking logic in which case, this should be readded.
-        // for (auto i : myQueue) {
-        //     if (i == floor) {
-        //         inQueue = true;
-        //     }
-        // }
-        //
-        // if (!inQueue) {
-        myElevator.getQueue().push_back(floor);
-        std::sort(myElevator.getQueue().begin(), myElevator.getQueue().end());
-        // }
-
-    }
-    else if (myElevator.getDirection() == DOWN)//this part sorts the vector in descending order(down direction).
-    {
-        // bool inQueue = false;
-        // for (auto i : myQueue) {
-        //     if (i == floor) {
-        //         inQueue = true;
-        //     }
-        // }
-        // if (!inQueue) {
-        myElevator.getQueue().push_back(floor);
-        std::sort(myElevator.getQueue().begin(), myElevator.getQueue().end(), std::greater<short int>());  // Descending order
-        // }
-
-    }
+void ElevatorSubsystem::addToQueue(e_struct request) {
+    std::unique_lock<std::mutex> lock(mtx);
+    // if (myElevator.getQueue().empty()) {// adds floor number, to queue.
+    //     std::cout << " adding floor " << floor << std::endl;
+    //     calcdirection(floor); // sets the direction
+    //     myElevator.getQueue().push_back(floor); // edge cases
+    // }
+    // else if (myElevator.getDirection() == UP) //this part sorts the vector ascending order(up direction).
+    // {
+    //     myElevator.getQueue().push_back(floor);
+    //     std::sort(myElevator.getQueue().begin(), myElevator.getQueue().end());
+    //
+    // }
+    // else if (myElevator.getDirection() == DOWN)//this part sorts the vector in descending order(down direction).
+    // {
+    //     myElevator.getQueue().push_back(floor);
+    //     std::sort(myElevator.getQueue().begin(), myElevator.getQueue().end(), std::greater<short int>());  // Descending order
+    //
+    // }
+    myElevator.myQueue.push_back(request);
     cv.notify_all();  // Notify waiting thread
 
 }
@@ -115,8 +99,8 @@ void Elevator::travel() {
 
 // prints queue
 void Elevator::printQueue() {
-    for (int num: myQueue) {
-        std::cout << num << " ";
+    for (auto request: myQueue) {
+        std::cout << request.floorNumber << " " << request.destinationFloorNumber << " ";
     }
     std::cout << std::endl;
 }
@@ -127,54 +111,39 @@ std::string Elevator::stringDirection(Direction direction) {
         case UP: return "UP";
         case DOWN: return "DOWN";
         case IDLE: return "IDLE";
-        case BROKEN: return "BROKEN";
         default: return "UNKNOWN";
     }
 }
 
-// should work.
-// this thread will communicate will be receiving from scheduler.
 void ElevatorSubsystem::receiverThread() {
-    // does the name for receiving matter, when elevator is receiving can't it just be sheduler?
-    // have ziad check, my sockets, becuase what I did was scuffed.
-    while (true) { // may have to consider removing some of this logic into mainThread instead.
-
-        // now pass it into add_queue, to update myQueue vector
+    while (true) {
         // TODO: Consider changing Elevator to ElevatorSubystem if needed.
         received_e_struct_ = wait_and_receive_with_ack("Elevator", receiveSocket, sendSocket);
 
-        if (received_e_struct_.direction == BROKEN) {
-            addtoQueue(0);
-            myElevator.setDirection(BROKEN);
+        addToQueue(received_e_struct_);
+
+        if (received_e_struct_.fault == TIMER) {
+            e_struct terminationStruct;
+            terminationStruct.elevatorID = programID;
+            terminationStruct.requestType = ELEVATOR;
+            terminationStruct.fault = TIMER;
+            send_and_wait_for_ack(threadName, terminationStruct,PORT, receiveSocket, sendSocket);
+            break;
         }
 
-        if (received_e_struct_.doorJammed) {
-            doorsJammed = true;
-            continue;
-        }
-
-
-        addtoQueue(received_e_struct_.transmittedFloor); // only thread to call addtoQueue is this one, but myQueue itself will change
-        // as other threads
-        myElevator.printQueue();
-        addtoQueue(received_e_struct_.car_to_floor_number);
-        myElevator.printQueue();
         std::cout << "Elevator " << programID << "'s current direction is " << myElevator.stringDirection(myElevator.getDirection()) << std::endl;
-        //std::this_thread::
     }
 }
 
 
 
 // make sure to pass the now Elevator Substystem programID as elevatorID
-Elevator::Elevator(int elevatorID) : arrived(false), floor_to_go_to(1),  current_floor(1), direction(IDLE) , ID(elevatorID) {
+Elevator::Elevator(int elevatorID) : arrived(false), current_floor(1), direction(IDLE) , ID(elevatorID), sourceFloor(0), destinationFloor(0) {
 } // initializes the elevator class to object.
 
 //TODO: Define the constructor for ElevatorSubsystem.
 // may not need programID member.
-ElevatorSubsystem::ElevatorSubsystem(int elevatorID) : myElevator(elevatorID) , programID(elevatorID),currentState(new eWaitingForInput), sendSocket(), receiveSocket(PORT+elevatorID){
-
-}
+ElevatorSubsystem::ElevatorSubsystem(int elevatorID) : myElevator(elevatorID) , programID(elevatorID),currentState(new eWaitingForInput), sendSocket(), receiveSocket(PORT+elevatorID){}
 
 
 void ElevatorSubsystem::operator()() {
@@ -194,13 +163,9 @@ void eWaitingForInput::handle(ElevatorSubsystem* context) {
     if (true) { // lock scope
         std::unique_lock<std::mutex> lock(context->mtx);
         while (context->myElevator.getQueue().empty()) context->cv.wait(lock);
-        if (context->myElevator.getDirection() == BROKEN) {
-          context->setState(new BrokenState());
-          context->handle();
-        }
         context->myElevator.printQueue();
-        //review this line. was confused about it before.
-        context->myElevator.floor_to_go_to = context->myElevator.getQueue().front();
+        context->myElevator.sourceFloor = context->myElevator.getQueue().front().floorNumber;
+        context->myElevator.destinationFloor = context->myElevator.getQueue().front().destinationFloorNumber;
     }
     std::cout << "Elevator " << context->programID << ": Received Request" << std::endl;
     context->setState(new ProcessRequest());
@@ -219,16 +184,18 @@ void ProcessRequest::handle(ElevatorSubsystem* context) {
 void CruiseAndWait::handle(ElevatorSubsystem* context) {
     //Review the context swith changes.
     std::cout << "Moving..." << std::endl;
-    while (context->myElevator.floor_to_go_to != context->myElevator.getCurrentFloor()) {
+    while (context->myElevator.sourceFloor != context->myElevator.getCurrentFloor()) {
         std::this_thread::sleep_for(std::chrono::seconds(ELEVATOR_TIME));//change this to match excel
-        if (true) {
+        if (true) { //lock scope
             std::unique_lock<std::mutex> lock(context->mtx);
-            std::cout << "Current Direction: " << context->myElevator.stringDirection(context->myElevator.getDirection()) << std::endl;
-            if (context->myElevator.getDirection() == UP) {
-                context->myElevator.setCurrentFloor(context->myElevator.getCurrentFloor()+ 1); // Check that this works properly. increments the floor by 1. (later worry about hard limit)
-            } else if (context->myElevator.getDirection()== DOWN) {
-                context->myElevator.setCurrentFloor(context->myElevator.getCurrentFloor()-1);
+            if (context->myElevator.sourceFloor > context->myElevator.getCurrentFloor()) {// Check that this works properly. increments the floor by 1. (later worry about hard limit)
+                context->myElevator.setCurrentFloor(context->myElevator.getCurrentFloor() + 1);
+                context->myElevator.setDirection(UP);
+            } else {
+                context->myElevator.setCurrentFloor(context->myElevator.getCurrentFloor() - 1);
+                context->myElevator.setDirection(DOWN);
             }// increments the floor by 1. (later worry about hard limit)
+            std::cout << "Current Direction: " << context->myElevator.stringDirection(context->myElevator.getDirection()) << std::endl;
         }
         context->send_e_struct_.elevatorID = context->programID;
         context->send_e_struct_.transmittedFloor = context->myElevator.getCurrentFloor();
@@ -236,39 +203,46 @@ void CruiseAndWait::handle(ElevatorSubsystem* context) {
         send_and_wait_for_ack(context->threadName, context->send_e_struct_,PORT, context->receiveSocket, context->sendSocket);
 
         std::cout <<  "Elevator " << context->programID <<": Just passed, floor " << context->myElevator.getCurrentFloor() << std::endl;
-
-        //check if we receive a new request and need to change floor_to_go_to
-        int new_state = false;
-        if (true) {
-            std::unique_lock<std::mutex> lock(context->mtx);
-            if (context->myElevator.getQueue().front() != context->myElevator.floor_to_go_to) {
-                std::cout <<"New input received" << std::endl;
-                context->myElevator.floor_to_go_to = context->myElevator.getQueue().front();
-                new_state = true;
-            }
-        }
-        if (new_state == true) {
-            context->setState(new ProcessRequest());
-            context->handle();
-        }
     }
-    if (context->myElevator.floor_to_go_to == context->myElevator.getCurrentFloor()) {
-        context->setState(new Stopped());
-        context->handle();
-    }
-
-}
-
-void Stopped::handle(ElevatorSubsystem* context) {
     std::cout << "Elevator " << context->programID << ": Stopped." << std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(1));
 
-    if (context->doorsJammed) {
-      context->setState(new JammedState());
+    std::cout << "Moving..." << std::endl;
+    while (context->myElevator.destinationFloor != context->myElevator.getCurrentFloor()) {
+        std::this_thread::sleep_for(std::chrono::seconds(ELEVATOR_TIME));//change this to match excel
+        if (true) { //lock scope
+            std::unique_lock<std::mutex> lock(context->mtx);
+            if (context->myElevator.destinationFloor > context->myElevator.getCurrentFloor()) {// Check that this works properly. increments the floor by 1. (later worry about hard limit)
+                context->myElevator.setCurrentFloor(context->myElevator.getCurrentFloor() + 1);
+                context->myElevator.setDirection(UP);
+            } else {
+                context->myElevator.setCurrentFloor(context->myElevator.getCurrentFloor() - 1);
+                context->myElevator.setDirection(DOWN);
+            }// increments the floor by 1. (later worry about hard limit)
+            std::cout << "Current Direction: " << context->myElevator.stringDirection(context->myElevator.getDirection()) << std::endl;
+        }
+        context->send_e_struct_.elevatorID = context->programID;
+        context->send_e_struct_.transmittedFloor = context->myElevator.getCurrentFloor();
+        context->send_e_struct_.direction = context->myElevator.getDirection();
+        send_and_wait_for_ack(context->threadName, context->send_e_struct_,PORT, context->receiveSocket, context->sendSocket);
+
+        std::cout <<  "Elevator " << context->programID <<": Just passed, floor " << context->myElevator.getCurrentFloor() << std::endl;
+    }
+    std::cout << "Elevator " << context->programID << ": Stopped." << std::endl;
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+
+    if (context->myElevator.getQueue().front().fault == DOOR_STUCK) {
+        context->setState(new JammedState());
+    } else if (context->myElevator.getQueue().front().fault == TIMER) {
+        context->setState(new BrokenState());
     } else {
-      context->setState(new DoorsOpened());
+        context->setState(new DoorsOpened());
     }
     context->handle();
+}
+
+void Stopped::handle(ElevatorSubsystem* context) {
+
 }
 
 void DoorsOpened::handle(ElevatorSubsystem* context) {
@@ -284,17 +258,13 @@ void InformSchedulerOfArrival::handle(ElevatorSubsystem* context) {
 
     if (true) {
         std::unique_lock<std::mutex> lock(context->mtx);
-        context->send_e_struct_.arrived = true;
-
         context->myElevator.getQueue().erase(context->myElevator.getQueue().begin()); // only erase once you arrive at the floor. Isolate this garbage from the rest so make an doors() method. and call that
-
-        if (context->myElevator.getQueue().empty()) {
-            std::cout << "Elevator Queue is empty, direction is now IDLE" << std::endl;
-            context->myElevator.setDirection(IDLE);
-        }
     }
 
-    send_and_wait_for_ack(context->threadName, context->send_e_struct_,PORT, context->receiveSocket, context->sendSocket);
+    if (context->myElevator.getQueue().empty()) {
+        std::cout << "Elevator Queue is empty, direction is now IDLE" << std::endl;
+        context->myElevator.setDirection(IDLE);
+    }
 
     context->setState(new DoorsClosed());
     context->handle();
@@ -303,30 +273,17 @@ void InformSchedulerOfArrival::handle(ElevatorSubsystem* context) {
 void DoorsClosed::handle(ElevatorSubsystem* context) {
     std::cout << "Elevator " << context->programID << ": Doors Closed." << std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(1));
-
-    if (true) {
-        std::unique_lock<std::mutex> lock(context->mtx);
-        context->send_e_struct_.arrived = false;
-
-        if (context->myElevator.getDirection() == IDLE) {
-            context->setState(new eWaitingForInput());
-        } else {
-            context->myElevator.floor_to_go_to = context->myElevator.getQueue().front();
-            context->setState(new CruiseAndWait());
-        }
-    }
+    context->setState(new eWaitingForInput());
     context->handle();
 }
 
 void BrokenState::handle(ElevatorSubsystem* context) {
     std::cout << "Elevator " << context->programID << ": Stuck Between Floors." << std::endl; // <--- START HERE FOR NEXT ITERATION
-    while (1){}
 }
 
 void JammedState::handle(ElevatorSubsystem* context) {
-    std::cout << "Doors Jammed.... Initated Fixed Doors Routine." << std::endl;
+    std::cout << "Doors Jammed.... Initiated Fixed Doors Routine." << std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(5));
-    context->doorsJammed = false;
     std::cout << "Doors have been fixed!!" << std::endl;
     context->setState(new DoorsOpened());
     context->handle();

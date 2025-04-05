@@ -64,55 +64,27 @@ public:
 
 class Elevator
 {
-private:
-
-
-
-    //void calcdirection(short int floor); // for now only used by addtoQueue. Will need to be Removed.
 
 public:
-
-    //e_struct send_e_struct_;
     int arrived;
     short int current_floor;
-    int floor_to_go_to;
+    int sourceFloor;
+    int destinationFloor;
     Direction direction; // direction
-    //std::string threadName; // string name to be used in Ziads interface.
-    //e_struct received_e_struct_;
-
-    //std::mutex mtx; // Mutex for myQueue and threads
     std::mutex mtx2; // Mutex for send_elevator_data and threads
-    //std::condition_variable cv; // Condition variable for signaling
-    std::vector<short int> myQueue; // added a vector of short int
+    std::vector<e_struct> myQueue; // added a vector of short int
     int ID; // elevator ID
-    //DatagramSocket sendSocket; // double check, this is a guess
-    //DatagramSocket receiveSocket; // double check, this is a guess
 
-    // modified consructor so the scheduler
+    // modified constructor so the scheduler
     explicit Elevator(int elevatorID);
-
-    //void operator()();
-
-
-
-    //void addtoQueue(short int floor); // logic for elevators path.
 
     // can remain in elevator class.
     void printQueue(); // should print the current queue.
 
-    // void setState(eState* state) {
-    //     currentState = state;
-    // }
-
     //modify so that this returns the elevators current direction as a string.
     std::string stringDirection(Direction direction);
 
-    //void handle();
-
-    //void receiverThread();
-
     void setCurrentFloor(short int floor);
-
 
     // can remain a part of Elevator.
     short int getCurrentFloor();
@@ -121,19 +93,13 @@ public:
 
     Direction getDirection();
 
-    std::vector<short int> &getQueue();
-
-
+    std::vector<e_struct> &getQueue();
 };
 
 
 
 // The wrapper class.
 class ElevatorSubsystem {
-private:
-
-
-
 public:
     bool stateTest = false;
     eState* currentState;
@@ -148,14 +114,13 @@ public:
     Elevator myElevator;
     DatagramSocket sendSocket; // double check, this is a guess Remove.
     DatagramSocket receiveSocket; // double check, this is a guess Remove.
-    bool doorsJammed = false;
 
     // constructor header for ElevatorSubsytem Constructor
     explicit ElevatorSubsystem(int elevatorID);
 
     void calcdirection(short int floor);
 
-    void addtoQueue(short int floor); // logic for elevators path.
+    void addToQueue(e_struct request); // logic for elevators path.
 
     void receiverThread();
 
@@ -165,9 +130,7 @@ public:
 
     void handle();
 
-
     void operator()();
-
 };
 
 

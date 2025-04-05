@@ -25,7 +25,6 @@
 #include <sys/time.h>      // For setting socket timeout
 #include <sys/select.h>    // For using select() to monitor multiple clients
 #include <unistd.h>        // For close()
-#define SERVER_PORT 5000
 
 class Scheduler;
 class State {
@@ -66,6 +65,7 @@ private:
 
     DatagramSocket sendSocket;
     DatagramSocket receiveSocket;
+    DatagramSocket updateSocket;
 public:
     State* currentState;
     std::vector<e_struct> elevators;
@@ -79,12 +79,19 @@ public:
     int numElevators;
 
     DatagramSocket& getReceiveSocket();
+
+    DatagramSocket& getUpdateSocket();
+
     DatagramSocket& getSendSocket();
     void handle();
+
+    void receiverThread();
 
     double calculateScore(e_struct &elevator, int requestedFloor, Direction requestedDirection);
 
     int calculateBestScore(int requestedFloor, Direction requestedDirection);
+
+    void operator()();
 
     std::string stringDirection(Direction direction);
 

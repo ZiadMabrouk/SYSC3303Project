@@ -7,17 +7,16 @@
 
 
 
-Scheduler::Scheduler(int num_elevators) :  sendData(), receiveData(),currentState(new WaitingForInput()), numElevators(num_elevators), sendSocket(),receiveSocket(SERVER_PORT) {
+Scheduler::Scheduler(int num_elevators) :  sendData(), receiveData(),currentState(new WaitingForInput()), numElevators(num_elevators), sendSocket(),receiveSocket(PORT), updateSocket(SCHEDULER_RECEIVE_PORT) {
 
     elevators.resize(numElevators);
     for (int i = 0; i < numElevators; i++) {
         elevators[i].elevatorID = i+1;
         elevators[i].transmittedFloor = 1;
         elevators[i].direction = IDLE;
+        elevators[i].fault = NONE;
     }
 }
-
-
 
 DatagramSocket &Scheduler::getSendSocket() {
     return sendSocket;
@@ -27,8 +26,23 @@ DatagramSocket& Scheduler::getReceiveSocket() {
     return receiveSocket;
 }
 
+DatagramSocket& Scheduler::getUpdateSocket() {
+    return receiveSocket;
+}
+
 void Scheduler::handle() {
     currentState->handle(this);
+}
+
+void Scheduler::receiverThread() {
+    while (true) {
+        e_struct updatedData = wait_and_receive_with_ack("Scheduler", getUpdateSocket(), getSendSocket());
+
+        int index = updatedData.elevatorID;
+        elevators[index - 1].direction = updatedData.direction;
+        elevators[index - 1].transmittedFloor = updatedData.transmittedFloor;
+        elevators[index - 1].fault = updatedData.fault;
+    }
 }
 
 void Calculation::handle(Scheduler *context) {
@@ -36,6 +50,7 @@ void Calculation::handle(Scheduler *context) {
     int index = context->receiveData.elevatorID;
     context->elevators[index - 1].direction = context->receiveData.direction;
     context->elevators[index - 1].transmittedFloor = context->receiveData.transmittedFloor;
+    context->elevators[index - 1].fault = context->receiveData.fault;
     std::cout<<"Calculated"<<std::endl;
     context->setState(new WaitingForInput());
     context->handle();
@@ -48,7 +63,7 @@ void WaitingForInput::handle(Scheduler *context) {
     //logic
 
     context->receiveData = wait_and_receive_with_ack("Server", context->getReceiveSocket(), context->getSendSocket());
-    if (context->receiveData.elevatorID < 0) {
+    if (context->receiveData.requestType == FLOOR) {
         context->setState(new Dispatching());
     } else {
         context->setState(new Calculation());
@@ -63,34 +78,17 @@ void WaitingForInput::handle(Scheduler *context) {
 
 void Dispatching::handle(Scheduler *context) {
     std::cout<<"Dispatching"<<std::endl;
-    int elevatorID = 0;
     if (!context->receiveData.stateTest) {
         //test
         e_struct sendtoElevator;
 
-        if (context->receiveData.elevatorID == -10) {
-            sendtoElevator.elevatorID = 1;
-            sendtoElevator.direction = BROKEN;
-            context->elevators[0].direction = BROKEN;
-        } else if (context->receiveData.elevatorID == -20) {
-            sendtoElevator.elevatorID = 2;
-            sendtoElevator.doorJammed = true;
-        } else {
-            if (context->receiveData.floor_up_button) {
-                elevatorID = context->calculateBestScore(context->receiveData.floor_number, UP);
-                sendtoElevator.direction = UP;
-            } else {
-                elevatorID = context->calculateBestScore(context->receiveData.floor_number, DOWN);
-                sendtoElevator.direction = DOWN;
-            }
+        sendtoElevator = context->receiveData;
+        int elevatorID = context->calculateBestScore(sendtoElevator.floorNumber, sendtoElevator.floorDirection);
+        sendtoElevator.elevatorID = elevatorID+1;
 
-            sendtoElevator.elevatorID = elevatorID+1;
-            std::cout << "Elevator ID: " << sendtoElevator.elevatorID << std::endl;
-            sendtoElevator.transmittedFloor = context->receiveData.floor_number;
-            sendtoElevator.car_to_floor_number = context->receiveData.car_to_floor_number;
-        }
+        std::cout << "Elevator ID: " << sendtoElevator.elevatorID << std::endl;
 
-        int ack = send_and_wait_for_ack("Scheduler", sendtoElevator, PORT+sendtoElevator.elevatorID, context->getReceiveSocket(), context->getSendSocket());
+        send_and_wait_for_ack("Scheduler", sendtoElevator, PORT+sendtoElevator.elevatorID, context->getReceiveSocket(), context->getSendSocket());
 
         std::cout<<"Dispatched"<<std::endl;
 
@@ -101,7 +99,7 @@ void Dispatching::handle(Scheduler *context) {
 
 }
 
-void AddingRequestToQueue::handle(Scheduler *context) {
+void AddingRequestToQueue::handle(Scheduler *context) { //TODO: Remove as its never used.
     std::cout<<"Adding request to queue..."<<std::endl;
     std::cout<<"Added to queue"<<std::endl;
     context->setState(new WaitingForInput());
@@ -113,10 +111,6 @@ void AddingRequestToQueue::handle(Scheduler *context) {
 double Scheduler::calculateScore(e_struct &elevator, int requestedFloor, Direction requestedDirection) {
     // Base score is absolute distance.
     double score = std::abs(elevator.transmittedFloor - requestedFloor);
-
-    if (elevator.direction == BROKEN) {
-        return 1000000;
-    }
 
     // If elevator is idle times by 10.
     if (elevator.direction == IDLE) {
@@ -134,11 +128,11 @@ double Scheduler::calculateScore(e_struct &elevator, int requestedFloor, Directi
 // Determines the elevator with the best(biggest) score and returns its index.
 int Scheduler::calculateBestScore(int requestedFloor, Direction requestedDirection) {
 
-    int bestElevatorIndex = 0;
-    double bestScore = calculateScore(elevators[0], requestedFloor, requestedDirection);
-    std::cout<<"Score: "<< bestScore << " ID: " << bestElevatorIndex+1 << std::endl;
+    int bestElevatorIndex = 10000;
+    double bestScore = 10000;
 
-    for (int i = 1; i < numElevators; i++) {
+    for (int i = 0; i < numElevators; i++) {
+        if (elevators[i].fault == TIMER) continue;
         double score = calculateScore(elevators[i], requestedFloor, requestedDirection);
         std::cout<<"Score: "<<score<< " ID: " << i+1 << std::endl;
         if (score < bestScore) {
@@ -148,6 +142,12 @@ int Scheduler::calculateBestScore(int requestedFloor, Direction requestedDirecti
     }
     std::cerr << "Best Score: " << bestElevatorIndex << std::endl;
     return bestElevatorIndex;
+}
+
+void Scheduler::operator()() {
+    std::thread t1(&Scheduler::receiverThread, this);
+    handle(); // check that this works as expected.
+    t1.join();
 }
 
 #ifndef UNIT_TEST

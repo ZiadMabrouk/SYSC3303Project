@@ -106,8 +106,8 @@ TEST_CASE("Scheduler put() & get()", "[Scheduler]") {
 
     // Prepare test elevator data.
     e_struct testData = {};
-    testData.floor_number = 5;
-    testData.car_to_floor_number = 10;
+    testData.floorNumber = 5;
+    testData.destinationFloorNumber = 10;
     testData.floor_up_button = true;
     testData.floor_down_button = false;
     testData.arrived = 0;

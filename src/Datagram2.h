@@ -232,7 +232,6 @@ e_struct inline wait_and_receive_with_ack(std::string name, DatagramSocket& iRec
     //std::this_thread::sleep_for(std::chrono::seconds());
 
     e_struct sendStruct = receivedData;
-    sendStruct.acknowledged = true;
     sendStruct.serialize(data.data()); // compress the struct to bytes
 
     DatagramPacket sendPacket(data, receivePacket.getLength(),
