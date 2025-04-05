@@ -157,6 +157,8 @@ void ElevatorSubsystem::receiverThread() {
         addtoQueue(received_e_struct_.transmittedFloor); // only thread to call addtoQueue is this one, but myQueue itself will change
         // as other threads
         myElevator.printQueue();
+        addtoQueue(received_e_struct_.car_to_floor_number);
+        myElevator.printQueue();
         std::cout << "Elevator " << programID << "'s current direction is " << myElevator.stringDirection(myElevator.getDirection()) << std::endl;
         //std::this_thread::
     }

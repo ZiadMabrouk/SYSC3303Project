@@ -11,8 +11,12 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/nelspc/CLionProjects/SYSC3303Project/src/Scheduler.cpp" "src/CMakeFiles/Scheduler.dir/Scheduler.cpp.o" "gcc" "src/CMakeFiles/Scheduler.dir/Scheduler.cpp.o.d"
   )
 
-# Targets to which this target links.
-set(CMAKE_TARGET_LINKED_INFO_FILES
+# Targets to which this target links which contain Fortran sources.
+set(CMAKE_Fortran_TARGET_LINKED_INFO_FILES
+  )
+
+# Targets to which this target links which contain Fortran sources.
+set(CMAKE_Fortran_TARGET_FORWARD_LINKED_INFO_FILES
   )
 
 # Fortran module output directory.

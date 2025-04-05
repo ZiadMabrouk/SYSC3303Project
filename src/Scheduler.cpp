@@ -87,6 +87,7 @@ void Dispatching::handle(Scheduler *context) {
             sendtoElevator.elevatorID = elevatorID+1;
             std::cout << "Elevator ID: " << sendtoElevator.elevatorID << std::endl;
             sendtoElevator.transmittedFloor = context->receiveData.floor_number;
+            sendtoElevator.car_to_floor_number = context->receiveData.car_to_floor_number;
         }
 
         int ack = send_and_wait_for_ack("Scheduler", sendtoElevator, PORT+sendtoElevator.elevatorID, context->getReceiveSocket(), context->getSendSocket());
