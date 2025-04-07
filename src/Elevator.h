@@ -6,26 +6,171 @@
 #define ELEVATOR_H
 
 #include "Scheduler.h"
-#include <chrono>
-#include <thread>
-#include <iostream>
-#include <random>
+#include "ElevatorDataTypes.h"
+#include "Datagram2.h"
 #include <mutex>
 #include <condition_variable>
-#include "ElevatorDataTypes.h"
+#include <thread>
+#include <algorithm>
+
+#define ELEVATOR_TIME 3
+#define DOORS_TIME 1
+
+class ElevatorSubsystem;
+class eState {
+public:
+    virtual void handle(ElevatorSubsystem* context) = 0;
+    virtual ~eState() = default;
+
+};
+
+class eWaitingForInput : public eState {
+public:
+    void handle(ElevatorSubsystem* context) override;
+};
+
+class ProcessRequest : public eState {
+public:
+    void handle(ElevatorSubsystem* context) override;
+};
+class CruiseAndWait : public eState {
+public:
+    void handle(ElevatorSubsystem* context) override;
+};
+class Stopped : public eState {
+public:
+    void handle(ElevatorSubsystem* context) override;
+};
+class DoorsOpened : public eState {
+public:
+    void handle(ElevatorSubsystem* context) override;
+};
+class InformSchedulerOfArrival : public eState {
+public:
+    void handle(ElevatorSubsystem* context) override;
+};
+class DoorsClosed : public eState {
+public:
+    void handle(ElevatorSubsystem* context) override;
+};
+class BrokenState : public eState {
+public:
+    void handle(ElevatorSubsystem* context) override;
+};
+class JammedState : public eState {
+public:
+    void handle(ElevatorSubsystem* context) override;
+};
 
 class Elevator
 {
 private:
-    e_struct elevator_data;
-    Scheduler& scheduler_object;
+
+
+
+    //void calcdirection(short int floor); // for now only used by addtoQueue. Will need to be Removed.
+
 public:
-    Elevator(Scheduler& object);	// Constructor
+
+    //e_struct send_e_struct_;
+    int arrived;
+    short int current_floor;
+    int floor_to_go_to;
+    Direction direction; // direction
+    //std::string threadName; // string name to be used in Ziads interface.
+    //e_struct received_e_struct_;
+
+    //std::mutex mtx; // Mutex for myQueue and threads
+    std::mutex mtx2; // Mutex for send_elevator_data and threads
+    //std::condition_variable cv; // Condition variable for signaling
+    std::vector<short int> myQueue; // added a vector of short int
+    int ID; // elevator ID
+    //DatagramSocket sendSocket; // double check, this is a guess
+    //DatagramSocket receiveSocket; // double check, this is a guess
+
+    // modified consructor so the scheduler
+    explicit Elevator(int elevatorID);
+
+    //void operator()();
+
+
+
+    //void addtoQueue(short int floor); // logic for elevators path.
+
+    // can remain in elevator class.
+    void printQueue(); // should print the current queue.
+
+    // void setState(eState* state) {
+    //     currentState = state;
+    // }
+
+    //modify so that this returns the elevators current direction as a string.
+    std::string stringDirection(Direction direction);
+
+    //void handle();
+
+    //void receiverThread();
+
+    void setCurrentFloor(short int floor);
+
+
+    // can remain a part of Elevator.
+    short int getCurrentFloor();
+
+    void setDirection(Direction set2);
+
+    Direction getDirection();
+
+    std::vector<short int> &getQueue();
+
+
+};
+
+
+
+// The wrapper class.
+class ElevatorSubsystem {
+private:
+
+
+
+public:
+    bool stateTest = false;
+    eState* currentState;
+    std::mutex mtx; // Mutex for myQueue and threads
+    std::condition_variable cv; // Condition variable for signaling
+    e_struct send_e_struct_; // for UDP communication to scheduler
+    e_struct received_e_struct_; //
+    //is elevators current floor something that should be saved into a var or just directly passed into send_e_struct?
+    //
+    short int programID;
+    std::string threadName; // string name to be used in Ziads interface.
+    Elevator myElevator;
+    DatagramSocket sendSocket; // double check, this is a guess Remove.
+    DatagramSocket receiveSocket; // double check, this is a guess Remove.
+    bool doorsJammed = false;
+
+    // constructor header for ElevatorSubsytem Constructor
+    explicit ElevatorSubsystem(int elevatorID);
+
+    void calcdirection(short int floor);
+
+    void addtoQueue(short int floor); // logic for elevators path.
+
+    void receiverThread();
+
+    void setState(eState* state) {
+        currentState = state;
+    }
+
+    void handle();
 
 
     void operator()();
-    
+
 };
+
+
 
 
 #endif //ELEVATOR_H

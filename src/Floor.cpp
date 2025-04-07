@@ -3,20 +3,58 @@
 //
 
 #include "Floor.h"
+#include <chrono>
+#include <thread>
 
+#include <random>
+#include "ElevatorDataTypes.h"
+#include <ctime>
+#include <iostream>
+#include <sstream>
+#include <iomanip>
+#include <string>
+#include <fstream>
+
+//
+
+// this method reads a line from the input file and converts it into e_struct then invokes put into the scheduler object.
 void Floor::readFile() {
-    std::ifstream file("../src/SamTestCase.txt");
+    std::ifstream file("../data/tests/SamTestCase.txt");//open the file for reading
     e_struct elevatorData;
 
     std::string line, token;
-    while (std::getline(file, line)) {
+    while (std::getline(file, line)) { //read each from file and store into line
         std::stringstream ss(line);
 
-        std::getline(ss, token, ' ');
-        elevatorData.datetime = formatTime(token);
+        std::getline(ss, token, ' ');// read first word in that line
+        if (token == "Elevator") {
+            std::cout << ss.str() << std::endl;
+            elevatorData.elevatorID = -10;
+            elevatorData.broken = true;
+            send_and_wait_for_ack("Floor", elevatorData, PORT, receiveSocket, sendSocket);
+            std::this_thread::sleep_for(std::chrono::seconds(5));
+            continue;
+        } else if (token == "Doors") {
+            std::cout << ss.str() << std::endl;
+            elevatorData.elevatorID = -20;
+            elevatorData.doorJammed = true;
+            send_and_wait_for_ack("Floor", elevatorData, PORT, receiveSocket, sendSocket);
+            std::this_thread::sleep_for(std::chrono::seconds(5));
+            continue;
+        } else {
+            elevatorData.datetime = formatTime(token);
+            elevatorData.broken = false;
+            elevatorData.doorJammed = false;
+        }
 
         std::getline(ss, token, ' ');
+        if (atoi(token.c_str()) > numFloors || atoi(token.c_str()) < 1) {
+            std::cout << "Invalid floor number: " << atoi(token.c_str()) << std::endl;
+            std::cout << "Skipping this line in the input file..." << std::endl;
+            continue;
+        }
         elevatorData.floor_number = atoi(token.c_str());
+        std::cout << "Floor Number: " << elevatorData.floor_number << std::endl;
 
         std::getline(ss, token, ' ');
         if (token == "Up") {
@@ -27,7 +65,18 @@ void Floor::readFile() {
             elevatorData.floor_down_button = true;
         }
 
-        scheduler.put(elevatorData);
+        std::getline(ss, token, ' ');
+        if (atoi(token.c_str()) > numFloors || atoi(token.c_str()) < 1) {
+            std::cout << "Invalid destination floor number: " << atoi(token.c_str()) << std::endl;
+            std::cout << "Skipping this line in the input file..." << std::endl;
+            continue;
+        }
+        elevatorData.car_to_floor_number = atoi(token.c_str());
+
+        elevatorData.elevatorID = -1; // Helps discern that this e_struct is just data read from a file and not actual elevator data.
+
+        send_and_wait_for_ack("Floor", elevatorData, PORT, receiveSocket, sendSocket);
+        std::this_thread::sleep_for(std::chrono::seconds(10));
     }
 }
 
@@ -40,12 +89,13 @@ tm Floor::formatTime(const std::string& str) {
 
     return datetime;
 }
-
-void Floor::operator()() {
-    readFile();
+#ifndef UNIT_TEST
+// invokes the readFile() method.
+int main(int argc, char *argv[]) {
+    Floor floor(std::atoi(argv[1]));
+    floor.readFile();
 }
-
-
+#endif
 
 
 

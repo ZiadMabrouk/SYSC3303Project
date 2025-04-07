@@ -1,0 +1,2 @@
+/usr/bin/ar qc libsource.a CMakeFiles/source.dir/Elevator.cpp.o CMakeFiles/source.dir/Floor.cpp.o CMakeFiles/source.dir/Scheduler.cpp.o
+/usr/bin/ranlib libsource.a

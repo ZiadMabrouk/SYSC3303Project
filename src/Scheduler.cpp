@@ -1,168 +1,158 @@
 //
 // Created by ziadm on 2025-01-30.
 //
-#include <chrono>
-#include <thread>
-#include <iostream>
-#include <random>
-#include <mutex>
-#include <condition_variable>
-#include "ElevatorDataTypes.h"
+
 #include "Scheduler.h"
-#include <ctime>
-#include <iostream>
-#include <sstream>
-#include <iomanip>
-#include <string>
-#include <fstream>
 
-Scheduler::Scheduler() : empty(true), mtx(), cv() {}
 
-void Scheduler::put(e_struct elevatorData) {
-    
 
-    std::unique_lock<std::mutex> lock(mtx);	// releases when lock goes out of scope.
-    //while ( !empty ) cv.wait(lock);
 
-    std::ostringstream oss;
-	
-    // Format time as hh:mm:ss.mmm
-    oss << std::setfill('0') 
-        << std::setw(2) << elevatorData.datetime.tm_hour << ":"
-        << std::setw(2) << elevatorData.datetime.tm_min << ":"
-        << std::setw(2) << elevatorData.datetime.tm_sec;
+Scheduler::Scheduler(int num_elevators) :  sendData(), receiveData(),currentState(new WaitingForInput()), numElevators(num_elevators), sendSocket(),receiveSocket(SERVER_PORT) {
 
-    // Format the rest of the string
-    oss << " " << elevatorData.floor_number << " "
-        << (elevatorData.floor_up_button ? "Up" : elevatorData.floor_down_button ? "Down" : "No Button");
-
-    std::string newLine = oss.str();
-	
-	
-	//std::string newLine = "12:23:12 4 Up";
-    // Open the file in append mode
-    std::ofstream outputFile("../lib/shareddata.txt", std::ios_base::app);
-    if (!outputFile) {
-        std::cerr << "File could not be opened for appending." << std::endl;
-        return;
+    elevators.resize(numElevators);
+    for (int i = 0; i < numElevators; i++) {
+        elevators[i].elevatorID = i+1;
+        elevators[i].transmittedFloor = 1;
+        elevators[i].direction = IDLE;
     }
-
-    // Write the new line to the end of the file
-    outputFile << newLine << std::endl;
-
-    outputFile.close();
-
-
-    empty = false;
-    cv.notify_all();
 }
 
-e_struct Scheduler::get() {
-    std::unique_lock<std::mutex> lock(mtx);	// releases when lock goes out of scope.
-    while ( empty ) cv.wait(lock);
-    std::ifstream f("../lib/shareddata.txt");
 
-        // Check if the file is successfully opened
-    if (!f.is_open()) {
-        std::cerr << "Error opening the file!";
-		e_struct struct1;
-        return  struct1;
+
+DatagramSocket &Scheduler::getSendSocket() {
+    return sendSocket;
+}
+
+DatagramSocket& Scheduler::getReceiveSocket() {
+    return receiveSocket;
+}
+
+void Scheduler::handle() {
+    currentState->handle(this);
+}
+
+void Calculation::handle(Scheduler *context) {
+    std::cout<<"Calculating..."<<std::endl;
+    int index = context->receiveData.elevatorID;
+    context->elevators[index - 1].direction = context->receiveData.direction;
+    context->elevators[index - 1].transmittedFloor = context->receiveData.transmittedFloor;
+    std::cout<<"Calculated"<<std::endl;
+    context->setState(new WaitingForInput());
+    context->handle();
+    delete this;
+}
+
+void WaitingForInput::handle(Scheduler *context) {
+
+    std::cout<<"Server: Waiting for input... "<<std::endl;
+    //logic
+
+    context->receiveData = wait_and_receive_with_ack("Server", context->getReceiveSocket(), context->getSendSocket());
+    if (context->receiveData.elevatorID < 0) {
+        context->setState(new Dispatching());
+    } else {
+        context->setState(new Calculation());
     }
 
 
+    std::cout<<"Input received... "<<std::endl;
+    context->handle();
 
-    std::vector<std::string> lines;
-    std::string line;
-    std::string firstLine;
+    delete this;
+}
 
-    // Read the first line separately
-    if (std::getline(f, firstLine)) {
-        // Read all remaining lines
-        while (std::getline(f, line)) {
-            lines.push_back(line);
+void Dispatching::handle(Scheduler *context) {
+    std::cout<<"Dispatching"<<std::endl;
+    int elevatorID = 0;
+    if (!context->receiveData.stateTest) {
+        //test
+        e_struct sendtoElevator;
+
+        if (context->receiveData.elevatorID == -10) {
+            sendtoElevator.elevatorID = 1;
+            sendtoElevator.direction = BROKEN;
+            context->elevators[0].direction = BROKEN;
+        } else if (context->receiveData.elevatorID == -20) {
+            sendtoElevator.elevatorID = 2;
+            sendtoElevator.doorJammed = true;
+        } else {
+            if (context->receiveData.floor_up_button) {
+                elevatorID = context->calculateBestScore(context->receiveData.floor_number, UP);
+                sendtoElevator.direction = UP;
+            } else {
+                elevatorID = context->calculateBestScore(context->receiveData.floor_number, DOWN);
+                sendtoElevator.direction = DOWN;
+            }
+
+            sendtoElevator.elevatorID = elevatorID+1;
+            std::cout << "Elevator ID: " << sendtoElevator.elevatorID << std::endl;
+            sendtoElevator.transmittedFloor = context->receiveData.floor_number;
+        }
+
+        int ack = send_and_wait_for_ack("Scheduler", sendtoElevator, PORT+sendtoElevator.elevatorID, context->getReceiveSocket(), context->getSendSocket());
+
+        std::cout<<"Dispatched"<<std::endl;
+
+        context->setState(new WaitingForInput());
+        context->handle();
+        delete this;
+    }
+
+}
+
+void AddingRequestToQueue::handle(Scheduler *context) {
+    std::cout<<"Adding request to queue..."<<std::endl;
+    std::cout<<"Added to queue"<<std::endl;
+    context->setState(new WaitingForInput());
+    context->handle();
+    delete this;
+}
+
+
+double Scheduler::calculateScore(e_struct &elevator, int requestedFloor, Direction requestedDirection) {
+    // Base score is absolute distance.
+    double score = std::abs(elevator.transmittedFloor - requestedFloor);
+
+    if (elevator.direction == BROKEN) {
+        return 1000000;
+    }
+
+    // If elevator is idle times by 10.
+    if (elevator.direction == IDLE) {
+        return score;
+    }
+
+    // If elevator is already heading in the right direction and will pass the requested floor, increase the score.
+    if ((elevator.direction == UP && requestedFloor > elevator.transmittedFloor && requestedDirection == UP) || (elevator.direction == DOWN && requestedFloor < elevator.transmittedFloor && requestedDirection == DOWN)) {
+        return score / 2;
+    }
+
+    return score * 2;
+}
+
+// Determines the elevator with the best(biggest) score and returns its index.
+int Scheduler::calculateBestScore(int requestedFloor, Direction requestedDirection) {
+
+    int bestElevatorIndex = 0;
+    double bestScore = calculateScore(elevators[0], requestedFloor, requestedDirection);
+    std::cout<<"Score: "<< bestScore << " ID: " << bestElevatorIndex+1 << std::endl;
+
+    for (int i = 1; i < numElevators; i++) {
+        double score = calculateScore(elevators[i], requestedFloor, requestedDirection);
+        std::cout<<"Score: "<<score<< " ID: " << i+1 << std::endl;
+        if (score < bestScore) {
+            bestScore = score;
+            bestElevatorIndex = i;
         }
     }
-    f.close();
-
-    // Write remaining lines back to the file
-    std::ofstream outputFile("../lib/shareddata.txt");
-    if (!outputFile) {
-        std::cerr << "File could not be opened for writing." << std::endl;
-		e_struct struct1;
-        return  struct1;
-    }
-
-    for (const auto& l : lines) {
-        outputFile << l << std::endl;
-    }
-    outputFile.close();
-    
-
-    if (lines.empty()) {
-        empty = true; 
-    }
-
-    
-    e_struct data;
-    std::istringstream iss(firstLine);
-    std::string timeString;
-    std::string floorButton;
-
-    // Extract time, floor number, and button status from the string
-    iss >> timeString >> data.floor_number >> floorButton;
-
-
-    // Parse time (hh:mm:ss.mmm)
-    sscanf(timeString.c_str(), "%2d:%2d:%2d", 
-           &data.datetime.tm_hour, 
-           &data.datetime.tm_min, 
-           &data.datetime.tm_sec);
-
-    // Set button status
-    data.floor_up_button = (floorButton == "Up");
-    data.floor_down_button = (floorButton == "Down");
-
-    
-    cv.notify_all();
-    return data;
-}
-void Scheduler::operator()() {
-    while (1) {}
+    std::cerr << "Best Score: " << bestElevatorIndex << std::endl;
+    return bestElevatorIndex;
 }
 
-/***
-int main(void) {
-
-    Scheduler scheduler; 
-// Test struct 1
-    ElevatorData test1;
-    test1.datetime = {30, 14, 1, 0, 125}; // 2025-01-01 14:30:00
-    test1.floor_number = 1;
-    test1.floor_up_button = true;
-    test1.floor_down_button = false;
-
-    // Test struct 2
-    ElevatorData test2;
-    test2.datetime = {45, 16, 1, 1, 125}; // 2025-02-01 16:45:00.500
-    test2.floor_number = 5;
-    test2.floor_up_button = false;
-    test2.floor_down_button = true;
-
-    // Test struct 3
-    ElevatorData test3;
-    test3.datetime = {15, 9, 1, 2, 125}; // 2025-03-01 09:15:00.750
-    test3.floor_number = 10;
-    test3.floor_up_button = true;
-    test3.floor_down_button = false;
-
-    scheduler.put(test1);
-    scheduler.put(test2);
-    scheduler.put(test3);
-
-    e_struct outtest1 = scheduler.get();
-    e_struct outtest2 =scheduler.get();
-    e_struct outtest3 = scheduler.get();
-    std::cout << "Success"; 
-    return 1;
+#ifndef UNIT_TEST
+int main(int argc, char* argv[]) {
+    Scheduler scheduler(std::atoi(argv[1]));
+    scheduler.handle();
 }
-***/
+#endif
+

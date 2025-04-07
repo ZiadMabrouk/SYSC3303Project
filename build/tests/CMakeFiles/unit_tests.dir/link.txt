@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/unit_tests.dir/ProjectTest.cpp.o -o unit_tests  ../src/libsource.a ../Catch2/src/libCatch2Main.a ../Catch2/src/libCatch2.a 

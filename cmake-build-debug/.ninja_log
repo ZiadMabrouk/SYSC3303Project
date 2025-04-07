@@ -1,7 +1,0 @@
-# ninja log v6
-1	206	7599774390967524	build.ninja	539288ed6e270b5e
-3	82	7599774391187508	CMakeFiles/SYSC3303Project.dir/src/Elevator.cpp.obj	91ff0e27491d853b
-6	83	7599774391217519	CMakeFiles/SYSC3303Project.dir/src/Floor.cpp.obj	cc9c79de325ae2c4
-4	83	7599774391197520	CMakeFiles/SYSC3303Project.dir/src/Scheduler.cpp.obj	b655314730a9c2b8
-2	420	7599774391177500	CMakeFiles/SYSC3303Project.dir/src/main.cpp.obj	320b626b7c981633
-421	506	7599774395360651	SYSC3303Project.exe	6040836ff5560ed0

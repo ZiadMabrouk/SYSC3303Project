@@ -1,3 +1,0 @@
-C:/Users/Daniel/CLionProjects/SYSC3303Project/cmake-build-debug/CMakeFiles/SYSC3303Project.dir
-C:/Users/Daniel/CLionProjects/SYSC3303Project/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/Daniel/CLionProjects/SYSC3303Project/cmake-build-debug/CMakeFiles/rebuild_cache.dir
