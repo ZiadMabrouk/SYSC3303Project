@@ -165,6 +165,8 @@ public:
 
     void handle();
 
+    void idleWithDoorsOpen();
+
 
     void operator()();
 

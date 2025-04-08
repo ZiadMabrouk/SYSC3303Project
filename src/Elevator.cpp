@@ -187,21 +187,35 @@ void ElevatorSubsystem::handle() {
     currentState->handle(this);
 }
 
-void eWaitingForInput::handle(ElevatorSubsystem* context) {
-    std::cout << "Elevator " << context->programID << ": Waiting for input / IDLE. Opening Doors" << std::endl;
+void ElevatorSubsystem::idleWithDoorsOpen() {
+    std::cout << "Elevator " << programID << ": Waiting for input / IDLE. Opening Doors" << std::endl;
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
-    std::cout << "Elevator " << context->programID << ": Doors Open" << std::endl;
+    std::cout << "Elevator " << programID << ": Doors Open" << std::endl;
+}
+
+void eWaitingForInput::handle(ElevatorSubsystem* context) {
+
+    context->idleWithDoorsOpen();
+
     if (true) { // lock scope
+        //Grab the lock and wait until a message is received from the scheduler
         std::unique_lock<std::mutex> lock(context->mtx);
         while (context->myElevator.getQueue().empty()) context->cv.wait(lock);
+
+        //If the Elevator senses it is broken (For Iteration 4 purposes)
         if (context->myElevator.getDirection() == BROKEN) {
           context->setState(new BrokenState());
           context->handle();
         }
+
+        //Print the floor which has been added
         context->myElevator.printQueue();
-        //review this line. was confused about it before.
+
+        // After a floor has been added to the queue, it will have been automatically sorted,
+        // so grab the first element to service that floor
         context->myElevator.floor_to_go_to = context->myElevator.getQueue().front();
     }
+    //Enter new state
     std::cout << "Elevator " << context->programID << ": Received Request" << std::endl;
     context->setState(new ProcessRequest());
     context->handle();
