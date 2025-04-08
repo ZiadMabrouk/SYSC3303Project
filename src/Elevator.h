@@ -12,6 +12,7 @@
 #include <condition_variable>
 #include <thread>
 #include <algorithm>
+#include <queue>
 
 #define ELEVATOR_TIME 3
 #define DOORS_TIME 1
@@ -83,8 +84,10 @@ public:
     //std::mutex mtx; // Mutex for myQueue and threads
     std::mutex mtx2; // Mutex for send_elevator_data and threads
     //std::condition_variable cv; // Condition variable for signaling
-    std::vector<short int> myQueue; // added a vector of short int
+    std::vector<short int> schedulerQueue; // added a vector of short int
+    std::queue<short int> userQueue;
     int ID; // elevator ID
+    int destinationFloor;
     //DatagramSocket sendSocket; // double check, this is a guess
     //DatagramSocket receiveSocket; // double check, this is a guess
 
