@@ -173,22 +173,44 @@ void ElevatorSubsystem::sortMapInPlace(
     std::map<short int, std::vector<std::string>, std::function<bool(short int, short int)>>& m,
     bool ascending)
 {
+    int current_floor = myElevator.getCurrentFloor();
     // Create a new map using the new comparator.
-    std::map<short int, std::vector<std::string>, std::function<bool(short int, short int)>> newMap(
-        [ascending](short int a, short int b) {
-            return ascending ? a < b : a > b;
+    auto comp = [ascending, current_floor](short int a, short int b) {
+        if (ascending) {
+            bool aGroup1 = (a >= current_floor);
+            bool bGroup1 = (b >= current_floor);
+            // If the keys belong to different groups, the one in group1 comes first.
+            if (aGroup1 != bGroup1) {
+                return aGroup1 && !bGroup1;
+            }
+            // If both are in the same group, sort normally (ascending).
+            return a < b;
+        } else {
+            // Descending case.
+            bool aGroup1 = (a <= current_floor);
+            bool bGroup1 = (b <= current_floor);
+            // If the keys belong to different groups, the one in group1 comes first.
+            if (aGroup1 != bGroup1) {
+                return aGroup1 && !bGroup1;
+            }
+            // If both are in the same group, sort normally (descending).
+            return a > b;
         }
-    );
+    };
 
-    // Insert all elements from the original map into the new one.
-    for (const auto& kv : m)
-    {
+    // Build a new map with the desired custom comparator.
+    std::map<short int, std::vector<std::string>,
+             std::function<bool(short int, short int)>> newMap(comp);
+
+    // Insert all elements from the original schedulerQueue into the new map.
+    for (const auto& kv : myElevator.getQueue()) {
         newMap.insert(kv);
     }
 
-    // Swap the new map with the original one so that m is now sorted using the new comparator.
-    m.swap(newMap);
+    // Swap the new map with the original so that schedulerQueue now uses the new order.
+    myElevator.getQueue().swap(newMap);
 }
+
 
 
 // prints queue
@@ -318,6 +340,8 @@ void eWaitingForInput::handle(ElevatorSubsystem* context) {
         context->myElevator.printQueue();
         //review this line. was confused about it before.
         auto floor_and_direction = context->front(context->myElevator.getQueue());
+        std::cout << "Floor to go to: " << floor_and_direction.first << std::endl;
+        std::cout << "User Direction: " << floor_and_direction.second << std::endl;
         context->myElevator.floor_to_go_to = floor_and_direction.first;
         context->myElevator.user_direction = floor_and_direction.second;
 
@@ -362,13 +386,19 @@ void CruiseAndWait::handle(ElevatorSubsystem* context) {
         int new_state = false;
         if (true) {
             std::unique_lock<std::mutex> lock(context->mtx);
-            if (context->front(context->myElevator.getQueue()).first != context->myElevator.floor_to_go_to) {
+            if (context->front(context->myElevator.getQueue()).first != context->myElevator.floor_to_go_to
+                ||context->front(context->myElevator.getQueue()).second != context->myElevator.user_direction ) {
                 std::cout <<"New input received" << std::endl;
                 new_state = true;
             }
         }
         if (new_state == true) {
             context->setState(new ProcessRequest());
+            auto floor_and_direction = context->front(context->myElevator.getQueue());
+            std::cout << "Floor to go to: " << floor_and_direction.first << std::endl;
+            std::cout << "User Direction: " << floor_and_direction.second << std::endl;
+            context->myElevator.floor_to_go_to = floor_and_direction.first;
+            context->myElevator.user_direction = floor_and_direction.second;
             context->handle();
         }
     }
@@ -383,20 +413,25 @@ void Stopped::handle(ElevatorSubsystem* context) {
     std::cout << "Elevator " << context->programID << ": Stopped." << std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(1));
     // remove the floor we just arrived at
-    context->deleteEntry(context->myElevator.getQueue(), context->myElevator.getCurrentFloor());
+
     if (!context->myElevator.userQueue.empty()) {
+        context->deleteEntry(context->myElevator.getQueue(), context->myElevator.getCurrentFloor());
         std::unique_lock<std::mutex> lock(context->mtx);
         context->myElevator.setDirection(IDLE);
         std::cout << "adding to user queue."<< std::endl;
         // add all the user button requets into the queue
-        if (!context->myElevator.user_direction.empty()) {
+
+        if (!context->myElevator.user_direction.empty()) { // If we were picking up passengers
             context->userQueuePop(context->myElevator.getCurrentFloor(), context->myElevator.user_direction);
         }
+        else {
+            context->calcdirection(context->front(context->myElevator.getQueue()).first);
+        }
         auto pair = context->front(context->myElevator.getQueue());
-        if (!pair.second.empty()) {
+        if (!pair.second.empty()) { // If we are picking up passengers
             context->myElevator.user_direction = pair.second;
         }
-        else {
+        else { //dropping off passengers
          context->myElevator.user_direction = "";
         }
         context->myElevator.floor_to_go_to = pair.first;
