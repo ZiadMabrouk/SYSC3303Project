@@ -418,6 +418,10 @@ void Stopped::handle(ElevatorSubsystem* context) {
         context->deleteEntry(context->myElevator.getQueue(), context->myElevator.getCurrentFloor());
         std::unique_lock<std::mutex> lock(context->mtx);
         context->myElevator.setDirection(IDLE);
+        if (context->myElevator.user_direction.empty() && context->myElevator.getQueue().empty()) {
+            std::cout << "Elevator " << context->programID << ": Done servicing queue" << std::endl;
+            goto end;
+        }
         std::cout << "adding to user queue."<< std::endl;
         // add all the user button requets into the queue
 
@@ -439,7 +443,7 @@ void Stopped::handle(ElevatorSubsystem* context) {
     }
 
 
-
+    end:
     if (context->doorsJammed) {
       context->setState(new JammedState());
     } else {
