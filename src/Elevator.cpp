@@ -26,9 +26,56 @@ Direction Elevator::getDirection() {
 }
 
 // returns reference and not a copy of myQueue. if this fails then go the setter function route.
-std::vector<short int> &Elevator::getQueue() {
+std::map<short int, std::vector<std::string>, std::function<bool(short int, short int)>> &Elevator::getQueue() {
     return schedulerQueue;
 }
+void ElevatorSubsystem::userQueuePush(int key, int value) {
+
+    std::string dictKey;
+
+    // Determine the suffix based on the comparison between key and value.
+    if (value > key)
+        dictKey = std::to_string(key) + "UP";
+    else if (value < key)
+        dictKey = std::to_string(key) + "DOWN";
+    else
+        // When value equals key, choosing "UP" by default.
+            dictKey = std::to_string(key) + "UP";
+    auto it = myElevator.userQueue.find(dictKey);
+    if (it == myElevator.userQueue.end()) {
+        // No entry exists for this key: create a new vector containing the value.
+        myElevator.userQueue[dictKey] = std::vector<int>{value};
+    } else {
+        // Entry exists: add the value if it is not already present.
+        auto& vec = it->second;
+        if (std::find(vec.begin(), vec.end(), value) == vec.end())
+            vec.push_back(value);
+    }
+}
+
+
+// Pop operation: For a given key, call addtoQueue() on each element
+// in the vector, then remove the key-value pair from the dictionary.
+// Returns true if the key was found and processed, false otherwise.
+bool ElevatorSubsystem::userQueuePop(int floor, const std::string& direction) {
+    std::string key = std::to_string(floor) + direction;
+    auto it = myElevator.userQueue.find(key);
+    if (it == myElevator.userQueue.end()) {
+        // Key not found; handle the error.
+        std::cerr << "Key " << key << " not found in UserQueue.\n";
+        return false;
+    }
+
+    // Call addtoQueue on every value in the vector.
+    for (int value : it->second) {
+        addtoQueue(static_cast<short int>(value), -1);
+    }
+
+    // Erase the key and its associated vector from the dictionary.
+    myElevator.userQueue.erase(it);
+    return true;
+}
+
 
 
 
@@ -47,46 +94,53 @@ void ElevatorSubsystem::calcdirection(short int pfloor) {
 
 // TODO: Test to see if get by refenrence works as expected.
 //Im gonna assume that a floor lower than the elevators current floor, when
-void ElevatorSubsystem::addtoQueue(short int floor) {
+void ElevatorSubsystem::addtoQueue(short int floor, short int car_to_floor) {
 
-    if (myElevator.getQueue().empty()) {// adds floor number, to queue.
+    std::string direction;
+    if (car_to_floor == -1) {
+        direction = nullptr;
+    }
+    else if (floor > car_to_floor) {
+        direction = "DOWN";
+    }
+    else if (floor < car_to_floor) {
+        direction = "UP";
+    }
+    auto it = myElevator.schedulerQueue.find(floor);
+    if (it == myElevator.schedulerQueue.end()) {
+            // No entry exists for this key: create a new vector containing the value.
+        if (car_to_floor != -1) {
+            myElevator.schedulerQueue[floor] = std::vector<std::string>{};
+        }
+        else {
+            myElevator.schedulerQueue[floor] = std::vector{direction};
+        }
+
+    } else if (car_to_floor != -1) {
+        // Entry exists: add the value if it is not already present.
+        auto& vec = it->second;
+        if (std::find(vec.begin(), vec.end(), direction) == vec.end()) {
+            vec.push_back(direction);
+        }
+    }
+
+
+
+    if (myElevator.getQueue().empty() || myElevator.getDirection() == IDLE) {// adds floor number, to queue.
         std::cout << " adding floor " << floor << std::endl;
         calcdirection(floor); // sets the direction
-        myElevator.getQueue().push_back(floor); // edge cases
+
     }
+
     else if (myElevator.getDirection() == UP) //this part sorts the vector ascending order(up direction).
     {
-        // bool inQueue = false; may be duplicate checking logic in which case, this should be readded.
-        // for (auto i : myQueue) {
-        //     if (i == floor) {
-        //         inQueue = true;
-        //     }
-        // }
-        //
-        // if (!inQueue) {
-        myElevator.getQueue().push_back(floor);
-        std::sort(myElevator.getQueue().begin(), myElevator.getQueue().end());
-        // }
-
+        sortMapInPlace(myElevator.schedulerQueue, true);//true means ascending order
     }
     else if (myElevator.getDirection() == DOWN)//this part sorts the vector in descending order(down direction).
     {
-        // bool inQueue = false;
-        // for (auto i : myQueue) {
-        //     if (i == floor) {
-        //         inQueue = true;
-        //     }
-        // }
-        // if (!inQueue) {
-        myElevator.getQueue().push_back(floor);
-        std::sort(myElevator.getQueue().begin(), myElevator.getQueue().end(), std::greater<short int>());  // Descending order
-        // }
+        sortMapInPlace(myElevator.schedulerQueue, false);//true means ascending order  // Descending order
 
-    } else if (myElevator.getDirection() == IDLE) {
-        calcdirection(floor);
-        myElevator.getQueue().push_back(floor);
     }
-     // Notify waiting thread
 
 }
 
@@ -115,11 +169,33 @@ void Elevator::travel() {
 
 }
 **/
+void ElevatorSubsystem::sortMapInPlace(
+    std::map<short int, std::vector<std::string>, std::function<bool(short int, short int)>>& m,
+    bool ascending)
+{
+    // Create a new map using the new comparator.
+    std::map<short int, std::vector<std::string>, std::function<bool(short int, short int)>> newMap(
+        [ascending](short int a, short int b) {
+            return ascending ? a < b : a > b;
+        }
+    );
+
+    // Insert all elements from the original map into the new one.
+    for (const auto& kv : m)
+    {
+        newMap.insert(kv);
+    }
+
+    // Swap the new map with the original one so that m is now sorted using the new comparator.
+    m.swap(newMap);
+}
+
 
 // prints queue
 void Elevator::printQueue() {
-    for (int num: schedulerQueue) {
-        std::cout << num << " ";
+    std::cout << "Map keys:" << std::endl;
+    for (const auto& entry : schedulerQueue) {
+        std::cout << entry.first << " ";
     }
     std::cout << std::endl;
 }
@@ -147,7 +223,7 @@ void ElevatorSubsystem::receiverThread() {
         received_e_struct_ = wait_and_receive_with_ack("Elevator", receiveSocket, sendSocket);
 
         if (received_e_struct_.direction == BROKEN) {
-            addtoQueue(0);
+            addtoQueue(0, 1);
             myElevator.setDirection(BROKEN);
         }
 
@@ -157,8 +233,9 @@ void ElevatorSubsystem::receiverThread() {
         }
 
         std::unique_lock<std::mutex> lock(mtx);
-        addtoQueue(received_e_struct_.transmittedFloor); // only thread to call addtoQueue is this one, but myQueue itself will change
-        myElevator.userQueue.push(received_e_struct_.car_to_floor_number);
+
+        addtoQueue(received_e_struct_.transmittedFloor, received_e_struct_.car_to_floor_number); // only thread to call addtoQueue is this one, but myQueue itself will change
+        userQueuePush(received_e_struct_.transmittedFloor, received_e_struct_.car_to_floor_number);
         // as other threads
         myElevator.printQueue();
         // addtoQueue(received_e_struct_.car_to_floor_number);
@@ -180,14 +257,47 @@ Elevator::Elevator(int elevatorID) : arrived(false), floor_to_go_to(1),  current
 ElevatorSubsystem::ElevatorSubsystem(int elevatorID) : myElevator(elevatorID) , programID(elevatorID),currentState(new eWaitingForInput), sendSocket(), receiveSocket(PORT+elevatorID){
 
 }
+void ElevatorSubsystem::deleteEntry(std::map<short int, std::vector<std::string>,
+              std::function<bool(short int, short int)>>& schedulerQueue, int key) {
+    // Find the key in the map
+    auto it = schedulerQueue.find(static_cast<short int>(key));
+    if (it == schedulerQueue.end()) {
+        std::cerr << "Key " << key << " not found in schedulerQueue." << std::endl;
+        return;
+    }
 
+    // If the vector has more than one element, remove the first element.
+    if (it->second.size() > 1) {
+        it->second.erase(it->second.begin());
+        std::cout << "Removed the first element from key " << key << "." << std::endl;
+    } else {
+        // Otherwise, remove the entire key-value pair.
+        schedulerQueue.erase(it);
+        std::cout << "Removed key " << key << " entirely from schedulerQueue." << std::endl;
+    }
+}
 
 void ElevatorSubsystem::operator()() {
     std::thread t1(&ElevatorSubsystem::receiverThread, this);
     handle(); // check that this works as expected.
     t1.join();
 }
+std::pair<short int, std::string> ElevatorSubsystem::front(const std::map<short int, std::vector<std::string>, std::function<bool(short int, short int)>>& m) {
+    if (m.empty()) {
+        throw std::runtime_error("Error: The map is empty.");
+    }
 
+    // Get the first key-value pair (the map is ordered).
+    auto iter = m.begin();
+
+    // Ensure that the vector associated with the first key is not empty.
+    if (iter->second.empty()) {
+        throw std::runtime_error("Error: The vector for the first key is empty.");
+    }
+
+    // Return the key and the first value from the associated vector.
+    return { iter->first, iter->second.front() };
+}
 void ElevatorSubsystem::handle() {
     currentState->handle(this);
 }
@@ -207,7 +317,9 @@ void eWaitingForInput::handle(ElevatorSubsystem* context) {
         }
         context->myElevator.printQueue();
         //review this line. was confused about it before.
-        context->myElevator.floor_to_go_to = context->myElevator.getQueue().front();
+        auto floor_and_direction = context->front(context->myElevator.getQueue());
+        context->myElevator.floor_to_go_to = floor_and_direction.first;
+        context->myElevator.user_direction = floor_and_direction.second;
 
     }
     std::cout << "Elevator " << context->programID << ": Received Request" << std::endl;
@@ -250,7 +362,7 @@ void CruiseAndWait::handle(ElevatorSubsystem* context) {
         int new_state = false;
         if (true) {
             std::unique_lock<std::mutex> lock(context->mtx);
-            if (context->myElevator.getQueue().front() != context->myElevator.floor_to_go_to) {
+            if (context->front(context->myElevator.getQueue()).first != context->myElevator.floor_to_go_to) {
                 std::cout <<"New input received" << std::endl;
                 new_state = true;
             }
@@ -270,26 +382,28 @@ void CruiseAndWait::handle(ElevatorSubsystem* context) {
 void Stopped::handle(ElevatorSubsystem* context) {
     std::cout << "Elevator " << context->programID << ": Stopped." << std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(1));
-
+    // remove the floor we just arrived at
+    context->deleteEntry(context->myElevator.getQueue(), context->myElevator.getCurrentFloor());
     if (!context->myElevator.userQueue.empty()) {
         std::unique_lock<std::mutex> lock(context->mtx);
         context->myElevator.setDirection(IDLE);
         std::cout << "adding to user queue."<< std::endl;
-        context->addtoQueue(context->myElevator.userQueue.front());
-        context->myElevator.floor_to_go_to = context->myElevator.userQueue.front();
-        context->myElevator.userQueue.pop();
-        auto it = std::find(context->myElevator.getQueue().begin(), context->myElevator.getQueue().end(), context->myElevator.floor_to_go_to);
-        short int index = 0;
-        if (it != context->myElevator.getQueue().end()) {
-            index = std::distance(context->myElevator.getQueue().begin(), it);
+        // add all the user button requets into the queue
+        if (!context->myElevator.user_direction.empty()) {
+            context->userQueuePop(context->myElevator.getCurrentFloor(), context->myElevator.user_direction);
         }
-        context->myElevator.getQueue().erase(context->myElevator.getQueue().begin() + index);
-        context->myElevator.printQueue();
-    } else {
-        context->myElevator.floor_to_go_to = context->myElevator.getQueue().front();
-        context->myElevator.getQueue().erase(context->myElevator.getQueue().begin());
+        auto pair = context->front(context->myElevator.getQueue());
+        if (!pair.second.empty()) {
+            context->myElevator.user_direction = pair.second;
+        }
+        else {
+         context->myElevator.user_direction = "";
+        }
+        context->myElevator.floor_to_go_to = pair.first;
         context->myElevator.printQueue();
     }
+
+
 
     if (context->doorsJammed) {
       context->setState(new JammedState());

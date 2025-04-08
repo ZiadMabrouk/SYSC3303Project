@@ -12,7 +12,10 @@
 #include <condition_variable>
 #include <thread>
 #include <algorithm>
+#include <functional>
+#include <map>
 #include <queue>
+#include <unordered_map>
 
 #define ELEVATOR_TIME 3
 #define DOORS_TIME 1
@@ -77,6 +80,7 @@ public:
     int arrived;
     short int current_floor;
     int floor_to_go_to;
+    std::string user_direction;
     Direction direction; // direction
     //std::string threadName; // string name to be used in Ziads interface.
     //e_struct received_e_struct_;
@@ -84,8 +88,8 @@ public:
     //std::mutex mtx; // Mutex for myQueue and threads
     std::mutex mtx2; // Mutex for send_elevator_data and threads
     //std::condition_variable cv; // Condition variable for signaling
-    std::vector<short int> schedulerQueue; // added a vector of short int
-    std::queue<short int> userQueue;
+    std::map<short int, std::vector<std::string>, std::function<bool(short int, short int)>> schedulerQueue; // added a vector of short int
+    std::map<std::string, std::vector<int>> userQueue;
     int ID; // elevator ID
     int destinationFloor;
     //DatagramSocket sendSocket; // double check, this is a guess
@@ -124,7 +128,7 @@ public:
 
     Direction getDirection();
 
-    std::vector<short int> &getQueue();
+    std::map<short int, std::vector<std::string>, std::function<bool(short int, short int)>> &getQueue();
 
 
 };
@@ -156,15 +160,26 @@ public:
     // constructor header for ElevatorSubsytem Constructor
     explicit ElevatorSubsystem(int elevatorID);
 
+    void deleteEntry(
+        std::map<short int, std::vector<std::string>, std::function<bool(short int, short int)>> &schedulerQueue,
+        int key);
+
+    void userQueuePush(int key, int value);
+
+    bool userQueuePop(int floor, const std::string &direction);
+
     void calcdirection(short int floor);
 
-    void addtoQueue(short int floor); // logic for elevators path.
+    void addtoQueue(short int floor, short int car_to_floor); // logic for elevators path.
+    void sortMapInPlace(std::map<short int, std::vector<std::string>, std::function<bool(short int, short int)>> &m,
+                        bool ascending);
 
     void receiverThread();
 
     void setState(eState* state) {
         currentState = state;
     }
+
 
     void handle();
 
@@ -173,6 +188,7 @@ public:
 
     void operator()();
 
+    std::pair<short int, std::string> front(const std::map<short int, std::vector<std::string>, std::function<bool(short int, short int)>> &m);
 };
 
 
