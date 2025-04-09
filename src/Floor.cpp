@@ -18,8 +18,10 @@
 //
 
 // this method reads a line from the input file and converts it into e_struct then invokes put into the scheduler object.
-void Floor::readFile() {
-    std::ifstream file("../data/tests/SamTestCase.txt");//open the file for reading
+void Floor::readFile(const std::string& inputfile) {
+    std::string str1 = "../data/tests/";
+    std::string filepath = str1 + inputfile;
+    std::ifstream file(filepath);//open the file for reading
     e_struct elevatorData;
 
     std::string line, token;
@@ -91,9 +93,12 @@ tm Floor::formatTime(const std::string& str) {
 }
 #ifndef UNIT_TEST
 // invokes the readFile() method.
+// ADD in readme that file must be in SYSC3303Project/data/tests/input_file.
 int main(int argc, char *argv[]) {
+    // Number of floors is argv[1]
     Floor floor(std::atoi(argv[1]));
-    floor.readFile();
+    // pass argv[2] as the file path.
+    floor.readFile(argv[2]);
 }
 #endif
 
