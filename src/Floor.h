@@ -28,7 +28,7 @@ public:
     DatagramSocket sendSocket;
     int numFloors;
 
-    void readFile();
+    void readFile(const std::string& inputfile);
 
     tm formatTime(const std::string& str);
 

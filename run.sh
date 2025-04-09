@@ -5,6 +5,7 @@ cd builds
 
 DEFAULT_ELEVATORS=1
 DEFAULT_FLOORS=22
+INPUT_FILE="SamTestCase.txt"
 
 NUM_ELEVATORS=${1:-$DEFAULT_ELEVATORS}
 NUM_FLOORS=${2:-$DEFAULT_FLOORS}
@@ -16,4 +17,4 @@ do
   gnome-terminal -- bash -c "./Elevator.o $i; exec bash"
 done
 
-gnome-terminal -- bash -c "./Floor.o $NUM_FLOORS; exec bash"
+gnome-terminal -- bash -c "./Floor.o $NUM_FLOORS $INPUT_FILE; exec bash"
