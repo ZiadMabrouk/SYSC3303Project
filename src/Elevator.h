@@ -86,7 +86,6 @@ public:
     //e_struct received_e_struct_;
 
     //std::mutex mtx; // Mutex for myQueue and threads
-    std::mutex mtx2; // Mutex for send_elevator_data and threads
     //std::condition_variable cv; // Condition variable for signaling
 
     /**

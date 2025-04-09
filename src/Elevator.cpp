@@ -73,6 +73,7 @@ bool ElevatorSubsystem::userQueuePop(int floor, const std::string& direction) {
 
     // Erase the key and its associated vector from the dictionary.
     myElevator.userQueue.erase(it);
+    std::cout << "Erased floor " << std::endl;
     return true;
 }
 
@@ -175,8 +176,8 @@ void ElevatorSubsystem::sortMapInPlace(
     // Create a new map using the new comparator.
     auto comp = [ascending, current_floor](short int a, short int b) {
         if (ascending) {
-            bool aGroup1 = (a >= current_floor);
-            bool bGroup1 = (b >= current_floor);
+            bool aGroup1 = (a > current_floor);
+            bool bGroup1 = (b > current_floor);
             // If the keys belong to different groups, the one in group1 comes first.
             if (aGroup1 != bGroup1) {
                 return aGroup1 && !bGroup1;
@@ -185,8 +186,8 @@ void ElevatorSubsystem::sortMapInPlace(
             return a < b;
         } else {
             // Descending case.
-            bool aGroup1 = (a <= current_floor);
-            bool bGroup1 = (b <= current_floor);
+            bool aGroup1 = (a < current_floor);
+            bool bGroup1 = (b < current_floor);
             // If the keys belong to different groups, the one in group1 comes first.
             if (aGroup1 != bGroup1) {
                 return aGroup1 && !bGroup1;
@@ -269,13 +270,13 @@ void ElevatorSubsystem::receiverThread() {
 
 
 // make sure to pass the now Elevator Substystem programID as elevatorID
-Elevator::Elevator(int elevatorID) : arrived(false), floor_to_go_to(1),  current_floor(1), direction(IDLE) , ID(elevatorID) {
+Elevator::Elevator(int elevatorID) : arrived(false), floor_to_go_to(1),  current_floor(1), direction(IDLE) , ID(elevatorID), user_direction(""), schedulerQueue(), userQueue(), destinationFloor(1) {
 } // initializes the elevator class to object.
 
 //TODO: Define the constructor for ElevatorSubsystem.
 // may not need programID member.
-ElevatorSubsystem::ElevatorSubsystem(int elevatorID) : myElevator(elevatorID) , programID(elevatorID),currentState(new eWaitingForInput), sendSocket(), receiveSocket(PORT+elevatorID){
-
+ElevatorSubsystem::ElevatorSubsystem(int elevatorID) : myElevator(elevatorID) , programID(elevatorID),currentState(new eWaitingForInput()), sendSocket(), receiveSocket(PORT+elevatorID){
+    sortMapInPlace(myElevator.schedulerQueue, true);
 }
 void ElevatorSubsystem::deleteEntry(std::map<short int, std::vector<std::string>,
               std::function<bool(short int, short int)>>& schedulerQueue, int key) {
@@ -309,14 +310,15 @@ std::pair<short int, std::string> ElevatorSubsystem::front(const std::map<short 
 
     // Get the first key-value pair (the map is ordered).
     auto iter = m.begin();
-
-    // Ensure that the vector associated with the first key is not empty.
+    std::string tmp;
     if (iter->second.empty()) {
-        throw std::runtime_error("Error: The vector for the first key is empty.");
+        tmp = "";
+    } else {
+        tmp = iter->second.front();
     }
 
     // Return the key and the first value from the associated vector.
-    return { iter->first, iter->second.front() };
+    return std::make_pair(iter->first, tmp);
 }
 void ElevatorSubsystem::handle() {
     currentState->handle(this);
@@ -412,37 +414,37 @@ void Stopped::handle(ElevatorSubsystem* context) {
     std::this_thread::sleep_for(std::chrono::seconds(1));
     // remove the floor we just arrived at
 
-    if (!context->myElevator.userQueue.empty()) {
-
+    if (true) {
         std::unique_lock<std::mutex> lock(context->mtx);
         context->deleteEntry(context->myElevator.getQueue(), context->myElevator.getCurrentFloor());
         context->myElevator.setDirection(IDLE);
         if (context->myElevator.user_direction.empty() && context->myElevator.getQueue().empty()) {
             std::cout << "Elevator " << context->programID << ": Done servicing queue" << std::endl;
-            goto end;
-        }
-        std::cout << "adding to user queue."<< std::endl;
-        // add all the user button requets into the queue
+        } else {
+            std::cout << "adding to user queue."<< std::endl;
+            // add all the user button requets into the queue
 
-        if (!context->myElevator.user_direction.empty()) { // If we were picking up passengers
-            context->userQueuePop(context->myElevator.getCurrentFloor(), context->myElevator.user_direction);
+            if (!context->myElevator.user_direction.empty()) { // If we were picking up passengers
+                context->userQueuePop(context->myElevator.getCurrentFloor(), context->myElevator.user_direction);
+            }
+            else {
+                context->calcdirection(context->front(context->myElevator.getQueue()).first);
+                context->sortMapInPlace(context->myElevator.getQueue(), context->myElevator.getDirection() == UP);
+            }
+            auto pair = context->front(context->myElevator.getQueue());
+            std::cout << "used front."<< std::endl;
+            if (!pair.second.empty()) { // If we are picking up passengers
+                context->myElevator.user_direction = pair.second;
+            }
+            else { //dropping off passengers
+                context->myElevator.user_direction = "";
+            }
+            context->myElevator.floor_to_go_to = pair.first;
+            context->myElevator.printQueue();
         }
-        else {
-            context->calcdirection(context->front(context->myElevator.getQueue()).first);
-        }
-        auto pair = context->front(context->myElevator.getQueue());
-        if (!pair.second.empty()) { // If we are picking up passengers
-            context->myElevator.user_direction = pair.second;
-        }
-        else { //dropping off passengers
-         context->myElevator.user_direction = "";
-        }
-        context->myElevator.floor_to_go_to = pair.first;
-        context->myElevator.printQueue();
     }
 
 
-    end:
     if (context->doorsJammed) {
       context->setState(new JammedState());
     } else {
@@ -466,14 +468,12 @@ void InformSchedulerOfArrival::handle(ElevatorSubsystem* context) {
         std::unique_lock<std::mutex> lock(context->mtx);
         context->send_e_struct_.arrived = true;
 
-        // context->myElevator.getQueue().erase(context->myElevator.getQueue().begin()); // only erase once you arrive at the floor. Isolate this garbage from the rest so make an doors() method. and call that
 
         if (context->myElevator.getQueue().empty()) {
             std::cout << "Elevator Queue is empty, direction is now IDLE" << std::endl;
             context->myElevator.setDirection(IDLE);
         }
     }
-
     send_and_wait_for_ack(context->threadName, context->send_e_struct_,PORT, context->receiveSocket, context->sendSocket);
 
     context->setState(new DoorsClosed());
