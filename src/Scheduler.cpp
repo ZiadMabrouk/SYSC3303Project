@@ -78,8 +78,11 @@ void Scheduler::handle() {
 void Calculation::handle(Scheduler *context) {
     std::cout<<"Calculating..."<<std::endl;
     int index = context->receiveData.elevatorID;
-    context->elevators[index - 1].direction = context->receiveData.direction;
-    context->elevators[index - 1].transmittedFloor = context->receiveData.transmittedFloor;
+    if (true){
+        std::lock_guard<std::mutex> lock(context->elevatorMutex);
+        context->elevators[index - 1].direction = context->receiveData.direction;
+        context->elevators[index - 1].transmittedFloor = context->receiveData.transmittedFloor;
+    }
     std::cout<<"Calculated"<<std::endl;
     context->setState(new WaitingForInput());
     context->handle();
@@ -115,7 +118,10 @@ void Dispatching::handle(Scheduler *context) {
         if (context->receiveData.elevatorID == -10) {
             sendtoElevator.elevatorID = 1;
             sendtoElevator.direction = BROKEN;
-            context->elevators[0].direction = BROKEN;
+            if (true) {
+                std::lock_guard<std::mutex> lock(context->elevatorMutex);
+                context->elevators[0].direction = BROKEN;
+            }
         } else if (context->receiveData.elevatorID == -20) {
             sendtoElevator.elevatorID = 2;
             sendtoElevator.doorJammed = true;
@@ -179,11 +185,19 @@ double Scheduler::calculateScore(e_struct &elevator, int requestedFloor, Directi
 int Scheduler::calculateBestScore(int requestedFloor, Direction requestedDirection) {
 
     int bestElevatorIndex = 0;
-    double bestScore = calculateScore(elevators[0], requestedFloor, requestedDirection);
+    double bestScore;
+    if (true) {
+        std::lock_guard<std::mutex> lock(elevatorMutex);
+        bestScore = calculateScore(elevators[0], requestedFloor, requestedDirection);
+    }
     std::cout<<"Score: "<< bestScore << " ID: " << bestElevatorIndex+1 << std::endl;
 
     for (int i = 1; i < numElevators; i++) {
-        double score = calculateScore(elevators[i], requestedFloor, requestedDirection);
+        double score;
+        if (true) {
+            std::lock_guard<std::mutex> lock(elevatorMutex);
+            score = calculateScore(elevators[i], requestedFloor, requestedDirection);
+        }
         std::cout<<"Score: "<<score<< " ID: " << i+1 << std::endl;
         if (score < bestScore) {
             bestScore = score;
