@@ -4,9 +4,53 @@
 
 #include "Scheduler.h"
 
+void Scheduler::startMonitoring() {
+    monitoringThread = std::thread(&Scheduler::monitorElevators, this);
+    // Detach the thread so that it runs independently of the main thread.
+    monitoringThread.detach();
+}
 
+void Scheduler::monitorElevators() {
+        using namespace std::chrono;
+        // Variables to track when the idle state started.
+        steady_clock::time_point idleStart;
+        bool trackingIdle = false;
 
+        while (true) {
+            bool allIdle = false;
+            {
+                // Lock mutex to safely access the shared vector.
+                std::lock_guard<std::mutex> lock(elevatorMutex);
+                allIdle = std::all_of(elevators.begin(), elevators.end(),
+                                        [](const e_struct &elevator) {
+                                            return elevator.direction == Direction::IDLE;});
+            }
 
+            auto now = steady_clock::now();
+            if (allIdle) {
+                if (!trackingIdle) {
+                    // Start tracking the idle period.
+                    idleStart = now;
+                    trackingIdle = true;
+                } else {
+                    // Check if the condition has held for at least 3 seconds.
+                    auto elapsed = duration_cast<seconds>(now - idleStart);
+                    if (elapsed.count() >= 5) {
+                        std::cout << "Monitoring thread: All elevators have been IDLE for at least 3 seconds. Exiting.\n";
+                        e_struct elevator;
+                        elevator.direction = Direction::IDLE;
+                        send_no_wait("Timer Thread", elevator, FLOOR_PORT, receiveSocket, sendSocket);
+                        break;  // Condition satisfied for the required time.
+                    }
+                }
+            } else {
+                // Reset idle tracking if condition is broken.
+                trackingIdle = false;
+            }
+            // Sleep briefly to avoid busy waiting.
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        }
+    }
 Scheduler::Scheduler(int num_elevators) :  sendData(), receiveData(),currentState(new WaitingForInput()), numElevators(num_elevators), sendSocket(),receiveSocket(SERVER_PORT) {
 
     elevators.resize(numElevators);
@@ -153,7 +197,9 @@ int Scheduler::calculateBestScore(int requestedFloor, Direction requestedDirecti
 #ifndef UNIT_TEST
 int main(int argc, char* argv[]) {
     Scheduler scheduler(std::atoi(argv[1]));
+    scheduler.startMonitoring();
     scheduler.handle();
+    return EXIT_FAILURE;
 }
 #endif
 

@@ -22,7 +22,7 @@
 class Floor {
 
 public:
-    Floor(int num_floors) : numFloors(num_floors) {}
+    Floor(int num_floors) : numFloors(num_floors), sendSocket(), receiveSocket(8000) {}
 
     DatagramSocket receiveSocket;
     DatagramSocket sendSocket;

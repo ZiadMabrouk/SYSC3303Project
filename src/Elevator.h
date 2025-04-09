@@ -89,7 +89,8 @@ public:
     //std::condition_variable cv; // Condition variable for signaling
 
     /**
-     *scheduler {1: [{"", 2}]}
+     *{1: ["DOWN",}
+     *scheduler {1: [{"DOWN", 2}, {"", 2}]}
      *floor three pressed the up button and the down button
      * floor 2 pressed the button to go down
      */

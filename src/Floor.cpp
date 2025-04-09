@@ -89,11 +89,35 @@ tm Floor::formatTime(const std::string& str) {
 
     return datetime;
 }
+
+class FloorTimer {
+private:
+    std::chrono::system_clock::time_point startTime;
+    std::chrono::system_clock::time_point endTime;
+public:
+
+    FloorTimer();
+    void start() {
+        startTime = std::chrono::system_clock::now();
+    }
+
+    void end() {
+        endTime = std::chrono::system_clock::now();
+        std::chrono::duration<double> elapsed_seconds = endTime - startTime;
+        std::cout << "Total Passenger Service time: " << elapsed_seconds.count() - 5 << " seconds" << std::endl;
+    }
+
+
+};
 #ifndef UNIT_TEST
 // invokes the readFile() method.
 int main(int argc, char *argv[]) {
+    FloorTimer floorTimer;
     Floor floor(std::atoi(argv[1]));
+    floorTimer.start(); // start the timer
     floor.readFile();
+    receive_no_wait("Floor", floor.receiveSocket, floor.sendSocket);
+    floorTimer.end(); // end the timer and print results
 }
 #endif
 
