@@ -19,7 +19,7 @@
 
 #define ELEVATOR_TIME 3
 #define DOORS_TIME 1
-
+#define MAX_CAPACITY 12
 class ElevatorSubsystem;
 class eState {
 public:
@@ -89,22 +89,22 @@ public:
     //std::condition_variable cv; // Condition variable for signaling
 
     /**
-     *scheduler {3: []}
+     *scheduler {1: [{"", 2}]}
      *floor three pressed the up button and the down button
      * floor 2 pressed the button to go down
      */
-    std::map<short int, std::vector<std::string>, std::function<bool(short int, short int)>> schedulerQueue; // added a vector of short int
+    std::map<short int, std::vector<std::pair<std::string, short int>>, std::function<bool(short int, short int)>> schedulerQueue; // added a vector of short int
 
 
     /**Key is the floor in combination with the direction
-     *ex: {}
+     *ex: {"2DOWN": [{1,2}]}
      *
      */
 
     // 1. Scheduler to elevator (Pick up request)
     // 2. User-to-elevator (drop off request)
 
-    std::map<std::string, std::vector<int>> userQueue;
+    std::map<std::string, std::vector<std::pair<int, int>>> userQueue;
     int ID; // elevator ID
     int destinationFloor;
     //DatagramSocket sendSocket; // double check, this is a guess
@@ -143,7 +143,7 @@ public:
 
     Direction getDirection();
 
-    std::map<short int, std::vector<std::string>, std::function<bool(short int, short int)>> &getQueue();
+    std::map<short int, std::vector<std::pair<std::string, short int>>, std::function<bool(short int, short int)>> &getQueue();
 
 
 };
@@ -171,22 +171,25 @@ public:
     DatagramSocket sendSocket; // double check, this is a guess Remove.
     DatagramSocket receiveSocket; // double check, this is a guess Remove.
     bool doorsJammed = false;
+    int capacity;
 
     // constructor header for ElevatorSubsytem Constructor
     explicit ElevatorSubsystem(int elevatorID);
 
-    void deleteEntry(
-        std::map<short int, std::vector<std::string>, std::function<bool(short int, short int)>> &schedulerQueue,
+    int deleteEntry(
+        std::map<short int, std::vector<std::pair<std::string, short int> >, std::function<bool(short int, short int)> >
+        &
+        schedulerQueue,
         int key);
 
     void userQueuePush(int key, int value);
 
-    bool userQueuePop(int floor, const std::string &direction);
+    bool userQueuePop(int floor, const std::string &direction, int number_of_pops);
 
     void calcdirection(short int floor);
 
     void addtoQueue(short int floor, short int car_to_floor); // logic for elevators path.
-    void sortMapInPlace(std::map<short int, std::vector<std::string>, std::function<bool(short int, short int)>> &m,
+    void sortMapInPlace(std::map<short int, std::vector<std::pair<std::string, short int>>, std::function<bool(short int, short int)>> &m,
                         bool ascending);
 
     void receiverThread();
@@ -203,7 +206,7 @@ public:
 
     void operator()();
 
-    std::pair<short int, std::string> front(const std::map<short int, std::vector<std::string>, std::function<bool(short int, short int)>> &m);
+    std::pair<short int, std::pair<std::string, short int>> front(const std::map<short int, std::vector<std::pair<std::string, short int>>, std::function<bool(short int, short int)>> &m);
 };
 
 
