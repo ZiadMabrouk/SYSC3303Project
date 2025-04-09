@@ -96,7 +96,8 @@ private:
     std::chrono::system_clock::time_point endTime;
 public:
 
-    FloorTimer();
+    FloorTimer() {
+    }
     void start() {
         startTime = std::chrono::system_clock::now();
     }

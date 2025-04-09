@@ -5,6 +5,7 @@
 #include "Scheduler.h"
 
 void Scheduler::startMonitoring() {
+  	std::cout << "Timer thread created" << std::endl;
     monitoringThread = std::thread(&Scheduler::monitorElevators, this);
     // Detach the thread so that it runs independently of the main thread.
     monitoringThread.detach();
@@ -28,6 +29,7 @@ void Scheduler::monitorElevators() {
 
             auto now = steady_clock::now();
             if (allIdle) {
+
                 if (!trackingIdle) {
                     // Start tracking the idle period.
                     idleStart = now;
@@ -48,7 +50,7 @@ void Scheduler::monitorElevators() {
                 trackingIdle = false;
             }
             // Sleep briefly to avoid busy waiting.
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
         }
     }
 Scheduler::Scheduler(int num_elevators) :  sendData(), receiveData(),currentState(new WaitingForInput()), numElevators(num_elevators), sendSocket(),receiveSocket(SERVER_PORT) {
@@ -81,6 +83,7 @@ void Calculation::handle(Scheduler *context) {
     if (true){
         std::lock_guard<std::mutex> lock(context->elevatorMutex);
         context->elevators[index - 1].direction = context->receiveData.direction;
+        std::cout<<"received direction" << context->elevators[index - 1].direction  <<std::endl;
         context->elevators[index - 1].transmittedFloor = context->receiveData.transmittedFloor;
     }
     std::cout<<"Calculated"<<std::endl;

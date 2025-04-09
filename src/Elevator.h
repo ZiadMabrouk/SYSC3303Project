@@ -19,7 +19,7 @@
 
 #define ELEVATOR_TIME 3
 #define DOORS_TIME 1
-#define MAX_CAPACITY 3
+#define MAX_CAPACITY 61
 class ElevatorSubsystem;
 class eState {
 public:
