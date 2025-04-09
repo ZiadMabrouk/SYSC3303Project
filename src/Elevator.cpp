@@ -91,6 +91,7 @@ bool ElevatorSubsystem::userQueuePop(int floor, const std::string& direction, in
             addtoQueue(static_cast<short int>(it->first), -1);
             // Increase capacity after each call.
             capacity++;
+            i++;
             // Decrease the frequency count for this request.
             it->second--;
         }
@@ -390,7 +391,7 @@ int ElevatorSubsystem::deleteEntry(
             int freq = frontPair.second;
             if (freq <= allowed) {
                 // Process the entire pair.
-                capacity += freq;
+
                 processed += freq;
                 std::cout << "Completely processed non-empty pair from key " << key
                           << ", incremented capacity by " << freq << "." << std::endl;
@@ -398,12 +399,10 @@ int ElevatorSubsystem::deleteEntry(
                 vec.erase(vec.begin());
             } else {
                 // Only process part of the pair.
-                capacity += allowed;
+
                 frontPair.second = freq - allowed;
                 processed += allowed;
-                std::cout << "Partially processed non-empty pair from key " << key
-                          << ". Incremented capacity by " << allowed
-                          << " (remaining frequency: " << frontPair.second << ")." << std::endl;
+
             }
         }
     }
@@ -538,6 +537,7 @@ void Stopped::handle(ElevatorSubsystem* context) {
         context->myElevator.setDirection(IDLE);
         if (context->myElevator.user_direction.empty() && context->myElevator.getQueue().empty()) {
             std::cout << "Elevator " << context->programID << ": Done servicing queue" << std::endl;
+            std::cout << "Elevator " << context->programID << ": Current Capacity is: " << context->capacity << std::endl;
         } else {
             std::cout << "adding to user queue."<< std::endl;
             // add all the user button requets into the queue

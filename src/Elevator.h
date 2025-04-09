@@ -19,7 +19,7 @@
 
 #define ELEVATOR_TIME 3
 #define DOORS_TIME 1
-#define MAX_CAPACITY 12
+#define MAX_CAPACITY 3
 class ElevatorSubsystem;
 class eState {
 public:
@@ -171,7 +171,7 @@ public:
     DatagramSocket sendSocket; // double check, this is a guess Remove.
     DatagramSocket receiveSocket; // double check, this is a guess Remove.
     bool doorsJammed = false;
-    int capacity;
+    int capacity = 0;
 
     // constructor header for ElevatorSubsytem Constructor
     explicit ElevatorSubsystem(int elevatorID);
