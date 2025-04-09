@@ -88,7 +88,23 @@ public:
     //std::mutex mtx; // Mutex for myQueue and threads
     std::mutex mtx2; // Mutex for send_elevator_data and threads
     //std::condition_variable cv; // Condition variable for signaling
+
+    /**
+     *scheduler {3: []}
+     *floor three pressed the up button and the down button
+     * floor 2 pressed the button to go down
+     */
     std::map<short int, std::vector<std::string>, std::function<bool(short int, short int)>> schedulerQueue; // added a vector of short int
+
+
+    /**Key is the floor in combination with the direction
+     *ex: {}
+     *
+     */
+
+    // 1. Scheduler to elevator (Pick up request)
+    // 2. User-to-elevator (drop off request)
+
     std::map<std::string, std::vector<int>> userQueue;
     int ID; // elevator ID
     int destinationFloor;

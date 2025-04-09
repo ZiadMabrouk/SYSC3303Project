@@ -97,10 +97,8 @@ void ElevatorSubsystem::calcdirection(short int pfloor) {
 void ElevatorSubsystem::addtoQueue(short int floor, short int car_to_floor) {
 
     std::string direction;
-    if (car_to_floor == -1) {
-        direction = nullptr;
-    }
-    else if (floor > car_to_floor) {
+    bool empty = myElevator.getQueue().empty();
+    if (floor > car_to_floor) {
         direction = "DOWN";
     }
     else if (floor < car_to_floor) {
@@ -109,7 +107,7 @@ void ElevatorSubsystem::addtoQueue(short int floor, short int car_to_floor) {
     auto it = myElevator.schedulerQueue.find(floor);
     if (it == myElevator.schedulerQueue.end()) {
             // No entry exists for this key: create a new vector containing the value.
-        if (car_to_floor != -1) {
+        if (car_to_floor == -1) {
             myElevator.schedulerQueue[floor] = std::vector<std::string>{};
         }
         else {
@@ -126,7 +124,7 @@ void ElevatorSubsystem::addtoQueue(short int floor, short int car_to_floor) {
 
 
 
-    if (myElevator.getQueue().empty() || myElevator.getDirection() == IDLE) {// adds floor number, to queue.
+    if (empty || myElevator.getDirection() == IDLE) {// adds floor number, to queue.
         std::cout << " adding floor " << floor << std::endl;
         calcdirection(floor); // sets the direction
 
@@ -138,7 +136,7 @@ void ElevatorSubsystem::addtoQueue(short int floor, short int car_to_floor) {
     }
     else if (myElevator.getDirection() == DOWN)//this part sorts the vector in descending order(down direction).
     {
-        sortMapInPlace(myElevator.schedulerQueue, false);//true means ascending order  // Descending order
+        sortMapInPlace(myElevator.schedulerQueue, false);//false means descending order  // Descending order
 
     }
 
@@ -415,8 +413,9 @@ void Stopped::handle(ElevatorSubsystem* context) {
     // remove the floor we just arrived at
 
     if (!context->myElevator.userQueue.empty()) {
-        context->deleteEntry(context->myElevator.getQueue(), context->myElevator.getCurrentFloor());
+
         std::unique_lock<std::mutex> lock(context->mtx);
+        context->deleteEntry(context->myElevator.getQueue(), context->myElevator.getCurrentFloor());
         context->myElevator.setDirection(IDLE);
         if (context->myElevator.user_direction.empty() && context->myElevator.getQueue().empty()) {
             std::cout << "Elevator " << context->programID << ": Done servicing queue" << std::endl;
