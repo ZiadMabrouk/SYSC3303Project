@@ -128,6 +128,8 @@ void ElevatorSubsystem::addtoQueue(short int floor, short int car_to_floor) {
     if (empty || myElevator.getDirection() == IDLE) {// adds floor number, to queue.
         std::cout << " adding floor " << floor << std::endl;
         calcdirection(floor); // sets the direction
+        std::cout << "Current Direction (add to Queue): " << myElevator.getDirection() << std::endl;
+        sortMapInPlace(myElevator.schedulerQueue, myElevator.getDirection() == UP);//true means ascending order
 
     }
 
@@ -429,6 +431,7 @@ void Stopped::handle(ElevatorSubsystem* context) {
             }
             else {
                 context->calcdirection(context->front(context->myElevator.getQueue()).first);
+                std::cout << "Current Direction (stopped state): " << context->myElevator.getDirection() << std::endl;
                 context->sortMapInPlace(context->myElevator.getQueue(), context->myElevator.getDirection() == UP);
             }
             auto pair = context->front(context->myElevator.getQueue());
