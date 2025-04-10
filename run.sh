@@ -3,7 +3,7 @@ g++ src/Floor.cpp src/Floor.h src/Datagram2.h src/ElevatorDataTypes.h -o builds/
 g++ src/Scheduler.cpp src/Scheduler.h src/Datagram2.h src/ElevatorDataTypes.h -o builds/Scheduler.o
 cd builds
 
-DEFAULT_ELEVATORS=1
+DEFAULT_ELEVATORS=4
 DEFAULT_FLOORS=22
 
 # Prompt the user

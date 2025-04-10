@@ -10,6 +10,7 @@
 #include <string>
 
 #define PORT 5000
+#define MAX_CAPACITY 3
 
 enum Direction { UP, DOWN, IDLE, BROKEN};
 

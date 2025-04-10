@@ -536,6 +536,7 @@ void Stopped::handle(ElevatorSubsystem* context) {
     if (true) {
         std::unique_lock<std::mutex> lock(context->mtx);
         int allowed = context->deleteEntry(context->myElevator.getQueue(), context->myElevator.getCurrentFloor());
+        auto direction = context->myElevator.getDirection();
         context->myElevator.setDirection(IDLE);
         if (context->myElevator.user_direction.empty() && context->myElevator.getQueue().empty()) {
             std::cout << "Elevator " << context->programID << ": Done servicing queue" << std::endl;
@@ -548,7 +549,11 @@ void Stopped::handle(ElevatorSubsystem* context) {
                 context->userQueuePop(context->myElevator.getCurrentFloor(), context->myElevator.user_direction, allowed);
             }
             else {
-                context->calcdirection(context->front(context->myElevator.getQueue()).first);
+                if (context->front(context->myElevator.getQueue()).first == context->myElevator.getCurrentFloor()) {
+                    context->myElevator.setDirection(direction);
+                }else {
+                    context->calcdirection(context->front(context->myElevator.getQueue()).first);
+                }
                 std::cout << "Current Direction (stopped state): " << context->myElevator.getDirection() << std::endl;
                 context->sortMapInPlace(context->myElevator.getQueue(), context->myElevator.getDirection() == UP);
             }
@@ -590,16 +595,15 @@ void InformSchedulerOfArrival::handle(ElevatorSubsystem* context) {
         std::unique_lock<std::mutex> lock(context->mtx);
         context->send_e_struct_.arrived = true;
 
-
-
-
         if (context->myElevator.getQueue().empty()) {
             std::cout << "Elevator Queue is empty, direction is now IDLE" << std::endl;
             context->myElevator.setDirection(IDLE);
         }
         context->send_e_struct_.direction = context->myElevator.getDirection();
+        context->send_e_struct_.capacity = context->capacity;
     }
     send_and_wait_for_ack(context->threadName, context->send_e_struct_,PORT, context->receiveSocket, context->sendSocket);
+    send_and_wait_for_ack(context->threadName, context->send_e_struct_,10000, context->receiveSocket, context->sendSocket);
 
     context->setState(new DoorsClosed());
     context->handle();

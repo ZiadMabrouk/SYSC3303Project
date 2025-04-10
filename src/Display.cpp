@@ -94,7 +94,7 @@ void Display::guiThread() {
                     ftxui::Color::Red
                 ),
                 ftxui::text(std::to_string(e.transmittedFloor)),
-                ftxui::text(std::to_string(e.capacity) + "/" + std::to_string(3)),
+                ftxui::text(std::to_string(e.capacity) + "/" + std::to_string(MAX_CAPACITY)),
             });
         }
 

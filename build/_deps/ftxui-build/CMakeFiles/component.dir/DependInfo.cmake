@@ -34,10 +34,12 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/nelspc/CLionProjects/SYSC3303Project/build/_deps/ftxui-src/src/ftxui/component/window.cpp" "_deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/window.cpp.o" "gcc" "_deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/window.cpp.o.d"
   )
 
-# Targets to which this target links.
-set(CMAKE_TARGET_LINKED_INFO_FILES
-  "/home/nelspc/CLionProjects/SYSC3303Project/build/_deps/ftxui-build/CMakeFiles/dom.dir/DependInfo.cmake"
-  "/home/nelspc/CLionProjects/SYSC3303Project/build/_deps/ftxui-build/CMakeFiles/screen.dir/DependInfo.cmake"
+# Targets to which this target links which contain Fortran sources.
+set(CMAKE_Fortran_TARGET_LINKED_INFO_FILES
+  )
+
+# Targets to which this target links which contain Fortran sources.
+set(CMAKE_Fortran_TARGET_FORWARD_LINKED_INFO_FILES
   )
 
 # Fortran module output directory.
