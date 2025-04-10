@@ -1,1 +1,1 @@
-/usr/bin/c++ -g CMakeFiles/Elevator.dir/Elevator.cpp.o -o Elevator
+/usr/bin/c++ CMakeFiles/Elevator.dir/Elevator.cpp.o -o Elevator 

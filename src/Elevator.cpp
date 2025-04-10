@@ -495,7 +495,9 @@ void CruiseAndWait::handle(ElevatorSubsystem* context) {
         context->send_e_struct_.elevatorID = context->programID;
         context->send_e_struct_.transmittedFloor = context->myElevator.getCurrentFloor();
         context->send_e_struct_.direction = context->myElevator.getDirection();
+        context->send_e_struct_.capacity = context->capacity;
         send_and_wait_for_ack(context->threadName, context->send_e_struct_,PORT, context->receiveSocket, context->sendSocket);
+        send_and_wait_for_ack(context->threadName, context->send_e_struct_,10000, context->receiveSocket, context->sendSocket);
 
         std::cout <<  "Elevator " << context->programID <<": Just passed, floor " << context->myElevator.getCurrentFloor() << std::endl;
 

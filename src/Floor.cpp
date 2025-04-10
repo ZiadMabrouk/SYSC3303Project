@@ -78,7 +78,7 @@ void Floor::readFile(const std::string& inputfile) {
         elevatorData.elevatorID = -1; // Helps discern that this e_struct is just data read from a file and not actual elevator data.
 
         send_and_wait_for_ack("Floor", elevatorData, PORT, receiveSocket, sendSocket);
-        std::this_thread::sleep_for(std::chrono::seconds(10));
+        std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 }
 

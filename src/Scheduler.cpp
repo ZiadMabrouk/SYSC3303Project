@@ -5,8 +5,6 @@
 #include "Scheduler.h"
 
 
-
-
 Scheduler::Scheduler(int num_elevators) :  sendData(), receiveData(),currentState(new WaitingForInput()), numElevators(num_elevators), sendSocket(),receiveSocket(SERVER_PORT) {
 
     elevators.resize(numElevators);
@@ -14,10 +12,9 @@ Scheduler::Scheduler(int num_elevators) :  sendData(), receiveData(),currentStat
         elevators[i].elevatorID = i+1;
         elevators[i].transmittedFloor = 1;
         elevators[i].direction = IDLE;
+        elevators[i].capacity = 0;
     }
 }
-
-
 
 DatagramSocket &Scheduler::getSendSocket() {
     return sendSocket;

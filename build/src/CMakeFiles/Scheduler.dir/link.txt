@@ -1,1 +1,1 @@
-/usr/bin/c++ -g CMakeFiles/Scheduler.dir/Scheduler.cpp.o -o Scheduler
+/usr/bin/c++ CMakeFiles/Scheduler.dir/Scheduler.cpp.o -o Scheduler 

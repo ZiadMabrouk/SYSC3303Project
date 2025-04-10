@@ -7,3 +7,4 @@
 subdirs("Catch2")
 subdirs("src")
 subdirs("tests")
+subdirs("_deps/ftxui-build")

@@ -78,15 +78,16 @@ public:
     explicit Scheduler(int num_elevators);
     int numElevators;
 
+
     DatagramSocket& getReceiveSocket();
     DatagramSocket& getSendSocket();
     void handle();
 
+    void guiThread();
+
     double calculateScore(e_struct &elevator, int requestedFloor, Direction requestedDirection);
 
     int calculateBestScore(int requestedFloor, Direction requestedDirection);
-
-    std::string stringDirection(Direction direction);
 
     void setState(State* state) {
         currentState = state;

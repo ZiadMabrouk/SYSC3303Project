@@ -7,10 +7,21 @@
 #include <ctime>
 #include <cstdint>
 #include <cstring>
+#include <string>
 
 #define PORT 5000
 
 enum Direction { UP, DOWN, IDLE, BROKEN};
+
+inline std::string stringDirection(Direction direction) {
+    switch (direction) {
+        case UP: return "UP";
+        case DOWN: return "DOWN";
+        case IDLE: return "IDLE";
+        case BROKEN: return "BROKEN";
+        default: return "UNKNOWN";
+    }
+}
 
 typedef struct ElevatorData {
     tm datetime{};  // Initialize to zero
@@ -26,6 +37,7 @@ typedef struct ElevatorData {
     bool stateTest = false;
     bool broken = false;
     bool doorJammed = false;
+    int capacity = 0;
     // Serialize struct into byte array
     void serialize(uint8_t* buffer) const {
         std::memcpy(buffer, this, sizeof(ElevatorData));
