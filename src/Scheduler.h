@@ -7,6 +7,7 @@
 
 #include <chrono>
 #include <thread>
+#include <algorithm>
 #include <iostream>
 #include <random>
 #include <mutex>
@@ -26,7 +27,7 @@
 #include <sys/select.h>    // For using select() to monitor multiple clients
 #include <unistd.h>        // For close()
 #define SERVER_PORT 5000
-
+#define FLOOR_PORT 8000
 class Scheduler;
 class State {
 public:
@@ -65,8 +66,11 @@ class Scheduler
 private:
 
     DatagramSocket sendSocket;
+    DatagramSocket floorSendSocket;
     DatagramSocket receiveSocket;
 public:
+    std::mutex elevatorMutex;
+    std::thread monitoringThread;
     State* currentState;
     std::vector<e_struct> elevators;
     bool elevatorOccupied = false;
@@ -75,6 +79,11 @@ public:
     bool requestInList = false;
     e_struct sendData;
     e_struct receiveData;
+
+    void startMonitoring();
+
+    void monitorElevators();
+
     explicit Scheduler(int num_elevators);
     int numElevators;
 

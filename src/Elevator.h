@@ -19,7 +19,7 @@
 
 #define ELEVATOR_TIME 3
 #define DOORS_TIME 1
-#define MAX_CAPACITY 3
+#define MAX_CAPACITY 61
 class ElevatorSubsystem;
 class eState {
 public:
@@ -89,7 +89,8 @@ public:
     //std::condition_variable cv; // Condition variable for signaling
 
     /**
-     *scheduler {1: [{"", 2}]}
+     *{1: ["DOWN",}
+     *scheduler {1: [{"DOWN", 2}, {"", 2}]}
      *floor three pressed the up button and the down button
      * floor 2 pressed the button to go down
      */

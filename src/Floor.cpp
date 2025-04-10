@@ -91,14 +91,38 @@ tm Floor::formatTime(const std::string& str) {
 
     return datetime;
 }
+
+class FloorTimer {
+private:
+    std::chrono::system_clock::time_point startTime;
+    std::chrono::system_clock::time_point endTime;
+public:
+
+    FloorTimer() {
+    }
+    void start() {
+        startTime = std::chrono::system_clock::now();
+    }
+
+    void end() {
+        endTime = std::chrono::system_clock::now();
+        std::chrono::duration<double> elapsed_seconds = endTime - startTime;
+        std::cout << "Total Passenger Service time: " << elapsed_seconds.count() - 5 << " seconds" << std::endl;
+    }
+
+
+};
 #ifndef UNIT_TEST
 // invokes the readFile() method.
-// ADD in readme that file must be in SYSC3303Project/data/tests/input_file.
 int main(int argc, char *argv[]) {
-    // Number of floors is argv[1]
+    FloorTimer floorTimer;
     Floor floor(std::atoi(argv[1]));
     // pass argv[2] as the file path.
+
+    floorTimer.start(); // start the timer
     floor.readFile(argv[2]);
+    receive_no_wait("Floor", floor.receiveSocket, floor.sendSocket);
+    floorTimer.end(); // end the timer and print results
 }
 #endif
 

@@ -4,7 +4,55 @@
 
 #include "Scheduler.h"
 
+void Scheduler::startMonitoring() {
+  	std::cout << "Timer thread created" << std::endl;
+    monitoringThread = std::thread(&Scheduler::monitorElevators, this);
+    // Detach the thread so that it runs independently of the main thread.
+    monitoringThread.detach();
+}
 
+void Scheduler::monitorElevators() {
+        using namespace std::chrono;
+        // Variables to track when the idle state started.
+        steady_clock::time_point idleStart;
+        bool trackingIdle = false;
+
+        while (true) {
+            bool allIdle = false;
+            {
+                // Lock mutex to safely access the shared vector.
+                std::lock_guard<std::mutex> lock(elevatorMutex);
+                allIdle = std::all_of(elevators.begin(), elevators.end(),
+                                        [](const e_struct &elevator) {
+                                            return elevator.direction == Direction::IDLE;});
+            }
+
+            auto now = steady_clock::now();
+            if (allIdle) {
+
+                if (!trackingIdle) {
+                    // Start tracking the idle period.
+                    idleStart = now;
+                    trackingIdle = true;
+                } else {
+                    // Check if the condition has held for at least 3 seconds.
+                    auto elapsed = duration_cast<seconds>(now - idleStart);
+                    if (elapsed.count() >= 5) {
+                        std::cout << "Monitoring thread: All elevators have been IDLE for at least 3 seconds. Exiting.\n";
+                        e_struct elevator;
+                        elevator.direction = Direction::IDLE;
+                        send_no_wait("Timer Thread", elevator, FLOOR_PORT, receiveSocket, sendSocket);
+                        break;  // Condition satisfied for the required time.
+                    }
+                }
+            } else {
+                // Reset idle tracking if condition is broken.
+                trackingIdle = false;
+            }
+            // Sleep briefly to avoid busy waiting.
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        }
+    }
 Scheduler::Scheduler(int num_elevators) :  sendData(), receiveData(),currentState(new WaitingForInput()), numElevators(num_elevators), sendSocket(),receiveSocket(SERVER_PORT) {
 
     elevators.resize(numElevators);
@@ -15,6 +63,8 @@ Scheduler::Scheduler(int num_elevators) :  sendData(), receiveData(),currentStat
         elevators[i].capacity = 0;
     }
 }
+
+
 
 DatagramSocket &Scheduler::getSendSocket() {
     return sendSocket;
@@ -31,8 +81,12 @@ void Scheduler::handle() {
 void Calculation::handle(Scheduler *context) {
     std::cout<<"Calculating..."<<std::endl;
     int index = context->receiveData.elevatorID;
-    context->elevators[index - 1].direction = context->receiveData.direction;
-    context->elevators[index - 1].transmittedFloor = context->receiveData.transmittedFloor;
+    if (true){
+        std::lock_guard<std::mutex> lock(context->elevatorMutex);
+        context->elevators[index - 1].direction = context->receiveData.direction;
+        std::cout<<"received direction" << context->elevators[index - 1].direction  <<std::endl;
+        context->elevators[index - 1].transmittedFloor = context->receiveData.transmittedFloor;
+    }
     std::cout<<"Calculated"<<std::endl;
     context->setState(new WaitingForInput());
     context->handle();
@@ -68,7 +122,10 @@ void Dispatching::handle(Scheduler *context) {
         if (context->receiveData.elevatorID == -10) {
             sendtoElevator.elevatorID = 1;
             sendtoElevator.direction = BROKEN;
-            context->elevators[0].direction = BROKEN;
+            if (true) {
+                std::lock_guard<std::mutex> lock(context->elevatorMutex);
+                context->elevators[0].direction = BROKEN;
+            }
         } else if (context->receiveData.elevatorID == -20) {
             sendtoElevator.elevatorID = 2;
             sendtoElevator.doorJammed = true;
@@ -132,11 +189,19 @@ double Scheduler::calculateScore(e_struct &elevator, int requestedFloor, Directi
 int Scheduler::calculateBestScore(int requestedFloor, Direction requestedDirection) {
 
     int bestElevatorIndex = 0;
-    double bestScore = calculateScore(elevators[0], requestedFloor, requestedDirection);
+    double bestScore;
+    if (true) {
+        std::lock_guard<std::mutex> lock(elevatorMutex);
+        bestScore = calculateScore(elevators[0], requestedFloor, requestedDirection);
+    }
     std::cout<<"Score: "<< bestScore << " ID: " << bestElevatorIndex+1 << std::endl;
 
     for (int i = 1; i < numElevators; i++) {
-        double score = calculateScore(elevators[i], requestedFloor, requestedDirection);
+        double score;
+        if (true) {
+            std::lock_guard<std::mutex> lock(elevatorMutex);
+            score = calculateScore(elevators[i], requestedFloor, requestedDirection);
+        }
         std::cout<<"Score: "<<score<< " ID: " << i+1 << std::endl;
         if (score < bestScore) {
             bestScore = score;
@@ -150,7 +215,9 @@ int Scheduler::calculateBestScore(int requestedFloor, Direction requestedDirecti
 #ifndef UNIT_TEST
 int main(int argc, char* argv[]) {
     Scheduler scheduler(std::atoi(argv[1]));
+    scheduler.startMonitoring();
     scheduler.handle();
+    return EXIT_FAILURE;
 }
 #endif
 

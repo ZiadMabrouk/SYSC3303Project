@@ -591,10 +591,13 @@ void InformSchedulerOfArrival::handle(ElevatorSubsystem* context) {
         context->send_e_struct_.arrived = true;
 
 
+
+
         if (context->myElevator.getQueue().empty()) {
             std::cout << "Elevator Queue is empty, direction is now IDLE" << std::endl;
             context->myElevator.setDirection(IDLE);
         }
+        context->send_e_struct_.direction = context->myElevator.getDirection();
     }
     send_and_wait_for_ack(context->threadName, context->send_e_struct_,PORT, context->receiveSocket, context->sendSocket);
 
