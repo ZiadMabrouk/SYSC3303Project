@@ -3,13 +3,13 @@
 # No other meaning or use of this file is supported.
 
 method=git
-command=/snap/clion/332/bin/cmake/linux/x64/bin/cmake;-DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE;-P;/home/nelspc/CLionProjects/SYSC3303Project/build/_deps/ftxui-subbuild/ftxui-populate-prefix/tmp/ftxui-populate-gitclone.cmake
-source_dir=/home/nelspc/CLionProjects/SYSC3303Project/build/_deps/ftxui-src
-work_dir=/home/nelspc/CLionProjects/SYSC3303Project/build/_deps
+command=/usr/bin/cmake;-P;/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/_deps/ftxui-subbuild/ftxui-populate-prefix/tmp/ftxui-populate-gitclone.cmake
+source_dir=/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/_deps/ftxui-src
+work_dir=/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/_deps
 repository=https://github.com/ArthurSonzogni/ftxui
 remote=origin
 init_submodules=TRUE
 recurse_submodules=--recursive
 submodules=
 CMP0097=NEW
-      
+

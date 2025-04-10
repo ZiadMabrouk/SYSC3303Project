@@ -4,8 +4,8 @@ events:
   -
     kind: "message-v1"
     backtrace:
-      - "/snap/clion/332/bin/cmake/linux/x64/share/cmake-3.30/Modules/CMakeDetermineSystem.cmake:205 (message)"
+      - "/usr/share/cmake-3.28/Modules/CMakeDetermineSystem.cmake:233 (message)"
       - "CMakeLists.txt:16 (project)"
     message: |
-      The system is: Linux - 6.8.0-52-generic - x86_64
+      The system is: Linux - 5.15.167.4-microsoft-standard-WSL2 - x86_64
 ...

@@ -2,6 +2,6 @@
 # The patch step will be re-executed if anything in this file changes.
 # No other meaning or use of this file is supported.
 
-command (connected)=/snap/clion/332/bin/cmake/linux/x64/bin/cmake;-Dcan_fetch=YES;-DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE;-P;/home/nelspc/CLionProjects/SYSC3303Project/build/_deps/ftxui-subbuild/ftxui-populate-prefix/tmp/ftxui-populate-gitupdate.cmake
-command (disconnected)=/snap/clion/332/bin/cmake/linux/x64/bin/cmake;-Dcan_fetch=NO;-DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE;-P;/home/nelspc/CLionProjects/SYSC3303Project/build/_deps/ftxui-subbuild/ftxui-populate-prefix/tmp/ftxui-populate-gitupdate.cmake
-work_dir=/home/nelspc/CLionProjects/SYSC3303Project/build/_deps/ftxui-src
+command (connected)=/usr/bin/cmake;-Dcan_fetch=YES;-P;/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/_deps/ftxui-subbuild/ftxui-populate-prefix/tmp/ftxui-populate-gitupdate.cmake
+command (disconnected)=/usr/bin/cmake;-Dcan_fetch=NO;-P;/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/_deps/ftxui-subbuild/ftxui-populate-prefix/tmp/ftxui-populate-gitupdate.cmake
+work_dir=/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/_deps/ftxui-src

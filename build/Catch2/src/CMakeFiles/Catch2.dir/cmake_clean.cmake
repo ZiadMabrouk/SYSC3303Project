@@ -209,8 +209,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/Catch2.dir/catch2/reporters/catch_reporter_teamcity.cpp.o.d"
   "CMakeFiles/Catch2.dir/catch2/reporters/catch_reporter_xml.cpp.o"
   "CMakeFiles/Catch2.dir/catch2/reporters/catch_reporter_xml.cpp.o.d"
-  "libCatch2.a"
-  "libCatch2.pdb"
+  "libCatch2d.a"
+  "libCatch2d.pdb"
 )
 
 # Per-language clean rules from dependency scanning.

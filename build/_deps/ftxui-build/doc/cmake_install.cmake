@@ -1,4 +1,4 @@
-# Install script for directory: /home/nelspc/CLionProjects/SYSC3303Project/build/_deps/ftxui-src/doc
+# Install script for directory: /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/_deps/ftxui-src/doc
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -37,7 +37,7 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
   set(CMAKE_CROSSCOMPILING "FALSE")
 endif()
 
-# Set path to fallback-tool for dependency-resolution.
+# Set default install directory permissions.
 if(NOT DEFINED CMAKE_OBJDUMP)
   set(CMAKE_OBJDUMP "/usr/bin/objdump")
 endif()
