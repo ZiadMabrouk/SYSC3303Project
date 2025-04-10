@@ -1,4 +1,4 @@
-# Install script for directory: /mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/_deps/ftxui-src/doc
+# Install script for directory: /home/nelspc/CLionProjects/SYSC3303Project/build/_deps/ftxui-src/doc
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

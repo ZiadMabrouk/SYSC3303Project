@@ -24,7 +24,7 @@ void Scheduler::monitorElevators() {
                 std::lock_guard<std::mutex> lock(elevatorMutex);
                 allIdle = std::all_of(elevators.begin(), elevators.end(),
                                         [](const e_struct &elevator) {
-                                            return elevator.direction == Direction::IDLE;});
+                                            return elevator.direction == Direction::IDLE || elevator.direction == Direction::BROKEN;});
             }
 
             auto now = steady_clock::now();

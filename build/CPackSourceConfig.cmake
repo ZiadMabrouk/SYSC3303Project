@@ -25,7 +25,7 @@ set(CPACK_IGNORE_FILES "/CVS/;/\\.svn/;/\\.bzr/;/\\.hg/;/\\.git/;\\.swp\$;\\.#;/
 set(CPACK_INSTALLED_DIRECTORIES "/home/nelspc/CLionProjects/SYSC3303Project;/")
 set(CPACK_INSTALL_CMAKE_PROJECTS "")
 set(CPACK_INSTALL_PREFIX "/usr/local")
-set(CPACK_MODULE_PATH "")
+set(CPACK_MODULE_PATH "/home/nelspc/CLionProjects/SYSC3303Project/Catch2/extras")
 set(CPACK_NSIS_DISPLAY_NAME "ftxui 6.0.1")
 set(CPACK_NSIS_INSTALLER_ICON_CODE "")
 set(CPACK_NSIS_INSTALLER_MUI_ICON_CODE "")

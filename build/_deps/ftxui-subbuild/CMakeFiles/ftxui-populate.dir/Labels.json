@@ -2,37 +2,37 @@
 	"sources" : 
 	[
 		{
-			"file" : "/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/_deps/ftxui-subbuild/CMakeFiles/ftxui-populate"
+			"file" : "/home/nelspc/CLionProjects/SYSC3303Project/build/_deps/ftxui-subbuild/CMakeFiles/ftxui-populate"
 		},
 		{
-			"file" : "/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/_deps/ftxui-subbuild/CMakeFiles/ftxui-populate.rule"
+			"file" : "/home/nelspc/CLionProjects/SYSC3303Project/build/_deps/ftxui-subbuild/CMakeFiles/ftxui-populate.rule"
 		},
 		{
-			"file" : "/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/_deps/ftxui-subbuild/CMakeFiles/ftxui-populate-complete.rule"
+			"file" : "/home/nelspc/CLionProjects/SYSC3303Project/build/_deps/ftxui-subbuild/CMakeFiles/ftxui-populate-complete.rule"
 		},
 		{
-			"file" : "/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-build.rule"
+			"file" : "/home/nelspc/CLionProjects/SYSC3303Project/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-build.rule"
 		},
 		{
-			"file" : "/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-configure.rule"
+			"file" : "/home/nelspc/CLionProjects/SYSC3303Project/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-configure.rule"
 		},
 		{
-			"file" : "/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-download.rule"
+			"file" : "/home/nelspc/CLionProjects/SYSC3303Project/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-download.rule"
 		},
 		{
-			"file" : "/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-install.rule"
+			"file" : "/home/nelspc/CLionProjects/SYSC3303Project/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-install.rule"
 		},
 		{
-			"file" : "/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-mkdir.rule"
+			"file" : "/home/nelspc/CLionProjects/SYSC3303Project/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-mkdir.rule"
 		},
 		{
-			"file" : "/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-patch.rule"
+			"file" : "/home/nelspc/CLionProjects/SYSC3303Project/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-patch.rule"
 		},
 		{
-			"file" : "/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-test.rule"
+			"file" : "/home/nelspc/CLionProjects/SYSC3303Project/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-test.rule"
 		},
 		{
-			"file" : "/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-update.rule"
+			"file" : "/home/nelspc/CLionProjects/SYSC3303Project/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-update.rule"
 		}
 	],
 	"target" : 

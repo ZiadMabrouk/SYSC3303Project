@@ -44,6 +44,21 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
+  include("/home/nelspc/CLionProjects/SYSC3303Project/build/Catch2/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/home/nelspc/CLionProjects/SYSC3303Project/build/src/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/home/nelspc/CLionProjects/SYSC3303Project/build/tests/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
   include("/home/nelspc/CLionProjects/SYSC3303Project/build/_deps/ftxui-build/cmake_install.cmake")
 endif()
 

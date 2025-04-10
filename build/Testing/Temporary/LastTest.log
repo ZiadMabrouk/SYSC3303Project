@@ -1,3 +1,263 @@
-Start testing: Apr 09 22:58 EDT
+Start testing: Apr 09 23:54 EDT
 ----------------------------------------------------------
-End testing: Apr 09 22:58 EDT
+1/10 Testing: State Machines (Elevator) - Jammed State 
+1/10 Test: State Machines (Elevator) - Jammed State 
+Command: "/home/nelspc/CLionProjects/SYSC3303Project/build/tests/unit_tests" "State Machines (Elevator) - Jammed State "
+Directory: /home/nelspc/CLionProjects/SYSC3303Project/build/tests
+"State Machines (Elevator) - Jammed State " start time: Apr 09 23:54 EDT
+Output:
+----------------------------------------------------------
+Filters: "State Machines (Elevator) - Jammed State"
+Randomness seeded to: 3958730951
+ adding floor 5
+Current Direction (add to Queue): 0
+Elevator 5: Stopped.
+Doors Jammed.... Initated Fixed Doors Routine.
+Doors have been fixed!!
+===============================================================================
+All tests passed (2 assertions in 1 test case)
+
+<end of output>
+Test time =   6.00 sec
+----------------------------------------------------------
+Test Passed.
+"State Machines (Elevator) - Jammed State " end time: Apr 09 23:54 EDT
+"State Machines (Elevator) - Jammed State " time elapsed: 00:00:06
+----------------------------------------------------------
+
+2/10 Testing: State Machines (Elevator) - Broken State 
+2/10 Test: State Machines (Elevator) - Broken State 
+Command: "/home/nelspc/CLionProjects/SYSC3303Project/build/tests/unit_tests" "State Machines (Elevator) - Broken State "
+Directory: /home/nelspc/CLionProjects/SYSC3303Project/build/tests
+"State Machines (Elevator) - Broken State " start time: Apr 09 23:54 EDT
+Output:
+----------------------------------------------------------
+Filters: "State Machines (Elevator) - Broken State"
+Randomness seeded to: 3039770395
+ adding floor 5
+Current Direction (add to Queue): 0
+Elevator 5: Waiting for input / IDLE. Opening Doors
+Elevator 5: Doors Open
+Acquired Mutex
+User Direction: 3
+Entered If: 
+Map keys:
+5 
+Floor to go to: 5
+User Direction: DOWN
+Elevator 5: Received Request
+===============================================================================
+All tests passed (2 assertions in 1 test case)
+
+<end of output>
+Test time =   0.50 sec
+----------------------------------------------------------
+Test Passed.
+"State Machines (Elevator) - Broken State " end time: Apr 09 23:54 EDT
+"State Machines (Elevator) - Broken State " time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/10 Testing: State Machines (Scheduler) - handle() 
+3/10 Test: State Machines (Scheduler) - handle() 
+Command: "/home/nelspc/CLionProjects/SYSC3303Project/build/tests/unit_tests" "State Machines (Scheduler) - handle() "
+Directory: /home/nelspc/CLionProjects/SYSC3303Project/build/tests
+"State Machines (Scheduler) - handle() " start time: Apr 09 23:54 EDT
+Output:
+----------------------------------------------------------
+Filters: "State Machines (Scheduler) - handle()"
+Randomness seeded to: 3712175570
+TestSenderSending message to server...
+Packet Sent!
+Server: Waiting for input... 
+Server: Waiting for Packet.
+Waiting...
+Server: Packet received:
+From host: 127.0.0.1
+Host port: 5053
+ServerSending acknowledgement back to client...
+Input received... 
+Dispatching
+===============================================================================
+All tests passed (2 assertions in 1 test case)
+
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"State Machines (Scheduler) - handle() " end time: Apr 09 23:54 EDT
+"State Machines (Scheduler) - handle() " time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/10 Testing: State Machines (Elevator) - Inital State 
+4/10 Test: State Machines (Elevator) - Inital State 
+Command: "/home/nelspc/CLionProjects/SYSC3303Project/build/tests/unit_tests" "State Machines (Elevator) - Inital State "
+Directory: /home/nelspc/CLionProjects/SYSC3303Project/build/tests
+"State Machines (Elevator) - Inital State " start time: Apr 09 23:54 EDT
+Output:
+----------------------------------------------------------
+Filters: "State Machines (Elevator) - Inital State"
+Randomness seeded to: 931027663
+ adding floor 5
+Current Direction (add to Queue): 0
+Elevator 5: Waiting for input / IDLE. Opening Doors
+Elevator 5: Doors Open
+Acquired Mutex
+User Direction: 0
+Map keys:
+5 
+Floor to go to: 5
+User Direction: DOWN
+Elevator 5: Received Request
+===============================================================================
+All tests passed (2 assertions in 1 test case)
+
+<end of output>
+Test time =   0.50 sec
+----------------------------------------------------------
+Test Passed.
+"State Machines (Elevator) - Inital State " end time: Apr 09 23:54 EDT
+"State Machines (Elevator) - Inital State " time elapsed: 00:00:00
+----------------------------------------------------------
+
+5/10 Testing: UDP Communication (Scheduler) - Socket.send() - Socket.receive()
+5/10 Test: UDP Communication (Scheduler) - Socket.send() - Socket.receive()
+Command: "/home/nelspc/CLionProjects/SYSC3303Project/build/tests/unit_tests" "UDP Communication (Scheduler) - Socket.send() - Socket.receive()"
+Directory: /home/nelspc/CLionProjects/SYSC3303Project/build/tests
+"UDP Communication (Scheduler) - Socket.send() - Socket.receive()" start time: Apr 09 23:54 EDT
+Output:
+----------------------------------------------------------
+Filters: "UDP Communication (Scheduler) - Socket.send() - Socket.receive()"
+Randomness seeded to: 974982359
+TestSenderSending message to server...
+Packet Sent!
+TestReceiver: Waiting for Packet.
+Waiting...
+TestReceiver: Packet received:
+From host: 127.0.0.1
+Host port: 8064
+===============================================================================
+All tests passed (1 assertion in 1 test case)
+
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"UDP Communication (Scheduler) - Socket.send() - Socket.receive()" end time: Apr 09 23:54 EDT
+"UDP Communication (Scheduler) - Socket.send() - Socket.receive()" time elapsed: 00:00:00
+----------------------------------------------------------
+
+6/10 Testing: UDP Communication (Elevator) - Socket.send() - Socket.receive()
+6/10 Test: UDP Communication (Elevator) - Socket.send() - Socket.receive()
+Command: "/home/nelspc/CLionProjects/SYSC3303Project/build/tests/unit_tests" "UDP Communication (Elevator) - Socket.send() - Socket.receive()"
+Directory: /home/nelspc/CLionProjects/SYSC3303Project/build/tests
+"UDP Communication (Elevator) - Socket.send() - Socket.receive()" start time: Apr 09 23:54 EDT
+Output:
+----------------------------------------------------------
+Filters: "UDP Communication (Elevator) - Socket.send() - Socket.receive()"
+Randomness seeded to: 1553087075
+TestSenderSending message to server...
+Packet Sent!
+TestReceiver: Waiting for Packet.
+Waiting...
+TestReceiver: Packet received:
+From host: 127.0.0.1
+Host port: 41640
+===============================================================================
+All tests passed (1 assertion in 1 test case)
+
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"UDP Communication (Elevator) - Socket.send() - Socket.receive()" end time: Apr 09 23:54 EDT
+"UDP Communication (Elevator) - Socket.send() - Socket.receive()" time elapsed: 00:00:00
+----------------------------------------------------------
+
+7/10 Testing: UDP Communication (GUI) - Socket.send() - Socket.receive()
+7/10 Test: UDP Communication (GUI) - Socket.send() - Socket.receive()
+Command: "/home/nelspc/CLionProjects/SYSC3303Project/build/tests/unit_tests" "UDP Communication (GUI) - Socket.send() - Socket.receive()"
+Directory: /home/nelspc/CLionProjects/SYSC3303Project/build/tests
+"UDP Communication (GUI) - Socket.send() - Socket.receive()" start time: Apr 09 23:54 EDT
+Output:
+----------------------------------------------------------
+Filters: "UDP Communication (GUI) - Socket.send() - Socket.receive()"
+Randomness seeded to: 916251425
+TestSenderSending message to server...
+Packet Sent!
+TestReceiver: Waiting for Packet.
+Waiting...
+TestReceiver: Packet received:
+From host: 127.0.0.1
+Host port: 49800
+===============================================================================
+All tests passed (1 assertion in 1 test case)
+
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"UDP Communication (GUI) - Socket.send() - Socket.receive()" end time: Apr 09 23:54 EDT
+"UDP Communication (GUI) - Socket.send() - Socket.receive()" time elapsed: 00:00:00
+----------------------------------------------------------
+
+8/10 Testing: ElevatorTest - getCurrentFloor()
+8/10 Test: ElevatorTest - getCurrentFloor()
+Command: "/home/nelspc/CLionProjects/SYSC3303Project/build/tests/unit_tests" "ElevatorTest - getCurrentFloor()"
+Directory: /home/nelspc/CLionProjects/SYSC3303Project/build/tests
+"ElevatorTest - getCurrentFloor()" start time: Apr 09 23:54 EDT
+Output:
+----------------------------------------------------------
+Filters: "ElevatorTest - getCurrentFloor()"
+Randomness seeded to: 4208499162
+===============================================================================
+All tests passed (2 assertions in 1 test case)
+
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"ElevatorTest - getCurrentFloor()" end time: Apr 09 23:54 EDT
+"ElevatorTest - getCurrentFloor()" time elapsed: 00:00:00
+----------------------------------------------------------
+
+9/10 Testing: FloorTest - Subsystem
+9/10 Test: FloorTest - Subsystem
+Command: "/home/nelspc/CLionProjects/SYSC3303Project/build/tests/unit_tests" "FloorTest - Subsystem"
+Directory: /home/nelspc/CLionProjects/SYSC3303Project/build/tests
+"FloorTest - Subsystem" start time: Apr 09 23:54 EDT
+Output:
+----------------------------------------------------------
+Filters: "FloorTest - Subsystem"
+Randomness seeded to: 3875995192
+===============================================================================
+All tests passed (3 assertions in 1 test case)
+
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"FloorTest - Subsystem" end time: Apr 09 23:54 EDT
+"FloorTest - Subsystem" time elapsed: 00:00:00
+----------------------------------------------------------
+
+10/10 Testing: Scheduler put() & get()
+10/10 Test: Scheduler put() & get()
+Command: "/home/nelspc/CLionProjects/SYSC3303Project/build/tests/unit_tests" "Scheduler put() & get()"
+Directory: /home/nelspc/CLionProjects/SYSC3303Project/build/tests
+"Scheduler put() & get()" start time: Apr 09 23:54 EDT
+Output:
+----------------------------------------------------------
+Filters: "Scheduler put() & get()"
+Randomness seeded to: 3708028661
+===============================================================================
+All tests passed (7 assertions in 1 test case)
+
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"Scheduler put() & get()" end time: Apr 09 23:54 EDT
+"Scheduler put() & get()" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Apr 09 23:54 EDT

@@ -19,7 +19,7 @@
 
 // this method reads a line from the input file and converts it into e_struct then invokes put into the scheduler object.
 void Floor::readFile(const std::string& inputfile) {
-    std::string str1 = "../data/tests/";
+    std::string str1 = "../../data/tests/";
     std::string filepath = str1 + inputfile;
     std::ifstream file(filepath);//open the file for reading
     e_struct elevatorData;

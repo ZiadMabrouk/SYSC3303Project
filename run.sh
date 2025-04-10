@@ -1,25 +1,46 @@
-g++ src/Elevator.cpp src/Elevator.h src/Datagram2.h src/ElevatorDataTypes.h -o builds/Elevator.o
-g++ src/Floor.cpp src/Floor.h src/Datagram2.h src/ElevatorDataTypes.h -o builds/Floor.o
-g++ src/Scheduler.cpp src/Scheduler.h src/Datagram2.h src/ElevatorDataTypes.h -o builds/Scheduler.o
-cd builds
+#!/bin/bash
+
+# Prompt the user
+echo "This test may take up to 45s. Continue? [Y/N]"
+read -r choice
 
 DEFAULT_ELEVATORS=4
 DEFAULT_FLOORS=22
 
-# Prompt the user
-echo "Enter input filename: "
-read -r choice
-
-#INPUT_FILE="SamTestCase.txt"
-
 NUM_ELEVATORS=${1:-$DEFAULT_ELEVATORS}
 NUM_FLOORS=${2:-$DEFAULT_FLOORS}
 
-gnome-terminal -- bash -c "./Scheduler.o $NUM_ELEVATORS; exec bash"
+# Check the user's input
+case "$choice" in
+    Y|y)
+        echo "Enter input filename: "
+        read -r choice
+        echo "Starting the test..."
+        rm -rf build
+        # Continue with the rest of the script
+        cmake -S . -B build
+        cmake --build build
+        cd build || exit
+        ctest
 
-for ((i=1; i<=NUM_ELEVATORS; i++))
-do
-  gnome-terminal -- bash -c "./Elevator.o $i; exec bash"
-done
+        gnome-terminal -- bash -c "./UI $NUM_ELEVATORS; exec bash"
 
-gnome-terminal -- bash -c "./Floor.o $NUM_FLOORS $choice; exec bash"
+        cd src || exit
+        gnome-terminal -- bash -c "./Scheduler $NUM_ELEVATORS; exec bash"
+
+        for ((i=1; i<=NUM_ELEVATORS; i++))
+        do
+          gnome-terminal -- bash -c "./Elevator $i; exec bash"
+        done
+
+        gnome-terminal -- bash -c "./Floor $NUM_FLOORS $choice; exec bash"
+        ;;
+    N|n)
+        echo "Test aborted."
+        exit 0
+        ;;
+    *)
+        echo "Invalid input. Please enter Y or N."
+        exit 1
+        ;;
+esac

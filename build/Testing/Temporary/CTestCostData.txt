@@ -1,1 +1,11 @@
+State Machines (Elevator) - Jammed State  1 6.00343
+State Machines (Elevator) - Broken State  1 0.504319
+State Machines (Scheduler) - handle()  1 0.00484755
+State Machines (Elevator) - Inital State  1 0.504122
+UDP Communication (Scheduler) - Socket.send() - Socket.receive() 1 0.00375855
+UDP Communication (Elevator) - Socket.send() - Socket.receive() 1 0.00262221
+UDP Communication (GUI) - Socket.send() - Socket.receive() 1 0.00250328
+ElevatorTest - getCurrentFloor() 1 0.00279943
+FloorTest - Subsystem 1 0.00247502
+Scheduler put() & get() 1 0.00281405
 ---
