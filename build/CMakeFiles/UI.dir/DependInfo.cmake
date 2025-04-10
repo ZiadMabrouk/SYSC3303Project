@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/nelspc/CLionProjects/SYSC3303Project/src/Display.cpp" "CMakeFiles/UI.dir/src/Display.cpp.o" "gcc" "CMakeFiles/UI.dir/src/Display.cpp.o.d"
+  "/mnt/c/Users/ziadm/CLionProjects/SYSC3303Project/src/Display.cpp" "CMakeFiles/UI.dir/src/Display.cpp.o" "gcc" "CMakeFiles/UI.dir/src/Display.cpp.o.d"
   )
 
 # Targets to which this target links.

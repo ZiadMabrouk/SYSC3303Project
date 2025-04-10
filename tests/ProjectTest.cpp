@@ -10,7 +10,50 @@
 
 
 #include <catch2/catch_test_macros.hpp>
-//
+/**
+ * @brief A Comprehensive test suite for the project src directory
+ * @author SYSC3303 Group 2 - Ziad Mabrouk / Jinan Kazi
+ *
+ * Uses Catch2 Library for a test suite
+ */
+
+TEST_CASE("State Machines (Elevator) - Jammed State ", "[StateMachine]") {
+    ElevatorSubsystem elevator_subsystem(5);
+    elevator_subsystem.setState(new Stopped());
+    SECTION("Elevator starts in Stopped state") {
+
+        auto* castedState = dynamic_cast<Stopped *>(elevator_subsystem.currentState);
+        REQUIRE(castedState != nullptr);
+    }
+    SECTION("Elevator goes into Jammed State after receiving message") {
+        elevator_subsystem.addtoQueue(5, 2);
+        elevator_subsystem.stateTest = true;
+        elevator_subsystem.doorsJammed = true;
+        elevator_subsystem.handle();
+        auto* castedState2 = dynamic_cast<JammedState *>(elevator_subsystem.currentState);
+        REQUIRE(castedState2 != nullptr);
+    }
+
+}
+
+TEST_CASE("State Machines (Elevator) - Broken State ", "[StateMachine]") {
+    ElevatorSubsystem elevator_subsystem(5);
+    SECTION("Elevator starts in WaitingForInput state") {
+        eWaitingForInput* castedState = dynamic_cast<eWaitingForInput *>(elevator_subsystem.currentState);
+        REQUIRE(castedState != nullptr);
+    }
+    SECTION("Elevator goes into Broken State after receiving message") {
+        elevator_subsystem.addtoQueue(5, 2);
+        elevator_subsystem.stateTest = true;
+        elevator_subsystem.myElevator.direction = BROKEN;
+        elevator_subsystem.handle();
+        auto* castedState2 = dynamic_cast<BrokenState *>(elevator_subsystem.currentState);
+        REQUIRE(castedState2 != nullptr);
+    }
+
+}
+
+
 TEST_CASE("State Machines (Scheduler) - handle() ", "[StateMachine]") {
     DatagramSocket sendSocket;
     DatagramSocket receiveSocket;
@@ -39,7 +82,7 @@ TEST_CASE("State Machines (Elevator) - Inital State ", "[StateMachine]") {
         REQUIRE(castedState != nullptr);
     }
     SECTION("Elevator goes into ProcessingRequest after receiving message") {
-        elevator_subsystem.myElevator.getQueue().push_back(5);
+        elevator_subsystem.addtoQueue(5, 2);
         elevator_subsystem.stateTest = true;
         elevator_subsystem.handle();
         ProcessRequest* castedState2 = dynamic_cast<ProcessRequest *>(elevator_subsystem.currentState);
@@ -70,11 +113,17 @@ TEST_CASE("UDP Communication (Elevator) - Socket.send() - Socket.receive()", "[U
     REQUIRE(receivedStruct.transmittedFloor == 9);
 }
 
+TEST_CASE("UDP Communication (GUI) - Socket.send() - Socket.receive()", "[GUI]") {
+    DatagramSocket sendSocket;
+    DatagramSocket receiveSocket(10000);
 
-TEST_CASE("Algorithm - Scheduler ", "[Algorithm]") {
-    //TODO: Fill this out with Daniel
-
+    e_struct testStruct;
+    testStruct.transmittedFloor = 9;
+    send_no_wait("TestSender", testStruct, 10000, receiveSocket, sendSocket);
+    e_struct receivedStruct = receive_no_wait("TestReceiver", receiveSocket, sendSocket);
+    REQUIRE(receivedStruct.transmittedFloor == 9);
 }
+
 //Created by Jinan
 TEST_CASE("ElevatorTest - getCurrentFloor()", "[Calculator]") {
     Scheduler scheduler(5);

@@ -452,9 +452,14 @@ void eWaitingForInput::handle(ElevatorSubsystem* context) {
 
         while (context->myElevator.getQueue().empty()) context->cv.wait(lock);
         std::cout << "Acquired Mutex" << std::endl;
+        std::cout << "User Direction: " << context->myElevator.getDirection() << std::endl;
         if (context->myElevator.getDirection() == BROKEN) {
-          context->setState(new BrokenState());
-          context->handle();
+            std::cout << "Entered If: "<< std::endl;
+            context->setState(new BrokenState());
+
+        }
+        else {
+            context->setState(new ProcessRequest());
         }
         context->myElevator.printQueue();
         //review this line. was confused about it before.
@@ -466,7 +471,7 @@ void eWaitingForInput::handle(ElevatorSubsystem* context) {
 
     }
     std::cout << "Elevator " << context->programID << ": Received Request" << std::endl;
-    context->setState(new ProcessRequest());
+
     context->handle();
 }
 
@@ -536,46 +541,45 @@ void Stopped::handle(ElevatorSubsystem* context) {
     std::cout << "Elevator " << context->programID << ": Stopped." << std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(1));
     // remove the floor we just arrived at
+    if (!context->stateTest) {
+        if (true) {
+            std::unique_lock<std::mutex> lock(context->mtx);
+            int allowed = context->deleteEntry(context->myElevator.getQueue(), context->myElevator.getCurrentFloor());
+            auto direction = context->myElevator.getDirection();
+            context->myElevator.setDirection(IDLE);
+            if (context->myElevator.user_direction.empty() && context->myElevator.getQueue().empty()) {
+                std::cout << "Elevator " << context->programID << ": Done servicing queue" << std::endl;
+                std::cout << "Elevator " << context->programID << ": Current Capacity is: " << context->capacity << std::endl;
+            } else {
+                std::cout << "adding to user queue."<< std::endl;
+                // add all the user button requets into the queue
 
-    if (true) {
-        std::unique_lock<std::mutex> lock(context->mtx);
-        int allowed = context->deleteEntry(context->myElevator.getQueue(), context->myElevator.getCurrentFloor());
-        auto direction = context->myElevator.getDirection();
-        context->myElevator.setDirection(IDLE);
-        if (context->myElevator.user_direction.empty() && context->myElevator.getQueue().empty()) {
-            std::cout << "Elevator " << context->programID << ": Done servicing queue" << std::endl;
-            std::cout << "Elevator " << context->programID << ": Current Capacity is: " << context->capacity << std::endl;
-        } else {
-            std::cout << "adding to user queue."<< std::endl;
-            // add all the user button requets into the queue
-
-            if (allowed > 0) { // If we were picking up passengers
-                context->userQueuePop(context->myElevator.getCurrentFloor(), context->myElevator.user_direction, allowed);
-            }
-            else {
-                if (context->front(context->myElevator.getQueue()).first == context->myElevator.getCurrentFloor()) {
-                    context->myElevator.setDirection(direction);
-                }else {
-                    context->calcdirection(context->front(context->myElevator.getQueue()).first);
+                if (allowed > 0) { // If we were picking up passengers
+                    context->userQueuePop(context->myElevator.getCurrentFloor(), context->myElevator.user_direction, allowed);
                 }
-                std::cout << "Current Direction (stopped state): " << context->myElevator.getDirection() << std::endl;
-                context->sortMapInPlace(context->myElevator.getQueue(), context->myElevator.getDirection() == UP);
+                else {
+                    if (context->front(context->myElevator.getQueue()).first == context->myElevator.getCurrentFloor()) {
+                        context->myElevator.setDirection(direction);
+                    }else {
+                        context->calcdirection(context->front(context->myElevator.getQueue()).first);
+                    }
+                    std::cout << "Current Direction (stopped state): " << context->myElevator.getDirection() << std::endl;
+                    context->sortMapInPlace(context->myElevator.getQueue(), context->myElevator.getDirection() == UP);
+                }
+                auto pair = context->front(context->myElevator.getQueue());
+                std::cout << "used front."<< std::endl;
+                if (!pair.second.first.empty()) { // If we are picking up passengers
+                    context->myElevator.user_direction = pair.second.first;
+                }
+                else { //dropping off passengers
+                    context->myElevator.user_direction = "";
+                }
+                context->myElevator.floor_to_go_to = pair.first;
+                context->myElevator.printQueue();
+                std::cout << "Elevator " << context->programID << ": Current Capacity is: " << context->capacity << std::endl;
             }
-            auto pair = context->front(context->myElevator.getQueue());
-            std::cout << "used front."<< std::endl;
-            if (!pair.second.first.empty()) { // If we are picking up passengers
-                context->myElevator.user_direction = pair.second.first;
-            }
-            else { //dropping off passengers
-                context->myElevator.user_direction = "";
-            }
-            context->myElevator.floor_to_go_to = pair.first;
-            context->myElevator.printQueue();
-            std::cout << "Elevator " << context->programID << ": Current Capacity is: " << context->capacity << std::endl;
         }
     }
-
-
     if (context->doorsJammed) {
       context->setState(new JammedState());
     } else {
@@ -632,17 +636,22 @@ void DoorsClosed::handle(ElevatorSubsystem* context) {
 }
 
 void BrokenState::handle(ElevatorSubsystem* context) {
-    std::cout << "Elevator " << context->programID << ": Stuck Between Floors." << std::endl; // <--- START HERE FOR NEXT ITERATION
-    while (1){}
+    if (!context->stateTest) {
+        std::cout << "Elevator " << context->programID << ": Stuck Between Floors." << std::endl; // <--- START HERE FOR NEXT ITERATION
+        while (1){}
+    }
 }
 
 void JammedState::handle(ElevatorSubsystem* context) {
+
     std::cout << "Doors Jammed.... Initated Fixed Doors Routine." << std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(5));
     context->doorsJammed = false;
     std::cout << "Doors have been fixed!!" << std::endl;
-    context->setState(new DoorsOpened());
-    context->handle();
+    if (!context->stateTest) {
+        context->setState(new DoorsOpened());
+        context->handle();
+    }
 }
 
 //
