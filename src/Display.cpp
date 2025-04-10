@@ -50,9 +50,11 @@ void Display::updateThread () {
           elevators[index - 1].direction = receiveData.direction;
           elevators[index - 1].transmittedFloor = receiveData.transmittedFloor;
           elevators[index - 1].capacity = receiveData.capacity;
+          elevators[index - 1].doorJammed = receiveData.doorJammed;
+
       }
 
-      {
+      if (true) {
           std::lock_guard<std::mutex> lock(screen_mtx);
           if (screen_ptr != nullptr) {
               screen_ptr->PostEvent(ftxui::Event::Custom);
@@ -87,7 +89,7 @@ void Display::guiThread() {
         for (const auto& e : copyElevators) {
             tableData.push_back({
                 ftxui::text(std::to_string(e.elevatorID)),
-                ftxui::text(stringDirection(e.direction)) | ftxui::color(
+                ftxui::text( e.doorJammed ? "DOORS_JAMMED" : stringDirection(e.direction)) | ftxui::color(
                     e.direction == UP ? ftxui::Color::Green :
                     e.direction == DOWN ? ftxui::Color::Blue :
                     e.direction == IDLE ? ftxui::Color::Yellow :

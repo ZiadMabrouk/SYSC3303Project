@@ -39,6 +39,7 @@ typedef struct ElevatorData {
     bool broken = false;
     bool doorJammed = false;
     int capacity = 0;
+
     // Serialize struct into byte array
     void serialize(uint8_t* buffer) const {
         std::memcpy(buffer, this, sizeof(ElevatorData));

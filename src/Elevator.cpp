@@ -368,7 +368,9 @@ int ElevatorSubsystem::deleteEntry(
     if (emptyPairIt != vec.end()) {
         int freq = emptyPairIt->second;
         // For an empty pair we remove it completely and decrement capacity.
-        capacity -= freq;
+        if (capacity > 0) {
+            capacity -= freq;
+        }
 
         std::cout << "Removed empty pair from key " << key
                   << " and decremented capacity by " << freq << "." << std::endl;
@@ -496,6 +498,8 @@ void CruiseAndWait::handle(ElevatorSubsystem* context) {
         context->send_e_struct_.transmittedFloor = context->myElevator.getCurrentFloor();
         context->send_e_struct_.direction = context->myElevator.getDirection();
         context->send_e_struct_.capacity = context->capacity;
+        context->send_e_struct_.doorJammed = context->doorsJammed;
+
         send_and_wait_for_ack(context->threadName, context->send_e_struct_,PORT, context->receiveSocket, context->sendSocket);
         send_and_wait_for_ack(context->threadName, context->send_e_struct_,10000, context->receiveSocket, context->sendSocket);
 
@@ -602,8 +606,8 @@ void InformSchedulerOfArrival::handle(ElevatorSubsystem* context) {
         context->send_e_struct_.direction = context->myElevator.getDirection();
         context->send_e_struct_.capacity = context->capacity;
     }
-    send_and_wait_for_ack(context->threadName, context->send_e_struct_,PORT, context->receiveSocket, context->sendSocket);
-    send_and_wait_for_ack(context->threadName, context->send_e_struct_,10000, context->receiveSocket, context->sendSocket);
+    send_and_wait_for_ack(context->threadName, context->send_e_struct_, PORT, context->receiveSocket, context->sendSocket);
+    send_and_wait_for_ack(context->threadName, context->send_e_struct_, 10000, context->receiveSocket, context->sendSocket);
 
     context->setState(new DoorsClosed());
     context->handle();

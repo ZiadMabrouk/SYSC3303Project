@@ -17,12 +17,8 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/nelspc/CLionProjects/SYSC3303Project/build/_deps/ftxui-src/src/ftxui/screen/terminal.cpp" "_deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/terminal.cpp.o" "gcc" "_deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/terminal.cpp.o.d"
   )
 
-# Targets to which this target links which contain Fortran sources.
-set(CMAKE_Fortran_TARGET_LINKED_INFO_FILES
-  )
-
-# Targets to which this target links which contain Fortran sources.
-set(CMAKE_Fortran_TARGET_FORWARD_LINKED_INFO_FILES
+# Targets to which this target links.
+set(CMAKE_TARGET_LINKED_INFO_FILES
   )
 
 # Fortran module output directory.
